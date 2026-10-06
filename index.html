@@ -4,1493 +4,620 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Run Blaze</title>
-
 <style>
 *{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
-  background:#07111d;
-  color:#fff;
-}
-
-button{
-  font:inherit;
-  border:0;
-  cursor:pointer;
-}
-
-.screen{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* HOME */
-
-.home{
-  background:radial-gradient(circle at 50% 20%,#164d78,#07111d 70%);
-  text-align:center;
-}
-
-.homeBox{
-  width:min(92vw,520px);
-  padding:24px;
-}
-
-.logo{
-  font-size:64px;
-}
-
-.title{
-  font-size:44px;
-  font-weight:900;
-  letter-spacing:2px;
-  color:#ff7043;
-  margin:8px 0;
-}
-
-.tag{
-  opacity:.9;
-  font-size:18px;
-  margin-bottom:25px;
-}
-
-.runner{
-  font-size:72px;
-  margin:10px 0 25px;
-}
-
-.play{
-  width:min(90%,300px);
-  padding:18px;
-  border-radius:18px;
-  background:#21e6a0;
-  color:#06251b;
-  font-size:24px;
-  font-weight:900;
-  box-shadow:0 8px 25px #0006;
-}
-
-.smallRow{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  margin-top:16px;
-}
-
-.smallBtn{
-  padding:12px 20px;
-  border-radius:14px;
-  background:#ffffff18;
-  color:#fff;
-}
-
-.features{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  justify-content:center;
-  margin-top:22px;
-}
-
-.pill{
-  background:#ffffff15;
-  border-radius:20px;
-  padding:8px 12px;
-  font-size:13px;
-}
-
-.brand{
-  margin-top:30px;
-  opacity:.65;
-  font-size:12px;
-}
-
-/* GAME */
-
-.game{
-  position:relative;
-  background:#07111d;
-}
-
-.game canvas{
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-.hud{
-  position:absolute;
-  top:12px;
-  left:12px;
-  right:12px;
-  display:flex;
-  justify-content:space-between;
-  pointer-events:none;
-  font-weight:800;
-  text-shadow:0 2px 4px #000;
-}
-
-.hud span{
-  margin-right:10px;
-}
-
-.controls{
-  position:absolute;
-  bottom:18px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-
-.ctrl{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  background:#ffffff25;
-  color:#fff;
-  font-size:27px;
-  font-weight:900;
-  border:2px solid #ffffff22;
-}
-
-.ctrl.jump{
-  background:#ff7043;
-}
-
-.ctrl:active{
-  transform:scale(.92);
-}
-
-.over{
-  position:absolute;
-  inset:0;
-  background:#0009;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-}
-
-.overBox{
-  background:#102235;
-  padding:30px;
-  border-radius:22px;
-  width:min(88vw,360px);
-  box-shadow:0 20px 60px #0008;
-}
-
-.over h2{
-  font-size:36px;
-  margin:0 0 15px;
-  color:#ff7043;
-}
-
-.again{
-  margin-top:18px;
-  padding:14px 25px;
-  border-radius:14px;
-  background:#21e6a0;
-  color:#06251b;
-  font-weight:900;
-  font-size:18px;
-}
-
-.hidden{
-  display:none!important;
-}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#07111d;color:#fff}
+button{font:inherit;border:0;cursor:pointer}
+.screen{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.home{background:radial-gradient(circle at 50% 20%,#164d78,#07111d 70%);text-align:center}
+.homeBox{width:min(92vw,520px);padding:24px}
+.logo{font-size:64px}.title{font-size:44px;font-weight:900;letter-spacing:2px;color:#ff7043;margin:8px 0}
+.tag{opacity:.9;font-size:18px;margin-bottom:25px}.runner{font-size:72px;margin:10px 0 25px}
+.play{width:min(90%,300px);padding:18px;border-radius:18px;background:#21e6a0;color:#06251b;font-size:24px;font-weight:900;box-shadow:0 8px 25px #0006}
+.smallRow{display:flex;gap:12px;justify-content:center;margin-top:16px}.smallBtn{padding:12px 20px;border-radius:14px;background:#ffffff18;color:#fff}
+.features{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:22px}.pill{background:#ffffff15;border-radius:20px;padding:8px 12px;font-size:13px}
+.brand{margin-top:30px;opacity:.65;font-size:12px}
+.game{position:relative;background:#07111d}.game canvas{width:100%;height:100%;display:block}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none;font-weight:800;text-shadow:0 2px 4px #000}
+.hud span{margin-right:10px}.controls{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:12px;align-items:center}
+.ctrl{width:64px;height:64px;border-radius:50%;background:#ffffff25;color:#fff;font-size:27px;font-weight:900;border:2px solid #ffffff22}
+.ctrl.jump{background:#ff7043}.ctrl:active{transform:scale(.92)}
+.over{position:absolute;inset:0;background:#0009;display:none;align-items:center;justify-content:center;text-align:center}
+.overBox{background:#102235;padding:30px;border-radius:22px;width:min(88vw,360px);box-shadow:0 20px 60px #0008}
+.over h2{font-size:36px;margin:0 0 15px;color:#ff7043}
+.again{margin-top:18px;padding:14px 25px;border-radius:14px;background:#21e6a0;color:#06251b;font-weight:900;font-size:18px}
+.hidden{display:none!important}
 </style>
 </head>
 
 <body>
 
-<!-- HOME -->
-
 <section id="home" class="screen home">
-
-  <div class="homeBox">
-
-    <div class="logo">🔥🏃</div>
-
-    <div class="title">
-      RUN BLAZE
-    </div>
-
-    <div class="tag">
-      Run. Collect. Survive.
-    </div>
-
-    <div class="runner">
-      🏃‍♂️
-    </div>
-
-    <button class="play" id="playBtn">
-      ▶ PLAY
-    </button>
-
-    <div class="smallRow">
-      <button class="smallBtn">
-        🛍 SHOP
-      </button>
-
-      <button class="smallBtn">
-        🎯 MISSIONS
-      </button>
-    </div>
-
-    <div class="features">
-      <span class="pill">🧲 Magnet</span>
-      <span class="pill">⚡ Boost</span>
-      <span class="pill">🎁 Gift</span>
-      <span class="pill">🛼 Skate</span>
-      <span class="pill">🔑 Key</span>
-    </div>
-
-    <div class="brand">
-      Playtech Studio
-    </div>
-
-  </div>
-
+<div class="homeBox">
+<div class="logo">🔥🏃</div>
+<div class="title">RUN BLAZE</div>
+<div class="tag">Run. Collect. Survive.</div>
+<div class="runner">🏃‍♂️</div>
+<button class="play" id="playBtn">▶ PLAY</button>
+<div class="smallRow">
+<button class="smallBtn">🛍 SHOP</button>
+<button class="smallBtn">🎯 MISSIONS</button>
+</div>
+<div class="features">
+<span class="pill">🧲 Magnet</span>
+<span class="pill">⚡ Boost</span>
+<span class="pill">🎁 Gift</span>
+<span class="pill">🛼 Skate</span>
+<span class="pill">🔑 Key</span>
+</div>
+<div class="brand">Playtech Studio</div>
+</div>
 </section>
-
-
-<!-- GAME -->
 
 <section id="game" class="screen game hidden">
 
-  <canvas id="canvas"></canvas>
+<canvas id="canvas"></canvas>
 
-  <div class="hud">
+<div class="hud">
+<div>
+<span>Score: <b id="score">0</b></span>
+<span>Best: <b id="best">0</b></span>
+</div>
+<div>
+<span>🪙 <b id="coins">0</b></span>
+<span>⭐ <b id="stars">0</b></span>
+<span>🔑 <b id="keys">0</b></span>
+</div>
+</div>
 
-    <div>
-      <span>
-        Score: <b id="score">0</b>
-      </span>
+<div class="controls">
+<button class="ctrl" id="leftBtn">◀</button>
+<button class="ctrl" id="jumpBtn">▲</button>
+<button class="ctrl jump" id="boostBtn">⚡</button>
+<button class="ctrl" id="rightBtn">▶</button>
+</div>
 
-      <span>
-        Best: <b id="best">0</b>
-      </span>
-    </div>
-
-    <div>
-
-      <span>
-        🪙 <b id="coins">0</b>
-      </span>
-
-      <span>
-        ⭐ <b id="stars">0</b>
-      </span>
-
-      <span>
-        🔑 <b id="keys">0</b>
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <!-- CONTROLS -->
-
-  <div class="controls">
-
-    <button class="ctrl" id="leftBtn">
-      ◀
-    </button>
-
-    <button class="ctrl" id="jumpBtn">
-      ▲
-    </button>
-
-    <button class="ctrl jump" id="boostBtn">
-      ⚡
-    </button>
-
-    <button class="ctrl" id="rightBtn">
-      ▶
-    </button>
-
-  </div>
-
-
-  <!-- GAME OVER -->
-
-  <div id="over" class="over">
-
-    <div class="overBox">
-
-      <h2>
-        GAME OVER
-      </h2>
-
-      <div>
-        Score:
-        <b id="finalScore">0</b>
-      </div>
-
-      <div>
-        Coins:
-        <b id="finalCoins">0</b>
-      </div>
-
-      <div>
-        Best:
-        <b id="finalBest">0</b>
-      </div>
-
-      <button class="again" id="againBtn">
-        ▶ PLAY AGAIN
-      </button>
-
-    </div>
-
-  </div>
+<div id="over" class="over">
+<div class="overBox">
+<h2>GAME OVER</h2>
+<div>Score: <b id="finalScore">0</b></div>
+<div>Coins: <b id="finalCoins">0</b></div>
+<div>Best: <b id="finalBest">0</b></div>
+<button class="again" id="againBtn">▶ PLAY AGAIN</button>
+</div>
+</div>
 
 </section>
 
-
 <script>
-
 (function(){
 
 "use strict";
 
+const home=document.getElementById("home");
+const game=document.getElementById("game");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
 
-/* ELEMENTS */
+const scoreEl=document.getElementById("score");
+const bestEl=document.getElementById("best");
+const coinsEl=document.getElementById("coins");
+const starsEl=document.getElementById("stars");
+const keysEl=document.getElementById("keys");
 
-const home =
-document.getElementById("home");
+const over=document.getElementById("over");
+const finalScore=document.getElementById("finalScore");
+const finalCoins=document.getElementById("finalCoins");
+const finalBest=document.getElementById("finalBest");
 
-const game =
-document.getElementById("game");
+let W=0,H=0,dpr=1;
+let raf=0,last=0;
+let running=false;
 
-const canvas =
-document.getElementById("canvas");
+let score=0,coins=0,stars=0,keys=0;
+let best=Number(localStorage.getItem("runBlazeBest")||0);
 
-const ctx =
-canvas.getContext("2d");
+let targetLane=1;
+let playerX=0;
+let playerY=0;
+let velocityY=0;
+let onGround=true;
 
+let speed=430;
+let spawnTimer=0;
+let objects=[];
 
-const scoreEl =
-document.getElementById("score");
+let boostUntil=0;
+let magnetUntil=0;
+let skateUntil=0;
 
-const bestEl =
-document.getElementById("best");
-
-const coinsEl =
-document.getElementById("coins");
-
-const starsEl =
-document.getElementById("stars");
-
-const keysEl =
-document.getElementById("keys");
-
-
-const over =
-document.getElementById("over");
-
-const finalScore =
-document.getElementById("finalScore");
-
-const finalCoins =
-document.getElementById("finalCoins");
-
-const finalBest =
-document.getElementById("finalBest");
-
-
-/* GAME VARIABLES */
-
-let W = 0;
-let H = 0;
-let dpr = 1;
-
-let raf = 0;
-let last = 0;
-
-let running = false;
-
-let score = 0;
-let coins = 0;
-let stars = 0;
-let keys = 0;
-
-let best =
-Number(localStorage.getItem("runBlazeBest") || 0);
-
-
-/*
-  0 = LEFT
-  1 = CENTER
-  2 = RIGHT
-*/
-
-let targetLane = 1;
-
-let playerX = 0;
-let playerY = 0;
-
-let velocityY = 0;
-
-let onGround = true;
-
-let speed = 430;
-
-let spawnTimer = 0;
-
-let objects = [];
-
-let boostUntil = 0;
-let magnetUntil = 0;
-let skateUntil = 0;
-
-
-/* LANE POSITIONS */
-
-const lanes = [-1,0,1];
-
+const lanes=[-1,0,1];
 
 function laneX(index){
-
-  const roadWidth =
-    Math.min(W * 0.62,520);
-
-  return W / 2 +
-    lanes[index] * roadWidth / 3;
+const roadWidth=Math.min(W*0.62,520);
+return W/2+lanes[index]*roadWidth/3;
 }
-
-
-/* RESIZE */
 
 function resize(){
 
-  dpr =
-    Math.min(window.devicePixelRatio || 1,2);
+dpr=Math.min(window.devicePixelRatio||1,2);
 
-  W = window.innerWidth;
-  H = window.innerHeight;
+W=window.innerWidth;
+H=window.innerHeight;
 
-  canvas.width =
-    Math.floor(W * dpr);
+canvas.width=Math.floor(W*dpr);
+canvas.height=Math.floor(H*dpr);
 
-  canvas.height =
-    Math.floor(H * dpr);
+ctx.setTransform(dpr,0,0,dpr,0,0);
 
-  ctx.setTransform(
-    dpr,
-    0,
-    0,
-    dpr,
-    0,
-    0
-  );
+playerY=H-145;
 
-  playerY =
-    H - 145;
-
-  if(!playerX){
-
-    playerX =
-      laneX(targetLane);
-
-  }
+if(!playerX){
+playerX=laneX(targetLane);
+}
 
 }
 
-
-window.addEventListener(
-  "resize",
-  resize
-);
-
+window.addEventListener("resize",resize);
 resize();
-
-
-/* MOVEMENT */
 
 function moveLeft(){
 
-  if(!running) return;
+if(!running)return;
 
-  targetLane =
-    Math.max(
-      0,
-      targetLane - 1
-    );
+targetLane=Math.max(0,targetLane-1);
+
 }
-
 
 function moveRight(){
 
-  if(!running) return;
+if(!running)return;
 
-  targetLane =
-    Math.min(
-      2,
-      targetLane + 1
-    );
+targetLane=Math.min(2,targetLane+1);
+
 }
-
 
 function jump(){
 
-  if(!running) return;
+if(!running)return;
 
-  if(onGround){
+if(onGround){
 
-    velocityY = -720;
-
-    onGround = false;
-
-  }
+velocityY=-720;
+onGround=false;
 
 }
 
+}
 
 function boost(){
 
-  if(!running) return;
+if(!running)return;
 
-  boostUntil =
-    performance.now() + 3500;
+boostUntil=performance.now()+3500;
 
 }
-
-
-/* BUTTONS */
 
 function bindButton(id,fn){
 
-  const button =
-    document.getElementById(id);
+const button=document.getElementById(id);
 
-  button.addEventListener(
-    "pointerdown",
-    function(e){
+button.addEventListener("pointerdown",function(e){
 
-      e.preventDefault();
+e.preventDefault();
+fn();
 
-      fn();
-
-    }
-  );
+});
 
 }
 
+bindButton("leftBtn",moveLeft);
+bindButton("rightBtn",moveRight);
+bindButton("jumpBtn",jump);
+bindButton("boostBtn",boost);
 
-bindButton(
-  "leftBtn",
-  moveLeft
-);
+window.addEventListener("keydown",function(e){
 
-bindButton(
-  "rightBtn",
-  moveRight
-);
+if(e.repeat)return;
 
-bindButton(
-  "jumpBtn",
-  jump
-);
+const key=e.key.toLowerCase();
 
-bindButton(
-  "boostBtn",
-  boost
-);
+if(e.key==="ArrowLeft"||key==="a")moveLeft();
+else if(e.key==="ArrowRight"||key==="d")moveRight();
+else if(e.key==="ArrowUp"||e.key===" "||key==="w")jump();
+else if(key==="b")boost();
 
+});
 
-/* KEYBOARD */
+let startX=0,startY=0;
 
-window.addEventListener(
-  "keydown",
-  function(e){
+canvas.addEventListener("pointerdown",function(e){
 
-    if(e.repeat) return;
+startX=e.clientX;
+startY=e.clientY;
 
-    const key =
-      e.key.toLowerCase();
+});
 
-    if(
-      e.key === "ArrowLeft" ||
-      key === "a"
-    ){
+canvas.addEventListener("pointerup",function(e){
 
-      moveLeft();
+const dx=e.clientX-startX;
+const dy=e.clientY-startY;
 
-    }
+if(Math.max(Math.abs(dx),Math.abs(dy))<25)return;
 
-    else if(
-      e.key === "ArrowRight" ||
-      key === "d"
-    ){
+if(Math.abs(dx)>Math.abs(dy)){
 
-      moveRight();
+if(dx<0)moveLeft();
+else moveRight();
 
-    }
+}else if(dy<0){
 
-    else if(
-      e.key === "ArrowUp" ||
-      e.key === " " ||
-      key === "w"
-    ){
+jump();
 
-      jump();
+}
 
-    }
-
-    else if(key === "b"){
-
-      boost();
-
-    }
-
-  }
-);
-
-
-/* SWIPE */
-
-let startX = 0;
-let startY = 0;
-
-
-canvas.addEventListener(
-  "pointerdown",
-  function(e){
-
-    startX = e.clientX;
-    startY = e.clientY;
-
-  }
-);
-
-
-canvas.addEventListener(
-  "pointerup",
-  function(e){
-
-    const dx =
-      e.clientX - startX;
-
-    const dy =
-      e.clientY - startY;
-
-    if(
-      Math.max(
-        Math.abs(dx),
-        Math.abs(dy)
-      ) < 25
-    ){
-
-      return;
-
-    }
-
-
-    if(
-      Math.abs(dx) >
-      Math.abs(dy)
-    ){
-
-      if(dx < 0){
-
-        moveLeft();
-
-      }else{
-
-        moveRight();
-
-      }
-
-    }
-
-    else if(dy < 0){
-
-      jump();
-
-    }
-
-  }
-);
-
-
-/* START GAME */
+});
 
 function startGame(){
 
-  cancelAnimationFrame(raf);
+cancelAnimationFrame(raf);
 
-  home.classList.add("hidden");
+home.classList.add("hidden");
+game.classList.remove("hidden");
 
-  game.classList.remove("hidden");
+score=0;
+coins=0;
+stars=0;
+keys=0;
 
+objects=[];
 
-  score = 0;
-  coins = 0;
-  stars = 0;
-  keys = 0;
+targetLane=1;
+playerX=laneX(1);
 
-  objects = [];
+velocityY=0;
+onGround=true;
 
-  targetLane = 1;
+spawnTimer=.3;
+speed=430;
 
-  playerX =
-    laneX(1);
+boostUntil=0;
+magnetUntil=0;
+skateUntil=0;
 
-  velocityY = 0;
+running=true;
 
-  onGround = true;
+over.style.display="none";
 
-  spawnTimer = 0.3;
+updateHUD();
 
-  speed = 430;
+last=performance.now();
 
-  boostUntil = 0;
-  magnetUntil = 0;
-  skateUntil = 0;
-
-  running = true;
-
-  over.style.display =
-    "none";
-
-  updateHUD();
-
-  last =
-    performance.now();
-
-  raf =
-    requestAnimationFrame(
-      gameLoop
-    );
+raf=requestAnimationFrame(gameLoop);
 
 }
-
-
-/* GAME OVER */
 
 function gameOver(){
 
-  running = false;
+running=false;
 
-  best =
-    Math.max(
-      best,
-      Math.floor(score)
-    );
+best=Math.max(best,Math.floor(score));
 
-  localStorage.setItem(
-    "runBlazeBest",
-    String(best)
-  );
+localStorage.setItem("runBlazeBest",String(best));
 
-  finalScore.textContent =
-    Math.floor(score);
+finalScore.textContent=Math.floor(score);
+finalCoins.textContent=coins;
+finalBest.textContent=best;
 
-  finalCoins.textContent =
-    coins;
-
-  finalBest.textContent =
-    best;
-
-  over.style.display =
-    "flex";
+over.style.display="flex";
 
 }
-
-
-/* HUD */
 
 function updateHUD(){
 
-  scoreEl.textContent =
-    Math.floor(score);
-
-  bestEl.textContent =
-    best;
-
-  coinsEl.textContent =
-    coins;
-
-  starsEl.textContent =
-    stars;
-
-  keysEl.textContent =
-    keys;
+scoreEl.textContent=Math.floor(score);
+bestEl.textContent=best;
+coinsEl.textContent=coins;
+starsEl.textContent=stars;
+keysEl.textContent=keys;
 
 }
-
-
-/* SPAWN OBJECT */
 
 function spawnObject(){
 
-  const random =
-    Math.random();
+const random=Math.random();
 
-  const lane =
-    Math.floor(
-      Math.random() * 3
-    );
+const lane=Math.floor(Math.random()*3);
 
-  let type =
-    "obstacle";
+let type="obstacle";
 
+if(random<.45)type="coin";
+else if(random<.57)type="star";
+else if(random<.63)type="key";
+else if(random<.68)type="gift";
+else if(random<.73)type="magnet";
+else if(random<.78)type="boost";
+else if(random<.83)type="skate";
 
-  if(random < 0.45){
-
-    type = "coin";
-
-  }
-
-  else if(random < 0.57){
-
-    type = "star";
-
-  }
-
-  else if(random < 0.63){
-
-    type = "key";
-
-  }
-
-  else if(random < 0.68){
-
-    type = "gift";
-
-  }
-
-  else if(random < 0.73){
-
-    type = "magnet";
-
-  }
-
-  else if(random < 0.78){
-
-    type = "boost";
-
-  }
-
-  else if(random < 0.83){
-
-    type = "skate";
-
-  }
-
-
-  objects.push({
-
-    lane:lane,
-
-    x:laneX(lane),
-
-    y:-50,
-
-    type:type,
-
-    hit:false
-
-  });
+objects.push({
+lane:lane,
+x:laneX(lane),
+y:-50,
+type:type,
+hit:false
+});
 
 }
-
-
-/* UPDATE */
 
 function update(dt,now){
 
-  const boostActive =
-    now < boostUntil;
+const boostActive=now<boostUntil;
 
-  const currentSpeed =
-    speed *
-    (boostActive ? 1.65 : 1);
+const currentSpeed=speed*(boostActive?1.65:1);
 
+score+=dt*(boostActive?22:10);
 
-  score +=
-    dt *
-    (boostActive ? 22 : 10);
+speed=Math.min(760,speed+dt*4);
 
+spawnTimer-=dt;
 
-  speed =
-    Math.min(
-      760,
-      speed + dt * 4
-    );
+if(spawnTimer<=0){
 
+spawnObject();
 
-  spawnTimer -= dt;
-
-
-  if(spawnTimer <= 0){
-
-    spawnObject();
-
-    spawnTimer =
-      Math.max(
-        0.48,
-        1.05 - score / 2500
-      ) +
-      Math.random() * 0.35;
-
-  }
-
-
-  /* SMOOTH SUBWAY-SURFERS LANE CHANGE */
-
-  const desiredX =
-    laneX(targetLane);
-
-
-  playerX +=
-    (desiredX - playerX) *
-    Math.min(
-      1,
-      dt * 12
-    );
-
-
-  /* JUMP PHYSICS */
-
-  velocityY +=
-    1850 * dt;
-
-  playerY +=
-    velocityY * dt;
-
-
-  if(
-    playerY >= H - 145
-  ){
-
-    playerY =
-      H - 145;
-
-    velocityY = 0;
-
-    onGround = true;
-
-  }
-
-
-  /* OBJECTS */
-
-  for(
-    let i = objects.length - 1;
-    i >= 0;
-    i--
-  ){
-
-    const obj =
-      objects[i];
-
-
-    obj.y +=
-      currentSpeed * dt;
-
-
-    /* MAGNET */
-
-    if(
-      obj.type !== "obstacle" &&
-      now < magnetUntil
-    ){
-
-      const dx =
-        playerX - obj.x;
-
-      const dy =
-        playerY - obj.y;
-
-      const distance =
-        Math.hypot(dx,dy);
-
-
-      if(distance < 260){
-
-        obj.x +=
-          (playerX - obj.x) *
-          Math.min(
-            1,
-            dt * 7
-          );
-
-        obj.y +=
-          (playerY - obj.y) *
-          Math.min(
-            1,
-            dt * 7
-          );
-
-      }
-
-    }
-
-
-    /* COLLISION */
-
-    const dx =
-      Math.abs(
-        obj.x - playerX
-      );
-
-    const dy =
-      Math.abs(
-        obj.y - playerY
-      );
-
-
-    if(
-      !obj.hit &&
-      dx < 42 &&
-      dy < 55
-    ){
-
-      obj.hit = true;
-
-
-      if(
-        obj.type === "obstacle"
-      ){
-
-        if(
-          now > skateUntil
-        ){
-
-          gameOver();
-
-          return;
-
-        }
-
-        else{
-
-          score += 30;
-
-        }
-
-      }
-
-
-      else if(
-        obj.type === "coin"
-      ){
-
-        coins++;
-        score += 15;
-
-      }
-
-
-      else if(
-        obj.type === "star"
-      ){
-
-        stars++;
-        score += 25;
-
-      }
-
-
-      else if(
-        obj.type === "key"
-      ){
-
-        keys++;
-        score += 40;
-
-      }
-
-
-      else if(
-        obj.type === "gift"
-      ){
-
-        coins += 3;
-        score += 60;
-
-      }
-
-
-      else if(
-        obj.type === "magnet"
-      ){
-
-        magnetUntil =
-          now + 6000;
-
-        score += 20;
-
-      }
-
-
-      else if(
-        obj.type === "boost"
-      ){
-
-        boostUntil =
-          now + 5000;
-
-        score += 20;
-
-      }
-
-
-      else if(
-        obj.type === "skate"
-      ){
-
-        skateUntil =
-          now + 7000;
-
-        score += 20;
-
-      }
-
-
-      objects.splice(i,1);
-
-      continue;
-
-    }
-
-
-    if(
-      obj.y > H + 80
-    ){
-
-      objects.splice(i,1);
-
-    }
-
-  }
-
-
-  updateHUD();
+spawnTimer=Math.max(.48,1.05-score/2500)+Math.random()*.35;
 
 }
 
+/* SMOOTH LANE MOVEMENT */
 
-/* DRAW */
+const desiredX=laneX(targetLane);
+
+playerX+=(desiredX-playerX)*Math.min(1,dt*12);
+
+/* JUMP */
+
+velocityY+=1850*dt;
+playerY+=velocityY*dt;
+
+if(playerY>=H-145){
+
+playerY=H-145;
+velocityY=0;
+onGround=true;
+
+}
+
+/* OBJECTS */
+
+for(let i=objects.length-1;i>=0;i--){
+
+const obj=objects[i];
+
+obj.y+=currentSpeed*dt;
+
+if(obj.type!=="obstacle"&&now<magnetUntil){
+
+const dx=playerX-obj.x;
+const dy=playerY-obj.y;
+const distance=Math.hypot(dx,dy);
+
+if(distance<260){
+
+obj.x+=(playerX-obj.x)*Math.min(1,dt*7);
+obj.y+=(playerY-obj.y)*Math.min(1,dt*7);
+
+}
+
+}
+
+const dx=Math.abs(obj.x-playerX);
+const dy=Math.abs(obj.y-playerY);
+
+if(!obj.hit&&dx<42&&dy<55){
+
+obj.hit=true;
+
+if(obj.type==="obstacle"){
+
+if(now>skateUntil){
+
+gameOver();
+return;
+
+}else{
+
+score+=30;
+
+}
+
+}else if(obj.type==="coin"){
+
+coins++;
+score+=15;
+
+}else if(obj.type==="star"){
+
+stars++;
+score+=25;
+
+}else if(obj.type==="key"){
+
+keys++;
+score+=40;
+
+}else if(obj.type==="gift"){
+
+coins+=3;
+score+=60;
+
+}else if(obj.type==="magnet"){
+
+magnetUntil=now+6000;
+score+=20;
+
+}else if(obj.type==="boost"){
+
+boostUntil=now+5000;
+score+=20;
+
+}else if(obj.type==="skate"){
+
+skateUntil=now+7000;
+score+=20;
+
+}
+
+objects.splice(i,1);
+continue;
+
+}
+
+if(obj.y>H+80){
+
+objects.splice(i,1);
+
+}
+
+}
+
+updateHUD();
+
+}
 
 function draw(){
 
-  ctx.clearRect(
-    0,
-    0,
-    W,
-    H
-  );
+ctx.clearRect(0,0,W,H);
 
+const horizon=H*.08;
 
-  const horizon =
-    H * 0.08;
+/* SKY */
 
+ctx.fillStyle="#08243a";
+ctx.fillRect(0,0,W,H);
 
-  /* SKY */
+ctx.fillStyle="#123c59";
+ctx.fillRect(0,horizon,W,H-horizon);
 
-  ctx.fillStyle =
-    "#08243a";
+/* ROAD */
 
-  ctx.fillRect(
-    0,
-    0,
-    W,
-    H
-  );
+const roadWidth=Math.min(W*.62,520);
 
+const left=W/2-roadWidth/2;
+const right=W/2+roadWidth/2;
 
-  /* BACKGROUND */
+ctx.fillStyle="#303b46";
 
-  ctx.fillStyle =
-    "#123c59";
+ctx.beginPath();
 
-  ctx.fillRect(
-    0,
-    horizon,
-    W,
-    H - horizon
-  );
+ctx.moveTo(W/2-roadWidth*.18,horizon);
+ctx.lineTo(W/2+roadWidth*.18,horizon);
+ctx.lineTo(right,H);
+ctx.lineTo(left,H);
+ctx.closePath();
 
+ctx.fill();
 
-  /* ROAD */
+/* ROAD EDGES */
 
-  const roadWidth =
-    Math.min(
-      W * 0.62,
-      520
-    );
+ctx.strokeStyle="#ff7043";
+ctx.lineWidth=5;
 
+ctx.beginPath();
 
-  const left =
-    W / 2 -
-    roadWidth / 2;
+ctx.moveTo(left,horizon);
+ctx.lineTo(left,H);
 
-  const right =
-    W / 2 +
-    roadWidth / 2;
+ctx.moveTo(right,horizon);
+ctx.lineTo(right,H);
 
+ctx.stroke();
 
-  ctx.fillStyle =
-    "#303b46";
+/* LANE LINES */
 
+ctx.strokeStyle="#ffffff99";
+ctx.lineWidth=3;
+ctx.setLineDash([28,26]);
 
-  ctx.beginPath();
+ctx.beginPath();
 
-  ctx.moveTo(
-    W / 2 -
-    roadWidth * 0.18,
-    horizon
-  );
+ctx.moveTo(W/2-roadWidth/6,horizon);
+ctx.lineTo(W/2-roadWidth/6,H);
 
-  ctx.lineTo(
-    W / 2 +
-    roadWidth * 0.18,
-    horizon
-  );
+ctx.moveTo(W/2+roadWidth/6,horizon);
+ctx.lineTo(W/2+roadWidth/6,H);
 
-  ctx.lineTo(
-    right,
-    H
-  );
+ctx.stroke();
 
-  ctx.lineTo(
-    left,
-    H
-  );
+ctx.setLineDash([]);
 
-  ctx.closePath();
+/* OBJECTS */
 
-  ctx.fill();
+for(const obj of objects){
 
+ctx.font="38px Arial";
+ctx.textAlign="center";
 
-  /* ROAD EDGES */
+let icon="🚧";
 
-  ctx.strokeStyle =
-    "#ff7043";
+if(obj.type==="coin")icon="🪙";
+else if(obj.type==="star")icon="⭐";
+else if(obj.type==="key")icon="🔑";
+else if(obj.type==="gift")icon="🎁";
+else if(obj.type==="magnet")icon="🧲";
+else if(obj.type==="boost")icon="⚡";
+else if(obj.type==="skate")icon="🛼";
 
-  ctx.lineWidth = 5;
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    left,
-    horizon
-  );
-
-  ctx.lineTo(
-    left,
-    H
-  );
-
-  ctx.moveTo(
-    right,
-    horizon
-  );
-
-  ctx.lineTo(
-    right,
-    H
-  );
-
-  ctx.stroke();
-
-
-  /* LANE LINES */
-
-  ctx.strokeStyle =
-    "#ffffff99";
-
-  ctx.lineWidth = 3;
-
-  ctx.setLineDash([
-    28,
-    26
-  ]);
-
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    W / 2 -
-    roadWidth / 6,
-    horizon
-  );
-
-  ctx.lineTo(
-    W / 2 -
-    roadWidth / 6,
-    H
-  );
-
-
-  ctx.moveTo(
-    W / 2 +
-    roadWidth / 6,
-    horizon
-  );
-
-  ctx.lineTo(
-    W / 2 +
-    roadWidth / 6,
-    H
-  );
-
-  ctx.stroke();
-
-  ctx.setLineDash([]);
-
-
-  /* OBJECTS */
-
-  for(
-    const obj of objects
-  ){
-
-    ctx.font =
-      "38px Arial";
-
-    ctx.textAlign =
-      "center";
-
-
-    let icon = "🚧";
-
-
-    if(obj.type === "coin")
-      icon = "🪙";
-
-    else if(obj.type === "star")
-      icon = "⭐";
-
-    else if(obj.type === "key")
-      icon = "🔑";
-
-    else if(obj.type === "gift")
-      icon = "🎁";
-
-    else if(obj.type === "magnet")
-      icon = "🧲";
-
-    else if(obj.type === "boost")
-      icon = "⚡";
-
-    else if(obj.type === "skate")
-      icon = "🛼";
-
-
-    ctx.fillText(
-      icon,
-      obj.x,
-      obj.y
-    );
-
-  }
-
-
-  /* PLAYER */
-
-  ctx.save();
-
-  ctx.translate(
-    playerX,
-    playerY
-  );
-
-  ctx.font =
-    "64px Arial";
-
-  ctx.textAlign =
-    "center";
-
-  ctx.fillText(
-    "🏃‍♂️",
-    0,
-    0
-  );
-
-  ctx.restore();
+ctx.fillText(icon,obj.x,obj.y);
 
 }
 
+/* RUNNING PLAYER */
 
-/* GAME LOOP */
+ctx.save();
+
+ctx.translate(playerX,playerY);
+
+const t=performance.now()/100;
+const bob=onGround?Math.sin(t*1.8)*4:0;
+const tilt=onGround?Math.sin(t*1.8)*.06:0;
+
+ctx.rotate(tilt);
+
+ctx.font="64px Arial";
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+
+ctx.fillText("🏃‍♂️",0,bob);
+
+ctx.restore();
+
+}
 
 function gameLoop(now){
 
-  if(!running)
-    return;
+if(!running)return;
 
+const dt=Math.min((now-last)/1000,.033);
 
-  const dt =
-    Math.min(
-      (now - last) / 1000,
-      0.033
-    );
+last=now;
 
+update(dt,now);
+draw();
 
-  last = now;
+if(running){
 
-
-  update(
-    dt,
-    now
-  );
-
-  draw();
-
-
-  if(running){
-
-    raf =
-      requestAnimationFrame(
-        gameLoop
-      );
-
-  }
+raf=requestAnimationFrame(gameLoop);
 
 }
 
+}
 
-/* START BUTTON */
+document.getElementById("playBtn").addEventListener("click",startGame);
 
-document
-  .getElementById("playBtn")
-  .addEventListener(
-    "click",
-    startGame
-  );
+document.getElementById("againBtn").addEventListener("click",startGame);
 
-
-/* PLAY AGAIN */
-
-document
-  .getElementById("againBtn")
-  .addEventListener(
-    "click",
-    startGame
-  );
-
-
-/* INITIAL BEST */
-
-bestEl.textContent =
-  best;
-
+bestEl.textContent=best;
 
 })();
 </script>
