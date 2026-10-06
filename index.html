@@ -532,12 +532,10 @@ function updateObjects(dt){
 
       if(o.type === "obstacle"){
 
-        if(jumpY > 65 || skateTimer > 0){
-          o.collected = true;
-        }else{
-          endGame();
-          return;
-        }
+    endGame();
+    return;
+
+}
 
       }else{
 
