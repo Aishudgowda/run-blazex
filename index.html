@@ -3,150 +3,1013 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<meta name="theme-color" content="#101a35">
-<meta name="description" content="Run Blaze - Endless runner game">
 <title>Run Blaze</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
+*{box-sizing:border-box}
 
 html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#08101f;
-  font-family:Arial,sans-serif;
-  touch-action:none;
+margin:0;
+width:100%;
+height:100%;
+overflow:hidden;
+font-family:Arial,sans-serif;
+background:#07101d;
+color:white;
+touch-action:none;
 }
 
 button{
-  font-family:Arial,sans-serif;
-  cursor:pointer;
+font:inherit;
+border:0;
+cursor:pointer;
+-webkit-tap-highlight-color:transparent;
 }
 
-#game{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-/* ---------- HUD ---------- */
-
-#hud{
-  position:fixed;
-  top:12px;
-  left:10px;
-  right:10px;
-  z-index:5;
-  display:flex;
-  justify-content:center;
-  gap:6px;
-  pointer-events:none;
-}
-
-.hudBox{
-  min-width:62px;
-  padding:7px 8px;
-  border-radius:12px;
-  background:rgba(7,15,31,.82);
-  border:1px solid rgba(255,255,255,.18);
-  color:#fff;
-  text-align:center;
-  font-weight:bold;
-  font-size:13px;
-  box-shadow:0 4px 12px rgba(0,0,0,.3);
-}
-
-/* ---------- POWER ---------- */
-
-#powerText{
-  position:fixed;
-  top:64px;
-  left:0;
-  right:0;
-  z-index:6;
-  text-align:center;
-  color:#fff;
-  font-size:15px;
-  font-weight:bold;
-  text-shadow:0 2px 5px #000;
-  pointer-events:none;
-}
-
-/* ---------- HOME ---------- */
+.hidden{display:none!important}
 
 .screen{
-  position:fixed;
-  inset:0;
-  z-index:20;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:auto;
-  background:
-    radial-gradient(circle at 50% 22%,rgba(40,150,255,.25),transparent 28%),
-    linear-gradient(180deg,#0b1730 0%,#07101f 55%,#050b16 100%);
-  padding:20px;
+position:absolute;
+inset:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
 }
 
-.homePanel{
-  width:min(440px,94vw);
-  text-align:center;
+/* HOME */
+
+#home{
+padding:20px;
+text-align:center;
+background:linear-gradient(180deg,#081526,#102b27);
 }
 
-.topBar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  margin-bottom:18px;
+.top{
+position:absolute;
+top:18px;
+left:18px;
+right:18px;
+display:flex;
+justify-content:space-between;
 }
 
-.topStat{
-  flex:1;
-  padding:8px 6px;
-  border-radius:14px;
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.13);
-  color:#fff;
-  font-size:13px;
-  font-weight:bold;
+.stats{
+display:flex;
+gap:8px;
 }
 
-.iconButton{
-  width:44px;
-  height:44px;
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:14px;
-  background:rgba(255,255,255,.1);
-  color:white;
-  font-size:21px;
+.badge{
+background:rgba(255,255,255,.10);
+padding:10px 14px;
+border-radius:15px;
+font-weight:bold;
 }
 
 .logo{
-  font-size:62px;
-  line-height:1;
-  margin:8px 0 3px;
-  filter:drop-shadow(0 5px 15px rgba(255,100,0,.4));
+font-size:68px;
+margin-bottom:5px;
+filter:drop-shadow(0 8px 12px rgba(255,100,0,.35));
 }
 
 .gameTitle{
-  margin:0;
-  font-size:46px;
-  font-weight:900;
-  letter-spacing:1px;
-  color:#ff7414;
-  text-shadow:
-    0 3px 0 #a93200,
-    0 0 25px rgba(255,100,0,.45);
+margin:0;
+font-size:44px;
+font-weight:900;
+letter-spacing:2px;
+color:#ff7414;
 }
 
 .tagline{
-  margin:5px 0 14px;
-  color:#c
+margin:8px 0 20px;
+color:#bdc8d4;
+}
+
+.runnerPreview{
+font-size:82px;
+margin:8px 0 20px;
+}
+
+.playBtn{
+width:230px;
+padding:17px;
+border-radius:18px;
+background:#19d66b;
+color:#04150c;
+font-size:22px;
+font-weight:900;
+box-shadow:0 8px 25px rgba(25,214,107,.25);
+}
+
+.playBtn:active{
+transform:scale(.97);
+}
+
+.menu{
+display:flex;
+gap:12px;
+margin-top:14px;
+}
+
+.menu button{
+padding:12px 20px;
+border-radius:14px;
+background:#182b40;
+color:white;
+font-weight:bold;
+}
+
+.features{
+display:flex;
+gap:8px;
+margin-top:20px;
+justify-content:center;
+flex-wrap:wrap;
+max-width:380px;
+}
+
+.feature{
+background:rgba(255,255,255,.08);
+padding:9px 12px;
+border-radius:12px;
+font-size:13px;
+}
+
+.footer{
+position:absolute;
+bottom:14px;
+color:#718094;
+font-size:12px;
+}
+
+/* GAME */
+
+#gameScreen{
+background:#08131a;
+}
+
+canvas{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+}
+
+.hud{
+position:absolute;
+top:12px;
+left:12px;
+right:12px;
+display:flex;
+justify-content:space-between;
+z-index:5;
+pointer-events:none;
+}
+
+.hudBox{
+background:rgba(0,0,0,.55);
+padding:9px 12px;
+border-radius:12px;
+font-size:13px;
+font-weight:bold;
+line-height:1.7;
+}
+
+.controls{
+position:absolute;
+bottom:20px;
+left:0;
+right:0;
+display:flex;
+justify-content:center;
+gap:12px;
+z-index:6;
+}
+
+.control{
+width:62px;
+height:62px;
+border-radius:50%;
+background:rgba(255,255,255,.16);
+color:white;
+font-size:24px;
+border:1px solid rgba(255,255,255,.15);
+}
+
+.control:active{
+transform:scale(.92);
+}
+
+.boost{
+background:#ff7414;
+}
+
+/* GAME OVER */
+
+#gameOver{
+background:rgba(3,8,15,.94);
+z-index:10;
+text-align:center;
+}
+
+.overTitle{
+font-size:42px;
+color:#ff7414;
+font-weight:900;
+}
+
+.result{
+background:rgba(255,255,255,.08);
+padding:18px 30px;
+border-radius:18px;
+line-height:2;
+margin:15px;
+}
+
+.again{
+padding:15px 38px;
+border-radius:16px;
+background:#19d66b;
+color:#04150c;
+font-size:18px;
+font-weight:bold;
+}
+
+@media(max-height:650px){
+.logo{font-size:50px}
+.gameTitle{font-size:34px}
+.runnerPreview{font-size:60px;margin:4px 0 10px}
+.features{margin-top:10px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<section id="home" class="screen">
+
+<div class="top">
+<div class="stats">
+<div class="badge">🪙 <span id="homeCoins">0</span></div>
+<div class="badge">⭐ <span id="homeStars">0</span></div>
+</div>
+</div>
+
+<div class="logo">🔥🏃</div>
+
+<h1 class="gameTitle">RUN BLAZE</h1>
+
+<div class="tagline">
+Run. Collect. Survive.
+</div>
+
+<div class="runnerPreview">🏃‍♂️</div>
+
+<button class="playBtn" id="playBtn">
+▶ PLAY
+</button>
+
+<div class="menu">
+<button id="shopBtn">🛒 SHOP</button>
+<button id="missionBtn">🎯 MISSIONS</button>
+</div>
+
+<div class="features">
+<div class="feature">🧲 Magnet</div>
+<div class="feature">⚡ Boost</div>
+<div class="feature">🎁 Gift</div>
+<div class="feature">🛹 Skate</div>
+<div class="feature">🔑 Key</div>
+</div>
+
+<div class="footer">
+Playtech Studio
+</div>
+
+</section>
+
+
+<section id="gameScreen" class="screen hidden">
+
+<canvas id="canvas"></canvas>
+
+<div class="hud">
+
+<div class="hudBox">
+Score: <span id="score">0</span><br>
+Best: <span id="best">0</span>
+</div>
+
+<div class="hudBox">
+🪙 <span id="coins">0</span>
+⭐ <span id="stars">0</span>
+🔑 <span id="keys">0</span>
+</div>
+
+</div>
+
+<div class="controls">
+
+<button class="control" id="leftBtn">◀</button>
+
+<button class="control" id="jumpBtn">⬆</button>
+
+<button class="control boost" id="boostBtn">⚡</button>
+
+<button class="control" id="rightBtn">▶</button>
+
+</div>
+
+</section>
+
+
+<section id="gameOver" class="screen hidden">
+
+<div class="overTitle">
+GAME OVER
+</div>
+
+<div class="result">
+
+🏆 Score: <b id="finalScore">0</b><br>
+🪙 Coins: <b id="finalCoins">0</b><br>
+⭐ Stars: <b id="finalStars">0</b><br>
+🔑 Keys: <b id="finalKeys">0</b><br>
+👑 Best: <b id="finalBest">0</b>
+
+</div>
+
+<button class="again" id="againBtn">
+▶ PLAY AGAIN
+</button>
+
+</section>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+const home=document.getElementById("home");
+const game=document.getElementById("gameScreen");
+const gameOver=document.getElementById("gameOver");
+
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+const scoreEl=document.getElementById("score");
+const bestEl=document.getElementById("best");
+const coinsEl=document.getElementById("coins");
+const starsEl=document.getElementById("stars");
+const keysEl=document.getElementById("keys");
+
+const homeCoins=document.getElementById("homeCoins");
+const homeStars=document.getElementById("homeStars");
+
+const finalScore=document.getElementById("finalScore");
+const finalCoins=document.getElementById("finalCoins");
+const finalStars=document.getElementById("finalStars");
+const finalKeys=document.getElementById("finalKeys");
+const finalBest=document.getElementById("finalBest");
+
+let W=window.innerWidth;
+let H=window.innerHeight;
+
+let running=false;
+let score=0;
+
+let coins=Number(localStorage.getItem("runblaze_coins")||0);
+let stars=Number(localStorage.getItem("runblaze_stars")||0);
+let best=Number(localStorage.getItem("runblaze_best")||0);
+
+let keys=0;
+let lane=1;
+let objects=[];
+let lastTime=0;
+let spawnTimer=0;
+
+let jumping=false;
+let jumpTime=0;
+
+let boostTime=0;
+let magnetTime=0;
+let skateTime=0;
+
+
+function resizeCanvas(){
+
+W=window.innerWidth;
+H=window.innerHeight;
+
+const dpr=Math.min(window.devicePixelRatio||1,2);
+
+canvas.width=W*dpr;
+canvas.height=H*dpr;
+
+canvas.style.width=W+"px";
+canvas.style.height=H+"px";
+
+ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+window.addEventListener("resize",resizeCanvas);
+
+resizeCanvas();
+
+
+function laneX(n){
+
+const left=W*0.18;
+const width=W*0.64;
+
+return left+width*((n+0.5)/3);
+}
+
+
+function updateHUD(){
+
+scoreEl.textContent=Math.floor(score);
+bestEl.textContent=best;
+coinsEl.textContent=coins;
+starsEl.textContent=stars;
+keysEl.textContent=keys;
+
+homeCoins.textContent=coins;
+homeStars.textContent=stars;
+}
+
+
+function saveData(){
+
+localStorage.setItem("runblaze_coins",coins);
+localStorage.setItem("runblaze_stars",stars);
+localStorage.setItem("runblaze_best",best);
+}
+
+
+function startGame(){
+
+home.classList.add("hidden");
+gameOver.classList.add("hidden");
+game.classList.remove("hidden");
+
+score=0;
+keys=0;
+lane=1;
+objects=[];
+spawnTimer=0;
+
+jumping=false;
+jumpTime=0;
+
+boostTime=0;
+magnetTime=0;
+skateTime=0;
+
+running=true;
+lastTime=performance.now();
+
+updateHUD();
+
+requestAnimationFrame(gameLoop);
+}
+
+
+function finishGame(){
+
+running=false;
+
+if(score>best){
+best=Math.floor(score);
+}
+
+saveData();
+
+finalScore.textContent=Math.floor(score);
+finalCoins.textContent=coins;
+finalStars.textContent=stars;
+finalKeys.textContent=keys;
+finalBest.textContent=best;
+
+game.classList.add("hidden");
+gameOver.classList.remove("hidden");
+
+updateHUD();
+}
+
+
+function spawnObject(){
+
+const types=[
+"coin",
+"coin",
+"coin",
+"star",
+"key",
+"gift",
+"magnet",
+"boost",
+"skate",
+"obstacle",
+"obstacle"
+];
+
+const type=types[
+Math.floor(Math.random()*types.length)
+];
+
+objects.push({
+lane:Math.floor(Math.random()*3),
+y:-60,
+type:type,
+collected:false
+});
+}
+
+
+function collectObject(object){
+
+object.collected=true;
+
+if(object.type==="coin"){
+coins++;
+score+=10;
+}
+
+else if(object.type==="star"){
+stars++;
+score+=25;
+}
+
+else if(object.type==="key"){
+keys++;
+score+=40;
+}
+
+else if(object.type==="gift"){
+coins+=3;
+score+=100;
+}
+
+else if(object.type==="magnet"){
+magnetTime=7000;
+}
+
+else if(object.type==="boost"){
+boostTime=5000;
+}
+
+else if(object.type==="skate"){
+skateTime=8000;
+}
+
+saveData();
+}
+
+
+function updateGame(delta){
+
+const speed=boostTime>0?620:390;
+
+score+=delta*(boostTime>0?0.035:0.020);
+
+spawnTimer+=delta;
+
+const spawnDelay=boostTime>0?480:650;
+
+if(spawnTimer>=spawnDelay){
+spawnTimer=0;
+spawnObject();
+}
+
+
+if(jumpTime>0){
+
+jumpTime-=delta;
+
+if(jumpTime<=0){
+jumpTime=0;
+jumping=false;
+}
+}
+
+
+if(boostTime>0)boostTime-=delta;
+if(magnetTime>0)magnetTime-=delta;
+if(skateTime>0)skateTime-=delta;
+
+
+for(const object of objects){
+
+object.y+=speed*delta/1000;
+
+
+if(magnetTime>0 && object.type!=="obstacle"){
+
+const distance=Math.abs(object.y-(H-150));
+const laneDistance=Math.abs(
+laneX(object.lane)-laneX(lane)
+);
+
+if(distance<180 && laneDistance<190){
+object.lane=lane;
+}
+}
+
+
+const playerY=H-150-(jumping?105:0);
+
+const verticalDistance=Math.abs(
+object.y-playerY
+);
+
+
+if(
+!object.collected &&
+verticalDistance<48 &&
+object.lane===lane
+){
+
+if(object.type==="obstacle"){
+
+if(jumping){
+object.collected=true;
+}
+
+else if(skateTime>0){
+
+skateTime=0;
+object.collected=true;
+}
+
+else{
+finishGame();
+return;
+}
+
+}
+
+else{
+collectObject(object);
+}
+
+}
+
+}
+
+
+objects=objects.filter(
+object=>object.y<H+100&&!object.collected
+);
+
+updateHUD();
+}
+
+
+function drawBackground(){
+
+ctx.clearRect(0,0,W,H);
+
+const gradient=ctx.createLinearGradient(0,0,0,H);
+
+gradient.addColorStop(0,"#08182a");
+gradient.addColorStop(1,"#143b2c");
+
+ctx.fillStyle=gradient;
+ctx.fillRect(0,0,W,H);
+
+
+const roadLeft=W*0.18;
+const roadRight=W*0.82;
+
+ctx.fillStyle="#30343a";
+
+ctx.fillRect(
+roadLeft,
+0,
+roadRight-roadLeft,
+H
+);
+
+
+ctx.fillStyle="#d56b18";
+
+ctx.fillRect(
+roadLeft,
+0,
+6,
+H
+);
+
+ctx.fillRect(
+roadRight-6,
+0,
+6,
+H
+);
+
+
+ctx.strokeStyle="rgba(255,255,255,.25)";
+ctx.lineWidth=3;
+
+ctx.setLineDash([28,25]);
+
+for(let i=1;i<3;i++){
+
+const x=roadLeft+(roadRight-roadLeft)*i/3;
+
+ctx.beginPath();
+ctx.moveTo(x,0);
+ctx.lineTo(x,H);
+ctx.stroke();
+}
+
+ctx.setLineDash([]);
+}
+
+
+function drawObject(object){
+
+const x=laneX(object.lane);
+const y=object.y;
+
+const icons={
+coin:"🪙",
+star:"⭐",
+key:"🔑",
+gift:"🎁",
+magnet:"🧲",
+boost:"⚡",
+skate:"🛹",
+obstacle:"🚧"
+};
+
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.font="32px Arial";
+
+ctx.fillText(
+icons[object.type],
+x,
+y
+);
+}
+
+
+function drawPlayer(){
+
+const x=laneX(lane);
+const baseY=H-150;
+const y=baseY-(jumping?105:0);
+
+
+if(boostTime>0){
+
+ctx.font="30px Arial";
+ctx.textAlign="center";
+
+ctx.fillText(
+"🔥",
+x,
+y+48
+);
+}
+
+
+if(skateTime>0){
+
+ctx.font="30px Arial";
+
+ctx.fillText(
+"🛹",
+x,
+y+45
+);
+}
+
+
+ctx.font="65px Arial";
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+
+ctx.fillText(
+"🏃‍♂️",
+x,
+y
+);
+}
+
+
+function drawGame(){
+
+drawBackground();
+
+for(const object of objects){
+drawObject(object);
+}
+
+drawPlayer();
+
+
+if(magnetTime>0){
+
+ctx.fillStyle="#ffd43b";
+ctx.font="bold 14px Arial";
+ctx.textAlign="center";
+
+ctx.fillText(
+"🧲 MAGNET",
+W/2,
+80
+);
+}
+
+
+if(boostTime>0){
+
+ctx.fillStyle="#ff7414";
+ctx.font="bold 14px Arial";
+ctx.textAlign="center";
+
+ctx.fillText(
+"⚡ BOOST!",
+W/2,
+102
+);
+}
+
+}
+
+
+function gameLoop(time){
+
+if(!running)return;
+
+const delta=Math.min(time-lastTime,40);
+
+lastTime=time;
+
+updateGame(delta);
+drawGame();
+
+requestAnimationFrame(gameLoop);
+}
+
+
+function moveLeft(){
+
+if(!running)return;
+
+if(lane>0)lane--;
+}
+
+
+function moveRight(){
+
+if(!running)return;
+
+if(lane<2)lane++;
+}
+
+
+function jumpPlayer(){
+
+if(!running)return;
+
+if(!jumping){
+
+jumping=true;
+jumpTime=650;
+
+}
+}
+
+
+function activateBoost(){
+
+if(!running)return;
+
+boostTime=5000;
+}
+
+
+document.getElementById("playBtn")
+.addEventListener("click",startGame);
+
+document.getElementById("againBtn")
+.addEventListener("click",startGame);
+
+document.getElementById("leftBtn")
+.addEventListener("click",moveLeft);
+
+document.getElementById("rightBtn")
+.addEventListener("click",moveRight);
+
+document.getElementById("jumpBtn")
+.addEventListener("click",jumpPlayer);
+
+document.getElementById("boostBtn")
+.addEventListener("click",activateBoost);
+
+
+document.getElementById("shopBtn")
+.addEventListener("click",function(){
+
+alert("Run Blaze Shop coming soon!");
+
+});
+
+
+document.getElementById("missionBtn")
+.addEventListener("click",function(){
+
+alert("Run Blaze Missions coming soon!");
+
+});
+
+
+window.addEventListener("keydown",function(event){
+
+const key=event.key.toLowerCase();
+
+if(event.key==="ArrowLeft"||key==="a"){
+moveLeft();
+}
+
+if(event.key==="ArrowRight"||key==="d"){
+moveRight();
+}
+
+if(
+event.key==="ArrowUp"||
+event.key===" "||
+key==="w"
+){
+
+event.preventDefault();
+jumpPlayer();
+
+}
+
+if(key==="b"){
+activateBoost();
+}
+
+});
+
+
+let touchStartX=0;
+let touchStartY=0;
+
+
+canvas.addEventListener(
+"touchstart",
+function(event){
+
+const touch=event.touches[0];
+
+touchStartX=touch.clientX;
+touchStartY=touch.clientY;
+
+},
+{passive:true}
+);
+
+
+canvas.addEventListener(
+"touchend",
+function(event){
+
+const touch=event.changedTouches[0];
+
+const dx=touch.clientX-touchStartX;
+const dy=touch.clientY-touchStartY;
+
+
+if(Math.abs(dx)>Math.abs(dy)){
+
+if(dx>35)moveRight();
+if(dx<-35)moveLeft();
+
+}
+else{
+
+if(dy<-35)jumpPlayer();
+
+}
+
+},
+{passive:true}
+);
+
+
+updateHUD();
+
+</script>
+
+</body>
+</html>
