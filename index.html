@@ -4,2317 +4,1067 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Run Blaze</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
-html,body{
-width:100%;
-height:100%;
-overflow:hidden;
-background:#07111d;
-font-family:Arial,sans-serif;
-touch-action:none
-}
-
-body{
-display:flex;
-justify-content:center;
-align-items:center
-}
-
-#app{
-position:relative;
-width:min(100vw,520px);
-height:100vh;
-overflow:hidden;
-background:#07111d
-}
-
-canvas{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-display:block
-}
-
-.screen{
-position:absolute;
-inset:0;
-z-index:20;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center
-}
-
-#home{
-background:
-radial-gradient(circle at 50% 25%,#194d70 0,#0b2032 45%,#03080d 100%)
-}
-
-.logo{
-font-size:clamp(42px,12vw,64px);
-font-weight:900;
-letter-spacing:2px;
-color:#fff;
-text-shadow:
-0 5px 0 #07111d,
-0 0 25px #ff6b00
-}
-
-.subtitle{
-margin-top:8px;
-color:#ffc46b;
-letter-spacing:5px;
-font-size:13px
-}
-
-.play{
-margin-top:40px;
-width:230px;
-padding:18px;
-border:0;
-border-radius:18px;
-background:linear-gradient(#ffb300,#ff5b00);
-color:#fff;
-font-size:25px;
-font-weight:900;
-box-shadow:0 7px 0 #8d3000,0 15px 30px #0008
-}
-
-.play:active{
-transform:translateY(5px);
-box-shadow:0 2px 0 #8d3000
-}
-
-.homeStats{
-display:flex;
-gap:12px;
-margin-top:34px
-}
-
-.stat{
-width:95px;
-padding:12px 8px;
-border-radius:14px;
-text-align:center;
-background:#ffffff12;
-border:1px solid #ffffff20
-}
-
-.stat b{
-display:block;
-font-size:21px
-}
-
-.stat span{
-font-size:10px;
-color:#a8bac8
-}
-
-.brand{
-position:absolute;
-bottom:18px;
-color:#7890a2;
-font-size:11px;
-letter-spacing:2px
-}
-
-#hud{
-position:absolute;
-top:12px;
-left:12px;
-right:12px;
-z-index:10;
-display:none;
-justify-content:space-between;
-pointer-events:none
-}
-
-.hud{
-min-width:92px;
-padding:8px 12px;
-border-radius:12px;
-background:#04101bcc;
-border:1px solid #ffffff22
-}
-
-.hud small{
-display:block;
-color:#91a6b6;
-font-size:9px;
-text-transform:uppercase
-}
-
-.hud strong{
-font-size:20px
-}
-
-#power{
-position:absolute;
-top:70px;
-left:50%;
-transform:translateX(-50%);
-z-index:11;
-display:none;
-padding:7px 14px;
-border-radius:20px;
-background:#ff790044;
-border:1px solid #ffb00088;
-font-size:12px;
-font-weight:bold
-}
-
-#controls{
-position:absolute;
-bottom:14px;
-left:12px;
-right:12px;
-z-index:12;
-display:none;
-justify-content:space-between;
-pointer-events:none
-}
-
-.controlGroup{
-display:flex;
-gap:9px;
-pointer-events:auto
-}
-
-.ctrl{
-width:58px;
-height:58px;
-border-radius:17px;
-border:1px solid #ffffff28;
-background:#06111ddd;
-color:#fff;
-font-size:25px;
-font-weight:bold;
-box-shadow:0 5px 15px #0008
-}
-
-.ctrl:active{
-transform:scale(.93);
-background:#ffffff22
-}
-
-#gameOver{
-display:none;
-background:#02070dcc;
-backdrop-filter:blur(5px)
-}
-
-.gameOverTitle{
-font-size:48px;
-font-weight:900;
-color:#ff7600;
-text-shadow:0 4px #5a1e00
-}
-
-.result{
-margin-top:15px;
-font-size:19px
-}
-
-.again{
-margin-top:25px;
-padding:15px 30px;
-border-radius:15px;
-background:#ff6500;
-color:#fff;
-font-size:19px;
-font-weight:bold
-}
-
-#tip{
-position:absolute;
-top:75px;
-left:50%;
-transform:translateX(-50%);
-z-index:9;
-color:#ffffffaa;
-font-size:11px;
-white-space:nowrap
-}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#07111d}
+body{touch-action:none}
+#app{position:relative;width:100%;height:100%;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#home{background:linear-gradient(#07172d,#0d5b7a 55%,#101820);z-index:5;color:white;text-align:center}
+.panel{width:min(92%,430px);padding:28px 20px;border-radius:28px;background:rgba(5,12,22,.78);border:2px solid rgba(255,255,255,.16);box-shadow:0 18px 60px rgba(0,0,0,.45)}
+.logo{font-size:48px;font-weight:900;letter-spacing:2px;text-shadow:0 5px 0 #7b2600,0 10px 25px #000}
+.sub{margin:8px 0 22px;color:#ccecf7;font-size:15px}
+.charTitle{font-weight:800;margin-bottom:8px}
+.charRow{display:flex;gap:10px;justify-content:center;margin-bottom:18px}
+.charBtn,.playBtn{border:0;border-radius:16px;color:white;font-weight:800;cursor:pointer}
+.charBtn{padding:11px 18px;background:#16334b;border:2px solid #315e79}
+.charBtn.active{background:#e86b22;border-color:#ffbd52}
+.playBtn{width:100%;padding:17px;background:linear-gradient(135deg,#ff8a00,#ff3d00);font-size:23px;box-shadow:0 8px 25px rgba(255,80,0,.35)}
+.tip{margin-top:16px;color:#a9c9d4;font-size:12px}
+#hud{position:absolute;top:12px;left:12px;right:12px;display:none;justify-content:space-between;z-index:3;color:white;font-weight:800;text-shadow:0 2px 4px #000}
+.hudBox{background:rgba(3,12,20,.62);padding:8px 11px;border-radius:12px;border:1px solid rgba(255,255,255,.18);font-size:14px}
+#controls{position:absolute;bottom:15px;left:0;right:0;display:none;justify-content:space-between;align-items:end;padding:0 14px;z-index:4}
+.controlGroup{display:flex;gap:9px}
+.ctrl{width:56px;height:56px;border:0;border-radius:16px;background:rgba(4,19,29,.72);color:#fff;font-size:25px;font-weight:900;border:1px solid rgba(255,255,255,.2)}
+.ctrl:active{transform:scale(.92)}
+#gameOver{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:6;color:#fff;text-align:center}
+.overPanel{width:min(88%,370px);padding:28px;border-radius:25px;background:#101d2a;border:2px solid #36566d}
+.overPanel h2{font-size:34px;margin-bottom:12px}
+.overPanel p{margin:7px 0;color:#cfe1e8}
+.again{margin-top:18px;width:100%;padding:14px;border:0;border-radius:14px;background:#ff6b18;color:#fff;font-size:18px;font-weight:900}
+.small{font-size:12px;color:#91aab5;margin-top:12px}
 </style>
 </head>
-
 <body>
-
 <div id="app">
-
 <canvas id="canvas"></canvas>
 
 <div id="home" class="screen">
+<div class="panel">
+<div class="logo">🔥 RUN BLAZE</div>
+<div class="sub">Run across moving trains. Jump, slide and survive!</div>
+<div class="charTitle">Choose Runner</div>
 
-<div class="logo">RUN BLAZE</div>
-
-<div class="subtitle">
-ENDLESS RUNNER
+<div class="charRow">
+<button class="charBtn active" id="boyBtn">🏃 Boy</button>
+<button class="charBtn" id="girlBtn">🏃‍♀️ Girl</button>
 </div>
 
-<button id="playBtn" class="play">
-▶ PLAY
-</button>
-
-<div class="homeStats">
-
-<div class="stat">
-<b id="homeBest">0</b>
-<span>BEST</span>
+<button class="playBtn" id="playBtn">▶ PLAY</button>
+<div class="tip">← → Lane &nbsp; • &nbsp; ↑ Jump &nbsp; • &nbsp; ↓ Slide</div>
 </div>
-
-<div class="stat">
-<b>3</b>
-<span>LANES</span>
 </div>
-
-<div class="stat">
-<b>∞</b>
-<span>RUN</span>
-</div>
-
-</div>
-
-<div class="brand">
-PLAYTECH STUDIO
-</div>
-
-</div>
-
 
 <div id="hud">
-
-<div class="hud">
-<small>Score</small>
-<strong id="scoreText">0</strong>
+<div class="hudBox">🏆 Score <span id="score">0</span></div>
+<div class="hudBox">🪙 <span id="coins">0</span> &nbsp; ⭐ <span id="stars">0</span></div>
+<div class="hudBox">🔥 Best <span id="best">0</span></div>
 </div>
-
-<div class="hud">
-<small>Coins</small>
-<strong id="coinText">0</strong>
-</div>
-
-</div>
-
-
-<div id="power"></div>
-
-<div id="tip">
-← → Lane &nbsp; ↑ Jump &nbsp; ↓ Slide
-</div>
-
 
 <div id="controls">
-
 <div class="controlGroup">
-
-<button class="ctrl" id="leftBtn">
-◀
-</button>
-
-<button class="ctrl" id="rightBtn">
-▶
-</button>
-
+<button class="ctrl" id="leftBtn">◀</button>
+<button class="ctrl" id="rightBtn">▶</button>
 </div>
 
 <div class="controlGroup">
-
-<button class="ctrl" id="jumpBtn">
-▲
-</button>
-
-<button class="ctrl" id="slideBtn">
-▼
-</button>
-
+<button class="ctrl" id="jumpBtn">▲</button>
+<button class="ctrl" id="slideBtn">▼</button>
+</div>
 </div>
 
+<div id="gameOver">
+<div class="overPanel">
+<h2>💥 GAME OVER</h2>
+<p>Score: <b id="finalScore">0</b></p>
+<p>Coins: <b id="finalCoins">0</b></p>
+<p>Best: <b id="finalBest">0</b></p>
+<button class="again" id="againBtn">🔥 PLAY AGAIN</button>
+<div class="small">Playtech Studio</div>
 </div>
-
-
-<div id="gameOver" class="screen">
-
-<div class="gameOverTitle">
-GAME OVER
 </div>
-
-<div class="result">
-Score:
-<b id="finalScore">0</b>
-
-&nbsp;&nbsp;
-
-Coins:
-<b id="finalCoins">0</b>
 </div>
-
-<button id="againBtn" class="again">
-↻ PLAY AGAIN
-</button>
-
-<div class="brand">
-PLAYTECH STUDIO
-</div>
-
-</div>
-
-</div>
-
 
 <script>
-
 "use strict";
 
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
 
-const canvas =
-document.getElementById("canvas");
+const home=document.getElementById("home");
+const hud=document.getElementById("hud");
+const controls=document.getElementById("controls");
+const gameOverBox=document.getElementById("gameOver");
 
-const ctx =
-canvas.getContext("2d");
-
-
-const home =
-document.getElementById("home");
-
-const hud =
-document.getElementById("hud");
-
-const controls =
-document.getElementById("controls");
-
-const gameOver =
-document.getElementById("gameOver");
-
-const scoreText =
-document.getElementById("scoreText");
-
-const coinText =
-document.getElementById("coinText");
-
-const finalScore =
-document.getElementById("finalScore");
-
-const finalCoins =
-document.getElementById("finalCoins");
-
-const homeBest =
-document.getElementById("homeBest");
-
-const power =
-document.getElementById("power");
-
-const tip =
-document.getElementById("tip");
-
-
-let W = 0;
-let H = 0;
-let DPR = 1;
-
+let W=0,H=0,DPR=1;
 
 function resize(){
+DPR=Math.min(window.devicePixelRatio||1,2);
+W=window.innerWidth;
+H=window.innerHeight;
 
-DPR =
-Math.min(
-window.devicePixelRatio || 1,
-2
-);
+canvas.width=Math.floor(W*DPR);
+canvas.height=Math.floor(H*DPR);
 
-W =
-window.innerWidth;
-
-H =
-window.innerHeight;
-
-canvas.width =
-W * DPR;
-
-canvas.height =
-H * DPR;
-
-canvas.style.width =
-W + "px";
-
-canvas.style.height =
-H + "px";
-
-ctx.setTransform(
-DPR,
-0,
-0,
-DPR,
-0,
-0
-);
-
+ctx.setTransform(DPR,0,0,DPR,0,0);
 }
 
-
-window.addEventListener(
-"resize",
-resize
-);
-
+window.addEventListener("resize",resize);
 resize();
 
+const laneX=[-1,0,1];
 
-let running = false;
+let targetLane=1;
+let lanePos=1;
 
-let score = 0;
+let playerY=0;
+let vy=0;
 
-let coins = 0;
+let jumping=false;
+let sliding=false;
+let slideTimer=0;
 
-let best =
-Number(
-localStorage.getItem(
-"runBlazeBest"
-) || 0
-);
+let running=false;
+let gameEnded=false;
 
-homeBest.textContent =
-best;
+let lastTime=0;
+let spawnTimer=0;
 
+let speed=0.42;
+let distance=0;
 
-let targetLane = 0;
+let score=0;
+let coins=0;
+let stars=0;
 
-let playerLane = 0;
+let best=Number(localStorage.getItem("runBlazeBest")||0);
 
-let playerY = 0;
+let magnetTimer=0;
+let boostTimer=0;
+let shieldTimer=0;
 
-let verticalVelocity = 0;
+let objects=[];
+let trainOffset=0;
 
-let jumping = false;
+let selected="boy";
 
-let sliding = false;
+document.getElementById("best").textContent=best;
 
-let slideTimer = 0;
+function laneScreenX(lane,z){
+const center=W/2;
+const spread=W*0.42;
+const t=1-z;
 
-let gameSpeed = 0.38;
-
-let spawnTimer = 0;
-
-let roadOffset = 0;
-
-let lastTime = 0;
-
-let objects = [];
-
-let magnetTimer = 0;
-
-let boostTimer = 0;
-
-let skateTimer = 0;
-
-
-function horizonY(){
-
-return H * 0.28;
-
+return center+laneX[lane]*spread*(0.22+0.78*t);
 }
 
+function groundY(z){
+const horizon=H*0.27;
+const bottom=H*0.84;
 
-function groundY(){
-
-return H * 0.87;
-
+return horizon+(bottom-horizon)*(1-z);
 }
 
-
-function laneX(lane){
-
-return (
-W / 2 +
-lane * (W * 0.72 / 3)
-);
-
+function scaleZ(z){
+return 0.25+1.35*(1-z);
 }
-
 
 function startGame(){
 
-home.style.display =
-"none";
+running=true;
+gameEnded=false;
 
-gameOver.style.display =
-"none";
+home.style.display="none";
+gameOverBox.style.display="none";
 
-hud.style.display =
-"flex";
+hud.style.display="flex";
+controls.style.display="flex";
 
-controls.style.display =
-"flex";
+targetLane=1;
+lanePos=1;
 
-tip.style.display =
-"block";
+playerY=0;
+vy=0;
 
-running = true;
+jumping=false;
+sliding=false;
+slideTimer=0;
 
-score = 0;
+spawnTimer=.35;
+speed=.42;
 
-coins = 0;
+distance=0;
+score=0;
+coins=0;
+stars=0;
 
-targetLane = 0;
+magnetTimer=0;
+boostTimer=0;
+shieldTimer=0;
 
-playerLane = 0;
+objects=[];
+trainOffset=0;
 
-playerY = 0;
-
-verticalVelocity = 0;
-
-jumping = false;
-
-sliding = false;
-
-slideTimer = 0;
-
-gameSpeed = 0.38;
-
-spawnTimer = 0.5;
-
-roadOffset = 0;
-
-magnetTimer = 0;
-
-boostTimer = 0;
-
-skateTimer = 0;
-
-objects = [];
-
-lastTime =
-performance.now();
+lastTime=performance.now();
 
 requestAnimationFrame(loop);
-
 }
-
 
 function endGame(){
 
-if(!running){
-return;
+if(!running)return;
+
+running=false;
+gameEnded=true;
+
+if(score>best){
+best=Math.floor(score);
+localStorage.setItem("runBlazeBest",best);
 }
 
-running = false;
+document.getElementById("finalScore").textContent=Math.floor(score);
+document.getElementById("finalCoins").textContent=coins;
+document.getElementById("finalBest").textContent=best;
 
-finalScore.textContent =
-Math.floor(score);
+gameOverBox.style.display="flex";
 
-finalCoins.textContent =
-coins;
-
-if(score > best){
-
-best =
-Math.floor(score);
-
-localStorage.setItem(
-"runBlazeBest",
-best
-);
-
-homeBest.textContent =
-best;
-
+hud.style.display="none";
+controls.style.display="none";
 }
-
-hud.style.display =
-"none";
-
-controls.style.display =
-"none";
-
-gameOver.style.display =
-"flex";
-
-}
-
 
 function moveLeft(){
 
-if(!running){
-return;
+if(!running)return;
+
+targetLane=Math.max(0,targetLane-1);
 }
-
-targetLane--;
-
-if(targetLane < -1){
-targetLane = -1;
-}
-
-}
-
 
 function moveRight(){
 
-if(!running){
-return;
+if(!running)return;
+
+targetLane=Math.min(2,targetLane+1);
 }
-
-targetLane++;
-
-if(targetLane > 1){
-targetLane = 1;
-}
-
-}
-
 
 function jump(){
 
-if(!running){
-return;
+if(!running || jumping || sliding)return;
+
+jumping=true;
+vy=1.25;
 }
-
-if(jumping){
-return;
-}
-
-sliding = false;
-
-slideTimer = 0;
-
-jumping = true;
-
-playerY = 0;
-
-verticalVelocity = 1.35;
-
-}
-
 
 function slide(){
 
-if(!running){
-return;
+if(!running || jumping)return;
+
+sliding=true;
+slideTimer=.55;
 }
+
+function spawn(type,lane,z=.98){
+
+objects.push({
+type,
+lane,
+z,
+collected:false,
+spin:Math.random()*6.28
+});
+}
+
+function spawnPattern(){
+
+const r=Math.random();
+const lane=Math.floor(Math.random()*3);
+
+if(r<.34){
+
+spawn("coin",lane,.98);
+
+if(Math.random()<.6)
+spawn("coin",lane,.84);
+
+if(Math.random()<.45)
+spawn("coin",lane,.70);
+
+}else if(r<.49){
+
+spawn("star",lane,.98);
+
+}else if(r<.58){
+
+spawn("key",lane,.98);
+
+}else if(r<.66){
+
+spawn("magnet",lane,.98);
+
+}else if(r<.73){
+
+spawn("boost",lane,.98);
+
+}else if(r<.79){
+
+spawn("shield",lane,.98);
+
+}else{
+
+spawn("obstacle",lane,.98);
+}
+
+if(Math.random()<.28){
+
+const other=(lane+1+Math.floor(Math.random()*2))%3;
+
+spawn("coin",other,1.05);
+}
+}
+
+function update(dt){
+
+distance+=dt*speed;
+
+score+=dt*100*(boostTimer>0?1.8:1);
+
+speed=Math.min(.78,.42+distance*.0025);
+
+trainOffset=(trainOffset+dt*speed*1.8)%1;
+
+if(boostTimer>0)
+boostTimer-=dt;
+
+if(magnetTimer>0)
+magnetTimer-=dt;
+
+if(shieldTimer>0)
+shieldTimer-=dt;
+
+const laneEase=Math.min(1,dt*10);
+
+lanePos+=(targetLane-lanePos)*laneEase;
 
 if(jumping){
 
-if(playerY > 0.35){
-verticalVelocity = -1.8;
+playerY+=vy*dt;
+
+vy-=3.1*dt;
+
+if(playerY<=0){
+
+playerY=0;
+vy=0;
+jumping=false;
 }
-
-return;
 }
-
-sliding = true;
-
-slideTimer = 0.65;
-
-}
-
-
-function createObject(){
-
-const r =
-Math.random();
-
-let type;
-
-if(r < 0.54){
-type = "coin";
-}
-else if(r < 0.64){
-type = "star";
-}
-else if(r < 0.72){
-type = "key";
-}
-else if(r < 0.77){
-type = "magnet";
-}
-else if(r < 0.82){
-type = "boost";
-}
-else if(r < 0.86){
-type = "skate";
-}
-else{
-type = "obstacle";
-}
-
-objects.push({
-
-lane:
-Math.floor(
-Math.random() * 3
-) - 1,
-
-z:1.12,
-
-type:type,
-
-collected:false
-
-});
-
-}
-
-
-function createCoinLine(){
-
-const lane =
-Math.floor(
-Math.random() * 3
-) - 1;
-
-for(
-let i = 0;
-i < 5;
-i++
-){
-
-objects.push({
-
-lane:lane,
-
-z:
-1.1 +
-i * 0.075,
-
-type:"coin",
-
-collected:false
-
-});
-
-}
-
-}
-
-
-function createObstacle(){
-
-objects.push({
-
-lane:
-Math.floor(
-Math.random() * 3
-) - 1,
-
-z:1.12,
-
-type:"obstacle",
-
-collected:false
-
-});
-
-}
-
-
-function spawnObjects(dt){
-
-spawnTimer -= dt;
-
-if(spawnTimer > 0){
-return;
-}
-
-const r =
-Math.random();
-
-if(r < 0.18){
-
-createCoinLine();
-
-}
-else if(r < 0.42){
-
-createObstacle();
-
-}
-else{
-
-createObject();
-
-}
-
-spawnTimer =
-Math.max(
-0.42,
-0.85 -
-gameSpeed * 0.35
-);
-
-}
-
-
-function updatePlayer(dt){
-
-playerLane +=
-(
-targetLane -
-playerLane
-) *
-Math.min(
-1,
-7.5 * dt
-);
-
-
-if(jumping){
-
-playerY +=
-verticalVelocity * dt;
-
-verticalVelocity -=
-3.7 * dt;
-
-if(playerY <= 0){
-
-playerY = 0;
-
-verticalVelocity = 0;
-
-jumping = false;
-
-}
-
-}
-
 
 if(sliding){
 
-slideTimer -= dt;
+slideTimer-=dt;
 
-if(slideTimer <= 0){
+if(slideTimer<=0){
 
-slideTimer = 0;
-
-sliding = false;
-
+slideTimer=0;
+sliding=false;
+}
 }
 
+spawnTimer-=dt;
+
+if(spawnTimer<=0){
+
+spawnPattern();
+
+spawnTimer=Math.max(.48,.78-speed*.42);
 }
 
+for(let i=objects.length-1;i>=0;i--){
+
+const o=objects[i];
+
+o.z-=dt*speed*1.35;
+o.spin+=dt*5;
+
+if(o.z<-.12){
+
+objects.splice(i,1);
+continue;
 }
 
+if(o.collected)
+continue;
+
+const sameLane=Math.abs(o.lane-lanePos)<.38;
+const near=o.z<.105 && o.z>-.04;
+
+if(
+magnetTimer>0 &&
+o.type==="coin" &&
+o.z<.55 &&
+o.z>.03 &&
+Math.abs(o.lane-lanePos)<1.25
+){
+
+o.lane=Math.round(lanePos);
+}
+
+if(sameLane && near){
+
+if(o.type==="obstacle"){
+
+if(shieldTimer>0){
+
+shieldTimer=0;
+o.collected=true;
+
+}else if(jumping && playerY>.28){
+
+o.collected=true;
+
+}else{
+
+endGame();
+return;
+}
+
+}else{
+
+collectObject(o);
+}
+}
+}
+
+updateHUD();
+}
 
 function collectObject(o){
 
-if(o.collected){
-return;
-}
+o.collected=true;
 
-o.collected = true;
-
-
-if(o.type === "coin"){
-
+if(o.type==="coin"){
 coins++;
-
-score += 50;
-
+score+=50;
 }
 
-
-else if(o.type === "star"){
-
-score += 150;
-
+else if(o.type==="star"){
+stars++;
+score+=150;
 }
 
-
-else if(o.type === "key"){
-
-score += 300;
-
+else if(o.type==="key"){
+score+=250;
 }
 
-
-else if(o.type === "magnet"){
-
-magnetTimer = 8;
-
+else if(o.type==="magnet"){
+magnetTimer=7;
+score+=100;
 }
 
-
-else if(o.type === "boost"){
-
-boostTimer = 5;
-
+else if(o.type==="boost"){
+boostTimer=5;
+score+=100;
 }
 
-
-else if(o.type === "skate"){
-
-skateTimer = 8;
-
+else if(o.type==="shield"){
+shieldTimer=8;
+score+=100;
+}
 }
 
+function updateHUD(){
+
+document.getElementById("score").textContent=Math.floor(score);
+document.getElementById("coins").textContent=coins;
+document.getElementById("stars").textContent=stars;
+document.getElementById("best").textContent=best;
 }
-
-
-function updateObjects(dt){
-
-for(
-let i = objects.length - 1;
-i >= 0;
-i--
-){
-
-const o =
-objects[i];
-
-o.z -=
-gameSpeed * dt;
-
-
-if(o.collected){
-
-objects.splice(i,1);
-
-continue;
-
-}
-
-
-/* MAGNET */
-
-if(
-magnetTimer > 0 &&
-o.type === "coin" &&
-o.z < 0.65 &&
-o.z > 0.02
-){
-
-if(
-Math.abs(
-o.lane -
-targetLane
-) <= 1
-){
-
-o.lane =
-targetLane;
-
-}
-
-}
-
-
-/* COLLISION */
-
-if(
-o.z < 0.105 &&
-o.z > 0.015 &&
-Math.abs(
-o.lane -
-playerLane
-) < 0.34
-){
-
-if(o.type === "obstacle"){
-
-/* JUMP OVER STONE */
-
-if(playerY > 0.32){
-
-o.collected = true;
-
-}
-
-/* SKATE PROTECTS ONCE */
-
-else if(skateTimer > 0){
-
-skateTimer = 0;
-
-o.collected = true;
-
-}
-
-/* HIT = GAME OVER */
-
-else{
-
-endGame();
-
-return;
-
-}
-
-}
-
-else{
-
-collectObject(o);
-
-}
-
-}
-
-
-/* REMOVE OLD OBJECT */
-
-if(o.z < -0.12){
-
-objects.splice(i,1);
-
-}
-
-}
-
-}
-
 
 function drawSky(){
 
-const gradient =
-ctx.createLinearGradient(
-0,
-0,
-0,
-H
-);
+const g=ctx.createLinearGradient(0,0,0,H);
 
-gradient.addColorStop(
-0,
-"#58b8ed"
-);
+g.addColorStop(0,"#4fc8ee");
+g.addColorStop(.58,"#dff7ff");
+g.addColorStop(1,"#9bc4d0");
 
-gradient.addColorStop(
-0.45,
-"#b9e8ff"
-);
+ctx.fillStyle=g;
+ctx.fillRect(0,0,W,H);
 
-gradient.addColorStop(
-1,
-"#e8f5fa"
-);
-
-ctx.fillStyle =
-gradient;
-
-ctx.fillRect(
-0,
-0,
-W,
-H
-);
-
-}
-
-
-function drawSun(){
-
-ctx.fillStyle =
-"#ffe79a";
+ctx.fillStyle="#ffd66b";
 
 ctx.beginPath();
-
-ctx.arc(
-W * 0.78,
-H * 0.17,
-42,
-0,
-Math.PI * 2
-);
-
+ctx.arc(W*.78,H*.17,Math.min(W,H)*.055,0,Math.PI*2);
 ctx.fill();
 
+ctx.fillStyle="#506d7c";
+
+for(let i=0;i<9;i++){
+
+const bw=35+(i%3)*14;
+const bh=55+(i%4)*25;
+
+const x=i*(W/8)-20;
+const y=H*.27-bh;
+
+ctx.fillRect(x,y,bw,bh);
+
+ctx.fillStyle="#c9e6ed";
+
+for(let yy=y+10;yy<y+bh-5;yy+=15){
+
+ctx.fillRect(x+8,yy,5,6);
+
+if(bw>45)
+ctx.fillRect(x+22,yy,5,6);
 }
 
-
-function drawCity(){
-
-const base =
-horizonY() + 35;
-
-for(
-let i = 0;
-i < 12;
-i++
-){
-
-const x =
-i * (W / 10) - 20;
-
-const height =
-25 +
-(i * 17) % 75;
-
-ctx.fillStyle =
-i % 2 ?
-"#6d8796" :
-"#7899a9";
-
-ctx.fillRect(
-x,
-base - height,
-55,
-height
-);
-
-ctx.fillStyle =
-"#d7edf2";
-
-for(
-let y =
-base - height + 10;
-y <
-base - 8;
-y += 15
-){
-
-ctx.fillRect(
-x + 9,
-y,
-6,
-6
-);
-
-ctx.fillRect(
-x + 28,
-y,
-6,
-6
-);
-
+ctx.fillStyle="#506d7c";
+}
 }
 
-}
+function drawTrainWorld(){
 
-}
+const horizon=H*.28;
+const bottom=H*.88;
 
+ctx.fillStyle="#384957";
+ctx.fillRect(0,horizon,W,H-horizon);
 
-function drawRoad(){
+ctx.fillStyle="#26343e";
 
-const hy =
-horizonY();
+ctx.beginPath();
+ctx.moveTo(0,horizon);
+ctx.lineTo(W,horizon);
+ctx.lineTo(W,bottom);
+ctx.lineTo(0,bottom);
+ctx.closePath();
+ctx.fill();
 
-const gy =
-groundY();
+for(let l=0;l<3;l++){
 
-const topWidth =
-W * 0.16;
+const topL=laneScreenX(l,.98)-W*.15;
+const topR=laneScreenX(l,.98)+W*.15;
 
-const bottomWidth =
-W * 0.95;
+const botL=laneScreenX(l,0)-W*.25;
+const botR=laneScreenX(l,0)+W*.25;
 
+ctx.fillStyle=l===1?"#b9362e":"#a92f2a";
 
 ctx.beginPath();
 
-ctx.moveTo(
-W / 2 - topWidth / 2,
-hy
-);
-
-ctx.lineTo(
-W / 2 + topWidth / 2,
-hy
-);
-
-ctx.lineTo(
-W / 2 + bottomWidth / 2,
-gy
-);
-
-ctx.lineTo(
-W / 2 - bottomWidth / 2,
-gy
-);
+ctx.moveTo(topL,horizon+18);
+ctx.lineTo(topR,horizon+18);
+ctx.lineTo(botR,bottom);
+ctx.lineTo(botL,bottom);
 
 ctx.closePath();
-
-ctx.fillStyle =
-"#30343a";
-
 ctx.fill();
 
-
-/* ROAD EDGES */
-
-ctx.strokeStyle =
-"#dddddd";
-
-ctx.lineWidth = 5;
+ctx.strokeStyle="#e9a45a";
+ctx.lineWidth=3;
 
 ctx.beginPath();
 
-ctx.moveTo(
-W / 2 - topWidth / 2,
-hy
-);
+ctx.moveTo(topL,horizon+18);
+ctx.lineTo(botL,bottom);
 
-ctx.lineTo(
-W / 2 - bottomWidth / 2,
-gy
-);
-
-ctx.moveTo(
-W / 2 + topWidth / 2,
-hy
-);
-
-ctx.lineTo(
-W / 2 + bottomWidth / 2,
-gy
-);
+ctx.moveTo(topR,horizon+18);
+ctx.lineTo(botR,bottom);
 
 ctx.stroke();
 
+for(let k=0;k<7;k++){
 
-/* LANE LINES */
+const z=.9-k*.12;
+const y=groundY(z);
+const cx=laneScreenX(l,z);
+const ww=W*(.10+.15*(1-z));
 
-roadOffset =
-(
-roadOffset +
-gameSpeed * 0.012
-) % 1;
-
-
-for(
-const lane of [-1,1]
-){
-
-for(
-let i = 0;
-i < 18;
-i++
-){
-
-const t =
-(
-i / 18 +
-roadOffset
-) % 1;
-
-const y =
-hy +
-(gy - hy) * t;
-
-const width =
-topWidth +
-(bottomWidth - topWidth) * t;
-
-const x =
-W / 2 +
-lane * (width / 3);
-
-const dash =
-4 +
-t * 30;
-
-ctx.strokeStyle =
-"#ffffffaa";
-
-ctx.lineWidth =
-2 +
-t * 3;
+ctx.strokeStyle="rgba(255,255,255,.22)";
+ctx.lineWidth=2;
 
 ctx.beginPath();
+ctx.moveTo(cx-ww,y);
+ctx.lineTo(cx+ww,y);
+ctx.stroke();
+}
+}
 
-ctx.moveTo(
-x,
-y
-);
+for(let l=0;l<2;l++){
 
-ctx.lineTo(
-x,
-y + dash
-);
+const xTop=(laneScreenX(l,.98)+laneScreenX(l+1,.98))/2;
+const xBot=(laneScreenX(l,0)+laneScreenX(l+1,0))/2;
 
+ctx.strokeStyle="#d6dce0";
+ctx.lineWidth=5;
+
+ctx.beginPath();
+ctx.moveTo(xTop,horizon);
+ctx.lineTo(xBot,bottom);
 ctx.stroke();
 
-}
-
-}
-
-}
-
-
-function objectPosition(o){
-
-const t =
-Math.max(
-0,
-Math.min(
-1,
-1 - o.z
-)
-);
-
-const hy =
-horizonY();
-
-const gy =
-groundY();
-
-const y =
-hy +
-(gy - hy) * t;
-
-const topWidth =
-W * 0.16;
-
-const bottomWidth =
-W * 0.95;
-
-const width =
-topWidth +
-(bottomWidth - topWidth) * t;
-
-const x =
-W / 2 +
-o.lane * (width / 3);
-
-return{
-
-x:x,
-
-y:y,
-
-scale:
-0.25 +
-t * 1.4
-
-};
-
-}
-
-
-function drawStar(
-x,
-y,
-r
-){
-
-ctx.fillStyle =
-"#ffe331";
+ctx.strokeStyle="#6e777c";
+ctx.lineWidth=2;
 
 ctx.beginPath();
-
-for(
-let i = 0;
-i < 10;
-i++
-){
-
-const angle =
--Math.PI / 2 +
-i * Math.PI / 5;
-
-const radius =
-i % 2 === 0 ?
-r :
-r * 0.45;
-
-const px =
-x +
-Math.cos(angle) *
-radius;
-
-const py =
-y +
-Math.sin(angle) *
-radius;
-
-if(i === 0){
-
-ctx.moveTo(
-px,
-py
-);
-
-}
-else{
-
-ctx.lineTo(
-px,
-py
-);
-
+ctx.moveTo(xTop+8,horizon);
+ctx.lineTo(xBot+8,bottom);
+ctx.stroke();
 }
 
+ctx.fillStyle="#344c58";
+
+for(let i=0;i<6;i++){
+
+const x=(i*173+distance*90)%(W+220)-110;
+const h=45+(i%3)*30;
+
+ctx.fillRect(x,horizon-h,65,h);
+
+ctx.fillStyle="#d5ebef";
+
+for(let q=0;q<3;q++)
+ctx.fillRect(x+10+q*17,horizon-h+12,7,7);
+
+ctx.fillStyle="#344c58";
 }
-
-ctx.closePath();
-
-ctx.fill();
-
 }
-
 
 function drawObjects(){
 
-const sorted =
-[...objects].sort(
-(a,b) =>
-b.z - a.z
-);
+for(const o of objects){
 
+if(o.collected)continue;
 
-for(
-const o of sorted
-){
-
-if(o.collected){
-continue;
-}
-
-const p =
-objectPosition(o);
-
-const s =
-p.scale;
+const x=laneScreenX(o.lane,o.z);
+const y=groundY(o.z);
+const s=scaleZ(o.z);
 
 ctx.save();
 
-ctx.translate(
-p.x,
-p.y
-);
+ctx.translate(x,y-24*s);
+ctx.scale(s,s);
 
+if(o.type==="coin"){
 
-if(o.type === "coin"){
-
-ctx.rotate(
-performance.now() / 250
-);
-
-ctx.fillStyle =
-"#ffd21c";
+ctx.fillStyle="#ffd33d";
 
 ctx.beginPath();
-
-ctx.arc(
-0,
--25 * s,
-15 * s,
-0,
-Math.PI * 2
-);
-
+ctx.arc(0,0,15,0,Math.PI*2);
 ctx.fill();
 
-ctx.fillStyle =
-"#fff29a";
-
-ctx.font =
-`${12*s}px Arial`;
-
-ctx.textAlign =
-"center";
-
-ctx.fillText(
-"$",
-0,
--21 * s
-);
-
-}
-
-
-else if(o.type === "star"){
-
-drawStar(
-0,
--28 * s,
-17 * s
-);
-
-}
-
-
-else if(o.type === "key"){
-
-ctx.strokeStyle =
-"#ffdc39";
-
-ctx.lineWidth =
-7 * s;
-
-ctx.beginPath();
-
-ctx.arc(
--5*s,
--30*s,
-9*s,
-0,
-Math.PI*2
-);
-
+ctx.strokeStyle="#ff9b00";
+ctx.lineWidth=3;
 ctx.stroke();
 
-ctx.beginPath();
+ctx.fillStyle="#fff2a4";
+ctx.font="bold 12px Arial";
+ctx.textAlign="center";
+ctx.fillText("C",0,4);
 
-ctx.moveTo(
-3*s,
--30*s
-);
+}else if(o.type==="star"){
 
-ctx.lineTo(
-22*s,
--30*s
-);
+ctx.fillStyle="#ffe95a";
+starShape(0,0,18,8,5);
 
-ctx.lineTo(
-18*s,
--23*s
-);
+}else if(o.type==="key"){
 
-ctx.moveTo(
-14*s,
--30*s
-);
-
-ctx.lineTo(
-10*s,
--24*s
-);
-
-ctx.stroke();
-
-}
-
-
-else if(o.type === "magnet"){
-
-ctx.font =
-`${30*s}px Arial`;
-
-ctx.textAlign =
-"center";
-
-ctx.fillText(
-"🧲",
-0,
--25*s
-);
-
-}
-
-
-else if(o.type === "boost"){
-
-ctx.font =
-`${30*s}px Arial`;
-
-ctx.textAlign =
-"center";
-
-ctx.fillText(
-"🔥",
-0,
--25*s
-);
-
-}
-
-
-else if(o.type === "skate"){
-
-ctx.font =
-`${30*s}px Arial`;
-
-ctx.textAlign =
-"center";
-
-ctx.fillText(
-"🛹",
-0,
--25*s
-);
-
-}
-
-
-else if(o.type === "obstacle"){
-
-const width =
-42*s;
-
-const height =
-45*s;
-
-ctx.fillStyle =
-"#60666d";
-
-ctx.fillRect(
--width/2,
--height,
-width,
-height
-);
-
-ctx.fillStyle =
-"#858b91";
-
-ctx.fillRect(
--width/2 + 5*s,
--height + 5*s,
-width - 10*s,
-8*s
-);
-
-ctx.strokeStyle =
-"#252a2f";
-
-ctx.lineWidth =
-4*s;
-
-ctx.strokeRect(
--width/2,
--height,
-width,
-height
-);
-
-}
-
-ctx.restore();
-
-}
-
-}
-
-
-function drawPlayer(){
-
-const x =
-laneX(playerLane);
-
-const baseY =
-groundY() -
-12 -
-playerY * 180;
-
-const time =
-performance.now() / 100;
-
-const bob =
-jumping ?
-0 :
-Math.sin(
-time * 0.8
-) * 4;
-
-
-ctx.save();
-
-ctx.translate(
-x,
-baseY
-);
-
-
-/* SHADOW */
-
-ctx.globalAlpha =
-0.35;
-
-ctx.fillStyle =
-"#000";
+ctx.fillStyle="#f5c84b";
 
 ctx.beginPath();
-
-ctx.ellipse(
-0,
-6,
-25,
-8,
-0,
-0,
-Math.PI * 2
-);
-
+ctx.arc(-6,0,9,0,Math.PI*2);
 ctx.fill();
 
-ctx.globalAlpha = 1;
+ctx.fillRect(0,-3,22,6);
+ctx.fillRect(15,-3,4,11);
 
+}else if(o.type==="magnet"){
 
-/* SKATE */
-
-if(skateTimer > 0){
-
-ctx.strokeStyle =
-"#66e8ff";
-
-ctx.lineWidth = 4;
+ctx.strokeStyle="#ff4b4b";
+ctx.lineWidth=8;
 
 ctx.beginPath();
-
-ctx.arc(
-0,
--28,
-34,
-0,
-Math.PI * 2
-);
-
+ctx.arc(0,0,13,0,Math.PI);
 ctx.stroke();
 
-}
+ctx.fillStyle="#fff";
 
+ctx.fillRect(-17,-2,7,8);
+ctx.fillRect(10,-2,7,8);
 
-/* BOOST */
+}else if(o.type==="boost"){
 
-if(boostTimer > 0){
+ctx.fillStyle="#57e8ff";
 
-ctx.fillStyle =
-"#ff7b00";
+ctx.beginPath();
+ctx.arc(0,0,18,0,Math.PI*2);
+ctx.fill();
+
+ctx.fillStyle="#fff";
 
 ctx.beginPath();
 
-ctx.moveTo(
--10,
-25
-);
-
-ctx.lineTo(
-0,
-55
-);
-
-ctx.lineTo(
-10,
-25
-);
-
+ctx.moveTo(3,-13);
+ctx.lineTo(-7,1);
+ctx.lineTo(1,1);
+ctx.lineTo(-3,13);
+ctx.lineTo(9,-3);
+ctx.lineTo(1,-3);
 ctx.closePath();
 
 ctx.fill();
 
+}else if(o.type==="shield"){
+
+ctx.fillStyle="#6f9cff";
+
+ctx.beginPath();
+ctx.arc(0,0,17,0,Math.PI*2);
+ctx.fill();
+
+ctx.fillStyle="#fff";
+ctx.font="bold 16px Arial";
+ctx.textAlign="center";
+ctx.fillText("S",0,6);
+
+}else if(o.type==="obstacle"){
+
+ctx.fillStyle="#202b34";
+ctx.fillRect(-27,-22,54,42);
+
+ctx.fillStyle="#e44732";
+ctx.fillRect(-24,-19,48,10);
+
+ctx.fillStyle="#f2d25c";
+ctx.fillRect(-19,-4,38,5);
+
+ctx.fillStyle="#111";
+
+ctx.fillRect(-17,7,12,10);
+ctx.fillRect(5,7,12,10);
 }
 
+ctx.restore();
+}
+}
 
-const bodyY =
-bob +
-(sliding ? 15 : 0);
-
-
-/* BODY */
-
-ctx.fillStyle =
-"#e94d25";
-
-ctx.fillRect(
--15,
-bodyY - 45,
-30,
-40
-);
-
-
-/* HEAD */
-
-ctx.fillStyle =
-"#f2b37f";
+function starShape(cx,cy,outer,inner,points){
 
 ctx.beginPath();
 
-ctx.arc(
-0,
-bodyY - 60,
-14,
-0,
-Math.PI * 2
-);
+for(let i=0;i<points*2;i++){
 
+const a=-Math.PI/2+i*Math.PI/points;
+const r=i%2===0?outer:inner;
+
+const x=cx+Math.cos(a)*r;
+const y=cy+Math.sin(a)*r;
+
+if(i===0)
+ctx.moveTo(x,y);
+else
+ctx.lineTo(x,y);
+}
+
+ctx.closePath();
 ctx.fill();
+}
 
+function drawPlayer(){
 
-/* HAIR */
+const x=laneScreenX(Math.round(lanePos),0);
 
-ctx.fillStyle =
-"#211914";
+const y=groundY(0)-22-playerY*H*.28;
+
+const bob=jumping?0:Math.sin(performance.now()/90)*3;
+
+const lean=(targetLane-lanePos)*.22;
+
+ctx.save();
+
+ctx.translate(x,y+bob);
+ctx.rotate(lean);
+
+if(shieldTimer>0){
+
+ctx.strokeStyle="rgba(100,190,255,.8)";
+ctx.lineWidth=4;
 
 ctx.beginPath();
+ctx.arc(0,-45,42,0,Math.PI*2);
+ctx.stroke();
+}
 
-ctx.arc(
-0,
-bodyY - 65,
-14,
-Math.PI,
-Math.PI * 2
-);
+ctx.save();
 
+ctx.scale(1,.3);
+
+ctx.fillStyle="rgba(0,0,0,.3)";
+
+ctx.beginPath();
+ctx.ellipse(0,12,27,12,0,0,Math.PI*2);
 ctx.fill();
-
-
-/* RUNNING LEGS */
-
-const legMove =
-sliding ?
-0 :
-Math.sin(
-time * 0.8
-) * 9;
-
-ctx.strokeStyle =
-"#26384b";
-
-ctx.lineWidth = 8;
-
-ctx.lineCap =
-"round";
-
-ctx.beginPath();
-
-ctx.moveTo(
--7,
-bodyY - 7
-);
-
-ctx.lineTo(
--13 + legMove,
-bodyY + 19
-);
-
-ctx.moveTo(
-7,
-bodyY - 7
-);
-
-ctx.lineTo(
-13 - legMove,
-bodyY + 19
-);
-
-ctx.stroke();
-
-
-/* RUNNING ARMS */
-
-const armMove =
-Math.sin(
-time * 0.8
-) * 12;
-
-ctx.strokeStyle =
-"#e3a272";
-
-ctx.lineWidth = 7;
-
-ctx.beginPath();
-
-ctx.moveTo(
--13,
-bodyY - 37
-);
-
-ctx.lineTo(
--25 - armMove * .5,
-bodyY - 18
-);
-
-ctx.moveTo(
-13,
-bodyY - 37
-);
-
-ctx.lineTo(
-25 + armMove * .5,
-bodyY - 18
-);
-
-ctx.stroke();
-
 
 ctx.restore();
 
+const skin="#d89568";
+const shirt=selected==="boy"?"#1677e8":"#e83d8c";
+const pants=selected==="boy"?"#172b55":"#54205c";
+
+if(sliding){
+
+ctx.rotate(-.25);
+
+ctx.fillStyle=shirt;
+ctx.fillRect(-20,-42,40,25);
+
+ctx.fillStyle=skin;
+
+ctx.beginPath();
+ctx.arc(25,-39,13,0,Math.PI*2);
+ctx.fill();
+
+ctx.fillStyle=pants;
+ctx.fillRect(-2,-18,32,11);
+
+ctx.fillStyle="#222";
+ctx.fillRect(22,-8,25,7);
+
+}else{
+
+ctx.strokeStyle=pants;
+ctx.lineWidth=10;
+ctx.lineCap="round";
+
+const run=Math.sin(performance.now()/80)*10;
+
+ctx.beginPath();
+ctx.moveTo(-8,-13);
+ctx.lineTo(-15+run*.35,10);
+ctx.lineTo(-25+run*.45,18);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(8,-13);
+ctx.lineTo(15-run*.35,10);
+ctx.lineTo(25-run*.45,18);
+ctx.stroke();
+
+ctx.strokeStyle="#101820";
+ctx.lineWidth=6;
+
+ctx.beginPath();
+ctx.moveTo(-25+run*.45,18);
+ctx.lineTo(-36+run*.45,18);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(25-run*.45,18);
+ctx.lineTo(36-run*.45,18);
+ctx.stroke();
+
+ctx.fillStyle=shirt;
+
+ctx.beginPath();
+ctx.roundRect(-18,-58,36,45,10);
+ctx.fill();
+
+ctx.strokeStyle=skin;
+ctx.lineWidth=8;
+
+ctx.beginPath();
+ctx.moveTo(-15,-48);
+ctx.lineTo(-29-run*.35,-28);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(15,-48);
+ctx.lineTo(29+run*.35,-28);
+ctx.stroke();
+
+ctx.fillStyle=skin;
+
+ctx.beginPath();
+ctx.arc(0,-75,17,0,Math.PI*2);
+ctx.fill();
+
+ctx.fillStyle=selected==="boy"?"#2a1a12":"#24151b";
+
+ctx.beginPath();
+
+if(selected==="boy"){
+
+ctx.arc(0,-81,18,Math.PI,Math.PI*2);
+ctx.fill();
+
+ctx.fillRect(-17,-81,34,8);
+
+}else{
+
+ctx.arc(0,-82,20,Math.PI,Math.PI*2);
+ctx.fill();
+
+ctx.fillRect(-20,-82,8,30);
+ctx.fillRect(12,-82,8,30);
 }
 
+ctx.fillStyle="#111";
 
-function updateUI(){
+ctx.beginPath();
 
-scoreText.textContent =
-Math.floor(score);
+ctx.arc(-6,-76,2,0,Math.PI*2);
+ctx.arc(6,-76,2,0,Math.PI*2);
 
-coinText.textContent =
-coins;
-
-
-if(magnetTimer > 0){
-
-power.textContent =
-"🧲 MAGNET " +
-Math.ceil(
-magnetTimer
-);
-
-power.style.display =
-"block";
-
+ctx.fill();
 }
 
-else if(boostTimer > 0){
-
-power.textContent =
-"🔥 BOOST " +
-Math.ceil(
-boostTimer
-);
-
-power.style.display =
-"block";
-
+ctx.restore();
 }
-
-else if(skateTimer > 0){
-
-power.textContent =
-"🛹 SKATE " +
-Math.ceil(
-skateTimer
-);
-
-power.style.display =
-"block";
-
-}
-
-else{
-
-power.style.display =
-"none";
-
-}
-
-}
-
 
 function draw(){
 
-ctx.clearRect(
-0,
-0,
-W,
-H
-);
+ctx.clearRect(0,0,W,H);
 
 drawSky();
-
-drawSun();
-
-drawCity();
-
-drawRoad();
-
+drawTrainWorld();
 drawObjects();
 
+if(running)
 drawPlayer();
 
+if(boostTimer>0 && running){
+
+ctx.fillStyle="rgba(255,210,80,.10)";
+ctx.fillRect(0,0,W,H);
+}
 }
 
-
-function loop(now){
+function loop(t){
 
 if(!running){
 
 draw();
-
 return;
-
 }
 
+const dt=Math.min(.035,(t-lastTime)/1000);
 
-let dt =
-(now - lastTime) /
-1000;
+lastTime=t;
 
-lastTime =
-now;
-
-
-dt =
-Math.min(
-dt,
-0.035
-);
-
-
-/* SPEED INCREASE */
-
-gameSpeed +=
-dt * 0.006;
-
-
-if(boostTimer > 0){
-
-boostTimer -= dt;
-
-gameSpeed +=
-dt * 0.18;
-
-}
-
-
-if(magnetTimer > 0){
-
-magnetTimer -= dt;
-
-}
-
-
-if(skateTimer > 0){
-
-skateTimer -= dt;
-
-}
-
-
-score +=
-dt *
-(
-70 +
-gameSpeed * 80
-);
-
-
-spawnObjects(dt);
-
-updatePlayer(dt);
-
-updateObjects(dt);
-
-updateUI();
-
+update(dt);
 draw();
 
-
-requestAnimationFrame(
-loop
-);
-
+requestAnimationFrame(loop);
 }
 
+document.getElementById("playBtn")
+.addEventListener("click",startGame);
 
-/* KEYBOARD */
+document.getElementById("againBtn")
+.addEventListener("click",startGame);
 
-document.addEventListener(
-"keydown",
-function(e){
+document.getElementById("boyBtn")
+.addEventListener("click",()=>{
 
-if(
-e.key === "ArrowLeft" ||
-e.key.toLowerCase() === "a"
-){
+selected="boy";
 
+document.getElementById("boyBtn")
+.classList.add("active");
+
+document.getElementById("girlBtn")
+.classList.remove("active");
+});
+
+document.getElementById("girlBtn")
+.addEventListener("click",()=>{
+
+selected="girl";
+
+document.getElementById("girlBtn")
+.classList.add("active");
+
+document.getElementById("boyBtn")
+.classList.remove("active");
+});
+
+document.getElementById("leftBtn")
+.addEventListener("pointerdown",moveLeft);
+
+document.getElementById("rightBtn")
+.addEventListener("pointerdown",moveRight);
+
+document.getElementById("jumpBtn")
+.addEventListener("pointerdown",jump);
+
+document.getElementById("slideBtn")
+.addEventListener("pointerdown",slide);
+
+window.addEventListener("keydown",e=>{
+
+if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a"){
 e.preventDefault();
-
 moveLeft();
-
 }
 
-else if(
-e.key === "ArrowRight" ||
-e.key.toLowerCase() === "d"
-){
-
+if(e.key==="ArrowRight"||e.key.toLowerCase()==="d"){
 e.preventDefault();
-
 moveRight();
-
 }
 
-else if(
-e.key === "ArrowUp" ||
-e.key === " " ||
-e.key.toLowerCase() === "w"
-){
-
+if(e.key==="ArrowUp"||e.key===" "||e.key.toLowerCase()==="w"){
 e.preventDefault();
-
 jump();
-
 }
 
-else if(
-e.key === "ArrowDown" ||
-e.key.toLowerCase() === "s"
-){
-
+if(e.key==="ArrowDown"||e.key.toLowerCase()==="s"){
 e.preventDefault();
-
 slide();
-
 }
 
+if(e.key==="Enter"&&!running&&gameEnded)
+startGame();
 });
 
+let touchX=0,touchY=0;
 
-/* BUTTONS */
+canvas.addEventListener("touchstart",e=>{
 
-document
-.getElementById("playBtn")
-.addEventListener(
-"click",
-startGame
-);
+const t=e.changedTouches[0];
 
+touchX=t.clientX;
+touchY=t.clientY;
 
-document
-.getElementById("againBtn")
-.addEventListener(
-"click",
-startGame
-);
+},{passive:true});
 
+canvas.addEventListener("touchend",e=>{
 
-document
-.getElementById("leftBtn")
-.addEventListener(
-"pointerdown",
-function(e){
+const t=e.changedTouches[0];
 
-e.preventDefault();
+const dx=t.clientX-touchX;
+const dy=t.clientY-touchY;
 
-moveLeft();
-
-});
-
-
-document
-.getElementById("rightBtn")
-.addEventListener(
-"pointerdown",
-function(e){
-
-e.preventDefault();
-
-moveRight();
-
-});
-
-
-document
-.getElementById("jumpBtn")
-.addEventListener(
-"pointerdown",
-function(e){
-
-e.preventDefault();
-
-jump();
-
-});
-
-
-document
-.getElementById("slideBtn")
-.addEventListener(
-"pointerdown",
-function(e){
-
-e.preventDefault();
-
-slide();
-
-});
-
-
-/* SWIPE */
-
-let touchStartX = 0;
-
-let touchStartY = 0;
-
-
-canvas.addEventListener(
-"touchstart",
-function(e){
-
-const t =
-e.changedTouches[0];
-
-touchStartX =
-t.clientX;
-
-touchStartY =
-t.clientY;
-
-},
-{
-passive:false
-}
-);
-
-
-canvas.addEventListener(
-"touchend",
-function(e){
-
-if(!running){
-return;
-}
-
-const t =
-e.changedTouches[0];
-
-const dx =
-t.clientX -
-touchStartX;
-
-const dy =
-t.clientY -
-touchStartY;
-
-const ax =
-Math.abs(dx);
-
-const ay =
-Math.abs(dy);
-
-if(
-ax < 35 &&
-ay < 35
-){
-
+if(Math.max(Math.abs(dx),Math.abs(dy))<30)
 return;
 
-}
+if(Math.abs(dx)>Math.abs(dy)){
 
-
-if(ax > ay){
-
-if(dx > 0){
-
+if(dx<0)
+moveLeft();
+else
 moveRight();
 
-}
-else{
+}else{
 
-moveLeft();
-
-}
-
-}
-else{
-
-if(dy < 0){
-
+if(dy<0)
 jump();
-
-}
-else{
-
+else
 slide();
-
 }
 
-}
-
-},
-{
-passive:false
-}
-);
-
-
-/* START DRAW */
+},{passive:true});
 
 draw();
-
 </script>
-
 </body>
 </html>
