@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#ff6b00">
-<meta name="description" content="Run Blaze - Run, collect coins and beat your high score.">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#101a35">
+<meta name="description" content="Run Blaze - Endless runner game">
 <title>Run Blaze</title>
 
 <style>
@@ -19,1014 +18,135 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#080808;
+  background:#08101f;
   font-family:Arial,sans-serif;
   touch-action:none;
 }
 
+button{
+  font-family:Arial,sans-serif;
+  cursor:pointer;
+}
 
-  #game{
+#game{
   position:fixed;
   inset:0;
   width:100%;
   height:100%;
   display:block;
-  background:#07120b;
 }
+
+/* ---------- HUD ---------- */
 
 #hud{
   position:fixed;
   top:12px;
-  left:12px;
-  right:12px;
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
+  left:10px;
+  right:10px;
   z-index:5;
+  display:flex;
+  justify-content:center;
+  gap:6px;
   pointer-events:none;
 }
 
 .hudBox{
-  background:rgba(0,0,0,.7);
+  min-width:62px;
+  padding:7px 8px;
+  border-radius:12px;
+  background:rgba(7,15,31,.82);
   border:1px solid rgba(255,255,255,.18);
-  border-radius:14px;
-  padding:9px 12px;
-  color:white;
-  font-size:14px;
+  color:#fff;
+  text-align:center;
   font-weight:bold;
+  font-size:13px;
+  box-shadow:0 4px 12px rgba(0,0,0,.3);
 }
+
+/* ---------- POWER ---------- */
+
+#powerText{
+  position:fixed;
+  top:64px;
+  left:0;
+  right:0;
+  z-index:6;
+  text-align:center;
+  color:#fff;
+  font-size:15px;
+  font-weight:bold;
+  text-shadow:0 2px 5px #000;
+  pointer-events:none;
+}
+
+/* ---------- HOME ---------- */
 
 .screen{
   position:fixed;
   inset:0;
-  z-index:10;
+  z-index:20;
   display:flex;
   align-items:center;
   justify-content:center;
-  text-align:center;
+  overflow:auto;
   background:
-    radial-gradient(circle at 50% 35%,rgba(255,107,0,.22),transparent 38%),
-    #080808;
+    radial-gradient(circle at 50% 22%,rgba(40,150,255,.25),transparent 28%),
+    linear-gradient(180deg,#0b1730 0%,#07101f 55%,#050b16 100%);
   padding:20px;
 }
 
-.panel{
-  width:min(420px,92vw);
+.homePanel{
+  width:min(440px,94vw);
+  text-align:center;
+}
+
+.topBar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:18px;
+}
+
+.topStat{
+  flex:1;
+  padding:8px 6px;
+  border-radius:14px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.13);
+  color:#fff;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.iconButton{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;
+  background:rgba(255,255,255,.1);
+  color:white;
+  font-size:21px;
 }
 
 .logo{
   font-size:62px;
-  margin-bottom:5px;
+  line-height:1;
+  margin:8px 0 3px;
+  filter:drop-shadow(0 5px 15px rgba(255,100,0,.4));
 }
 
-h1{
+.gameTitle{
   margin:0;
-  color:#ff6b00;
-  font-size:44px;
-  text-shadow:0 0 25px rgba(255,107,0,.5);
+  font-size:46px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:#ff7414;
+  text-shadow:
+    0 3px 0 #a93200,
+    0 0 25px rgba(255,100,0,.45);
 }
 
-.subtitle{
-  color:#ddd;
-  margin:10px 0 24px;
-  font-size:17px;
-}
-
-.features{
-  color:#ddd;
-  text-align:left;
-  line-height:2;
-  margin-bottom:25px;
-}
-
-button{
-  border:0;
-  border-radius:16px;
-  padding:16px 30px;
-  font-size:18px;
-  font-weight:bold;
-  color:white;
-  background:linear-gradient(135deg,#ff7a00,#ff3d00);
-  box-shadow:0 8px 25px rgba(255,85,0,.3);
-}
-
-button:active{
-  transform:scale(.96);
-}
-
-.small{
-  margin-top:15px;
-  color:#888;
-  font-size:13px;
-}
-
-#gameOver{
-  display:none;
-}
-
-.result{
-  color:white;
-  font-size:21px;
-  line-height:1.8;
-  margin:20px 0;
-}
-
-#controls{
-  position:fixed;
-  bottom:20px;
-  left:0;
-  right:0;
-  z-index:6;
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  pointer-events:none;
-}
-
-.control{
-  width:68px;
-  height:55px;
-  padding:0;
-  font-size:24px;
-  opacity:.8;
-  pointer-events:auto;
-}
-
-#boostBtn{
-  width:100px;
-  font-size:15px;
-}
-</style>
-</head>
-
-<body>
-
-<canvas id="game"></canvas>
-
-<div id="hud">
-  <div class="hudBox">🔥 <span id="score">0</span></div>
-  <div class="hudBox">🪙 <span id="coins">0</span></div>
-  <div class="hudBox">🏆 <span id="best">0</span></div>
-</div>
-
-<div id="startScreen" class="screen">
-  <div class="panel">
-
-    <div class="logo">🔥🏃</div>
-
-    <h1>Run Blaze</h1>
-
-    <div class="subtitle">
-      Run as far as you can!
-    </div>
-
-    <div class="features">
-      🪙 Collect coins<br>
-      🧲 Magnet collects nearby coins<br>
-      ⚡ Boost gives extra speed<br>
-      🚧 Avoid the obstacles
-    </div>
-
-    <button id="startBtn">
-      START GAME
-    </button>
-
-    <div class="small">
-      Playtech Studio
-    </div>
-
-  </div>
-</div>
-
-<div id="gameOver" class="screen">
-  <div class="panel">
-
-    <div class="logo">💥</div>
-
-    <h1>GAME OVER</h1>
-
-    <div class="result">
-      🔥 Score: <b id="finalScore">0</b><br>
-      🪙 Coins: <b id="finalCoins">0</b><br>
-      🏆 Best: <b id="finalBest">0</b>
-    </div>
-
-    <button id="restartBtn">
-      PLAY AGAIN
-    </button>
-
-    <div class="small">
-      Playtech Studio
-    </div>
-
-  </div>
-</div>
-
-<div id="controls">
-  <button class="control" id="leftBtn">⬅️</button>
-  <button class="control" id="boostBtn">⚡ BOOST</button>
-  <button class="control" id="rightBtn">➡️</button>
-</div>
-
-<script>
-"use strict";
-
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-
-const scoreEl = document.getElementById("score");
-const coinsEl = document.getElementById("coins");
-const bestEl = document.getElementById("best");
-
-const startScreen = document.getElementById("startScreen");
-const gameOverScreen = document.getElementById("gameOver");
-
-const finalScore = document.getElementById("finalScore");
-const finalCoins = document.getElementById("finalCoins");
-const finalBest = document.getElementById("finalBest");
-
-let W = 0;
-let H = 0;
-let running = false;
-let lastTime = 0;
-
-let score = 0;
-let coins = 0;
-
-let best = Number(
-  localStorage.getItem("runBlazeBest") || 0
-);
-
-let speed = 6;
-let roadOffset = 0;
-let obstacleTimer = 0;
-let coinTimer = 0;
-
-let boostTime = 0;
-let magnetTime = 0;
-
-let obstacles = [];
-let coinItems = [];
-
-const player = {
-  lane:1,
-  x:0,
-  y:0,
-  targetX:0,
-  width:44,
-  height:62
-};
-
-bestEl.textContent = best;
-
-function resize(){
-
-  W = window.innerWidth;
-  H = window.innerHeight;
-
-  canvas.width = W;
-  canvas.height = H;
-
-  player.y = H - 150;
-
-  updatePlayerTarget();
-}
-
-window.addEventListener("resize",resize);
-
-function roadWidth(){
-
-  return Math.min(W * 0.86,430);
-}
-
-function laneX(lane){
-
-  const rw = roadWidth();
-
-  const left = (W-rw)/2;
-
-  const laneWidth = rw/3;
-
-  return left + laneWidth*lane + laneWidth/2;
-}
-
-function updatePlayerTarget(){
-
-  player.targetX = laneX(player.lane);
-
-  if(!running){
-    player.x = player.targetX;
-  }
-}
-
-function moveLeft(){
-
-  if(!running)return;
-
-  player.lane = Math.max(
-    0,
-    player.lane-1
-  );
-
-  updatePlayerTarget();
-}
-
-function moveRight(){
-
-  if(!running)return;
-
-  player.lane = Math.min(
-    2,
-    player.lane+1
-  );
-
-  updatePlayerTarget();
-}
-
-function activateBoost(){
-
-  if(!running)return;
-
-  boostTime = 3000;
-}
-
-document.getElementById("leftBtn")
-.addEventListener("pointerdown",moveLeft);
-
-document.getElementById("rightBtn")
-.addEventListener("pointerdown",moveRight);
-
-document.getElementById("boostBtn")
-.addEventListener("pointerdown",activateBoost);
-
-window.addEventListener("keydown",function(e){
-
-  if(
-    e.key==="ArrowLeft" ||
-    e.key.toLowerCase()==="a"
-  ){
-    moveLeft();
-  }
-
-  if(
-    e.key==="ArrowRight" ||
-    e.key.toLowerCase()==="d"
-  ){
-    moveRight();
-  }
-
-  if(
-    e.key===" " ||
-    e.key.toLowerCase()==="w"
-  ){
-    activateBoost();
-  }
-});
-
-let touchStartX = 0;
-
-canvas.addEventListener(
-  "touchstart",
-  function(e){
-
-    touchStartX =
-      e.touches[0].clientX;
-
-  },
-  {passive:true}
-);
-
-canvas.addEventListener(
-  "touchend",
-  function(e){
-
-    const endX =
-      e.changedTouches[0].clientX;
-
-    const diff =
-      endX-touchStartX;
-
-    if(Math.abs(diff)>35){
-
-      if(diff<0){
-        moveLeft();
-      }else{
-        moveRight();
-      }
-
-    }
-
-  },
-  {passive:true}
-);
-
-function startGame(){
-
-  score = 0;
-  coins = 0;
-
-  speed = 6;
-
-  roadOffset = 0;
-
-  obstacleTimer = 0;
-  coinTimer = 0;
-
-  boostTime = 0;
-  magnetTime = 0;
-
-  obstacles = [];
-  coinItems = [];
-
-  player.lane = 1;
-  player.y = H-150;
-
-  updatePlayerTarget();
-
-  running = true;
-
-  startScreen.style.display = "none";
-  gameOverScreen.style.display = "none";
-
-  updateHUD();
-}
-
-function endGame(){
-
-  running = false;
-
-  if(score>best){
-
-    best = score;
-
-    localStorage.setItem(
-      "runBlazeBest",
-      String(best)
-    );
-  }
-
-  finalScore.textContent = score;
-  finalCoins.textContent = coins;
-  finalBest.textContent = best;
-
-  gameOverScreen.style.display = "flex";
-}
-
-document.getElementById("startBtn")
-.addEventListener("click",startGame);
-
-document.getElementById("restartBtn")
-.addEventListener("click",startGame);
-
-function spawnObstacle(){
-
-  const lane =
-    Math.floor(Math.random()*3);
-
-  obstacles.push({
-
-    lane:lane,
-
-    x:laneX(lane),
-
-    y:-80,
-
-    width:48,
-
-    height:55
-
-  });
-}
-
-function spawnCoin(){
-
-  const lane =
-    Math.floor(Math.random()*3);
-
-  coinItems.push({
-
-    lane:lane,
-
-    x:laneX(lane),
-
-    y:-30,
-
-    radius:12
-
-  });
-}
-
-function update(delta){
-
-  if(!running)return;
-
-  const multiplier =
-    boostTime>0 ? 1.8 : 1;
-
-  boostTime =
-    Math.max(0,boostTime-delta);
-
-  magnetTime =
-    Math.max(0,magnetTime-delta);
-
-  speed += delta*0.00003;
-
-  const moveSpeed =
-    speed*multiplier*delta*0.12;
-
-  roadOffset += moveSpeed;
-
-  if(roadOffset>80){
-    roadOffset=0;
-  }
-
-  obstacleTimer += delta;
-  coinTimer += delta;
-
-  const obstacleInterval =
-    Math.max(
-      500,
-      1100-score*3
-    );
-
-  if(obstacleTimer>obstacleInterval){
-
-    spawnObstacle();
-
-    obstacleTimer=0;
-  }
-
-  if(coinTimer>450){
-
-    spawnCoin();
-
-    coinTimer=0;
-  }
-
-  player.x +=
-    (player.targetX-player.x)*0.18;
-
-  for(
-    let i=obstacles.length-1;
-    i>=0;
-    i--
-  ){
-
-    const o = obstacles[i];
-
-    o.y += moveSpeed;
-
-    if(o.y>H+100){
-
-      obstacles.splice(i,1);
-
-      continue;
-    }
-
-    if(isColliding(player,o)){
-
-      endGame();
-
-      return;
-    }
-  }
-
-  for(
-    let i=coinItems.length-1;
-    i>=0;
-    i--
-  ){
-
-    const c=coinItems[i];
-
-    c.y += moveSpeed;
-
-    if(magnetTime>0){
-
-      const dx =
-        player.x-c.x;
-
-      const dy =
-        player.y-c.y;
-
-      const distance =
-        Math.sqrt(
-          dx*dx+dy*dy
-        );
-
-      if(distance<180){
-
-        c.x += dx*0.08;
-        c.y += dy*0.08;
-      }
-    }
-
-    const dx =
-      player.x-c.x;
-
-    const dy =
-      player.y-c.y;
-
-    const distance =
-      Math.sqrt(
-        dx*dx+dy*dy
-      );
-
-    if(distance<38){
-
-      coins++;
-
-      coinItems.splice(i,1);
-
-      if(coins%5===0){
-
-        magnetTime=5000;
-      }
-
-      continue;
-    }
-
-    if(c.y>H+50){
-
-      coinItems.splice(i,1);
-    }
-  }
-
-  score +=
-    Math.floor(
-      delta*0.01*multiplier
-    );
-
-  updateHUD();
-}
-
-function isColliding(a,b){
-
-  return(
-    Math.abs(a.x-b.x) <
-      (a.width+b.width)*0.45 &&
-
-    Math.abs(a.y-b.y) <
-      (a.height+b.height)*0.45
-  );
-}
-
-function updateHUD(){
-
-  scoreEl.textContent=score;
-
-  coinsEl.textContent=coins;
-
-  bestEl.textContent=best;
-}
-
-function drawBackground(){
-
-  ctx.fillStyle="#07120b";
-
-  ctx.fillRect(
-    0,0,W,H
-  );
-
-  const roadW=roadWidth();
-
-  const roadLeft=
-    (W-roadW)/2;
-
-  ctx.fillStyle="#222";
-
-  ctx.fillRect(
-    roadLeft,
-    0,
-    roadW,
-    H
-  );
-
-  ctx.fillStyle="#171717";
-
-  ctx.fillRect(
-    roadLeft+8,
-    0,
-    roadW-16,
-    H
-  );
-
-  ctx.strokeStyle="#ff6b00";
-
-  ctx.lineWidth=5;
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    roadLeft,
-    0
-  );
-
-  ctx.lineTo(
-    roadLeft,
-    H
-  );
-
-  ctx.stroke();
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    roadLeft+roadW,
-    0
-  );
-
-  ctx.lineTo(
-    roadLeft+roadW,
-    H
-  );
-
-  ctx.stroke();
-
-  ctx.strokeStyle=
-    "rgba(255,255,255,.22)";
-
-  ctx.lineWidth=3;
-
-  ctx.setLineDash([
-    35,
-    35
-  ]);
-
-  ctx.lineDashOffset=
-    roadOffset;
-
-  for(let i=1;i<3;i++){
-
-    const x =
-      roadLeft+
-      (roadW/3)*i;
-
-    ctx.beginPath();
-
-    ctx.moveTo(x,0);
-
-    ctx.lineTo(x,H);
-
-    ctx.stroke();
-  }
-
-  ctx.setLineDash([]);
-}
-
-function drawPlayer(){
-
-  const x=player.x;
-  const y=player.y;
-
-  ctx.save();
-
-  if(boostTime>0){
-
-    ctx.shadowColor="#ff6b00";
-
-    ctx.shadowBlur=30;
-
-    ctx.fillStyle="#ff6b00";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x,
-      y+75
-    );
-
-    ctx.lineTo(
-      x-12,
-      y+45
-    );
-
-    ctx.lineTo(
-      x+12,
-      y+45
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-  }
-
-  ctx.shadowBlur=0;
-
-  ctx.fillStyle="#ff6b00";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    x,
-    y-22,
-    16,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-  ctx.fillStyle="#eeeeee";
-
-  ctx.fillRect(
-    x-16,
-    y-5,
-    32,
-    40
-  );
-
-  ctx.fillStyle="#111";
-
-  ctx.fillRect(
-    x-10,
-    y+35,
-    7,
-    25
-  );
-
-  ctx.fillRect(
-    x+3,
-    y+35,
-    7,
-    25
-  );
-
-  ctx.fillStyle="#ff6b00";
-
-  ctx.fillRect(
-    x-25,
-    y,
-    9,
-    28
-  );
-
-  ctx.fillRect(
-    x+16,
-    y,
-    9,
-    28
-  );
-
-  ctx.restore();
-}
-
-function drawObstacles(){
-
-  for(const o of obstacles){
-
-    ctx.save();
-
-    ctx.fillStyle="#e53935";
-
-    ctx.shadowColor="#e53935";
-
-    ctx.shadowBlur=12;
-
-    ctx.fillRect(
-      o.x-o.width/2,
-      o.y-o.height/2,
-      o.width,
-      o.height
-    );
-
-    ctx.shadowBlur=0;
-
-    ctx.fillStyle="#fff";
-
-    ctx.font="bold 20px Arial";
-
-    ctx.textAlign="center";
-
-    ctx.textBaseline="middle";
-
-    ctx.fillText(
-      "🚧",
-      o.x,
-      o.y
-    );
-
-    ctx.restore();
-  }
-}
-
-function drawCoins(){
-
-  for(const c of coinItems){
-
-    ctx.save();
-
-    ctx.fillStyle="#ffd700";
-
-    ctx.shadowColor="#ffd700";
-
-    ctx.shadowBlur=15;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      c.x,
-      c.y,
-      c.radius,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.shadowBlur=0;
-
-    ctx.fillStyle="#8a6200";
-
-    ctx.font="bold 13px Arial";
-
-    ctx.textAlign="center";
-
-    ctx.textBaseline="middle";
-
-    ctx.fillText(
-      "$",
-      c.x,
-      c.y+1
-    );
-
-    ctx.restore();
-  }
-}
-
-function drawPowerStatus(){
-
-  if(!running)return;
-
-  if(boostTime>0){
-
-    ctx.fillStyle="#ff6b00";
-
-    ctx.font="bold 16px Arial";
-
-    ctx.textAlign="center";
-
-    ctx.fillText(
-      "⚡ BOOST!",
-      W/2,
-      105
-    );
-  }
-
-  if(magnetTime>0){
-
-    ctx.fillStyle="#4fc3f7";
-
-    ctx.font="bold 15px Arial";
-
-    ctx.textAlign="center";
-
-    ctx.fillText(
-      "🧲 MAGNET",
-      W/2,
-      128
-    );
-  }
-}
-
-function draw(){
-
-  drawBackground();
-
-  drawCoins();
-
-  drawObstacles();
-
-  drawPlayer();
-
-  drawPowerStatus();
-}
-
-function gameLoop(timestamp){
-
-  const delta =
-    Math.min(
-      timestamp-lastTime,
-      40
-    );
-
-  lastTime=timestamp;
-
-  update(delta);
-
-  draw();
-
-  requestAnimationFrame(
-    gameLoop
-  );
-}
-
-resize();
-
-requestAnimationFrame(
-  gameLoop
-);
-</script>
-
-</body>
-</html>
+.tagline{
+  margin:5px 0 14px;
+  color:#c
