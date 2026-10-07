@@ -6,958 +6,1612 @@
 <title>Run Blaze</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#07150c;font-family:Arial,sans-serif;color:#fff}
+button{font:inherit}
+.screen{position:fixed;inset:0}
+
+#home{
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(#0b2818,#07150c);
 }
 
-html,body{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#050912;
-  font-family:Arial,sans-serif;
+.homeCard{
+width:min(430px,92vw);
+padding:25px 20px;
+text-align:center;
+background:#10261a;
+border-radius:28px;
+box-shadow:0 20px 70px #0009;
 }
 
-body{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.logo{font-size:42px;font-weight:900}
+.sub{opacity:.7;margin:5px 0 20px}
+
+.characters{
+display:flex;
+gap:12px;
 }
 
-#app{
-  position:relative;
-  width:100%;
-  max-width:520px;
-  height:100%;
-  overflow:hidden;
-  background:#101a27;
+.charBtn{
+flex:1;
+padding:12px;
+border:2px solid #38533f;
+border-radius:18px;
+background:#172f20;
+color:#fff;
+font-weight:800;
 }
+
+.charBtn.active{
+border-color:#ffd34d;
+}
+
+.charPreview{
+height:75px;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.mainBtn,.smallBtn,.rowBtn{
+width:100%;
+padding:14px;
+margin-top:10px;
+border:0;
+border-radius:15px;
+font-weight:900;
+}
+
+.mainBtn{
+background:#ffd34d;
+color:#08120b;
+font-size:20px;
+}
+
+.smallBtn{
+background:#d9e6df;
+color:#07150c;
+}
+
+.note{
+font-size:12px;
+opacity:.6;
+margin-top:12px;
+}
+
+#game{display:none;background:#07150c}
 
 canvas{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-.screen{
-  position:absolute;
-  inset:0;
-  z-index:5;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  background:
-    linear-gradient(#071322aa,#071322ee),
-    radial-gradient(circle at 50% 20%,#2b5274,#07111d 65%);
-  color:white;
-}
-
-.logo{
-  font-size:48px;
-  font-weight:900;
-  letter-spacing:2px;
-  text-shadow:0 5px 18px #000;
-}
-
-.studio{
-  margin-top:8px;
-  color:#9fb6c9;
-  letter-spacing:3px;
-  font-size:12px;
-}
-
-.character-select{
-  display:flex;
-  gap:14px;
-  margin:28px 0 22px;
-}
-
-.char{
-  width:110px;
-  height:125px;
-  border:2px solid #60788c;
-  border-radius:18px;
-  background:#102333;
-  color:white;
-  cursor:pointer;
-  font-size:15px;
-}
-
-.char.selected{
-  border-color:#39d5ff;
-  box-shadow:0 0 20px #39d5ff66;
-}
-
-.char-face{
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  margin:0 auto 9px;
-  background:#e2a77e;
-  border:3px solid #263645;
-}
-
-.char-body{
-  width:45px;
-  height:42px;
-  margin:auto;
-  border-radius:12px 12px 6px 6px;
-  background:#2379d8;
-}
-
-#girl .char-body{
-  background:#d73570;
-}
-
-.play{
-  width:220px;
-  padding:17px;
-  border:0;
-  border-radius:40px;
-  background:linear-gradient(90deg,#ff8a00,#ff3d00);
-  color:white;
-  font-size:22px;
-  font-weight:900;
-  cursor:pointer;
-  box-shadow:0 8px 25px #ff5b0055;
-}
-
-.small{
-  margin-top:18px;
-  color:#91a7b8;
-  font-size:12px;
+width:100%;
+height:100%;
+display:block;
 }
 
 #hud{
-  position:absolute;
-  z-index:4;
-  top:12px;
-  left:12px;
-  right:12px;
-  display:none;
-  justify-content:space-between;
-  pointer-events:none;
+position:absolute;
+top:12px;
+left:12px;
+right:12px;
+display:flex;
+justify-content:space-between;
+font-weight:900;
+pointer-events:none;
 }
 
-.hudbox{
-  padding:8px 12px;
-  border-radius:12px;
-  background:#06101dcc;
-  border:1px solid #ffffff22;
-  color:white;
-  font-weight:bold;
+.hudBox{
+padding:8px 11px;
+background:#07150cdd;
+border-radius:11px;
+font-size:13px;
 }
 
-#controls{
-  position:absolute;
-  z-index:6;
-  bottom:20px;
-  left:0;
-  right:0;
-  display:none;
-  justify-content:center;
-  gap:12px;
-}
-
-.ctrl{
-  width:65px;
-  height:55px;
-  border:1px solid #ffffff44;
-  border-radius:16px;
-  background:#06101dcc;
-  color:white;
-  font-size:24px;
-  font-weight:bold;
+#hint{
+position:absolute;
+bottom:16px;
+left:50%;
+transform:translateX(-50%);
+background:#07150ccc;
+padding:8px 12px;
+border-radius:12px;
+font-size:11px;
+white-space:nowrap;
+opacity:.75;
 }
 
 #gameOver{
-  display:none;
+display:none;
+position:absolute;
+inset:0;
+align-items:center;
+justify-content:center;
+background:#000b;
 }
 
-.over-title{
-  font-size:44px;
-  font-weight:900;
-  margin-bottom:20px;
+.card{
+width:min(380px,90vw);
+padding:25px;
+border-radius:24px;
+background:#10261a;
+text-align:center;
 }
 
-.over-score{
-  font-size:20px;
-  margin-bottom:25px;
+.card h2{font-size:32px;margin-bottom:15px}
+
+.stats{
+display:flex;
+justify-content:space-around;
+margin:15px 0;
+font-weight:800;
 }
 
-@media(max-width:430px){
-  .logo{font-size:40px}
-  .char{width:100px}
+.panel{
+display:none;
+position:fixed;
+inset:0;
+z-index:50;
+align-items:center;
+justify-content:center;
+background:#000c;
+padding:20px;
 }
+
+.rowBtn{
+background:#1b3926;
+color:#fff;
+}
+
+.rowBtn.primary{
+background:#ffd34d;
+color:#07150c;
+}
+
+.close{
+background:#718579;
+}
+
 </style>
 </head>
 
 <body>
 
-<div id="app">
-
-<canvas id="gameCanvas"></canvas>
-
 <div id="home" class="screen">
 
-  <div class="logo">RUN BLAZE</div>
-  <div class="studio">PLAYTECH STUDIO</div>
+<div class="homeCard">
 
-  <div class="character-select">
+<div class="logo">RUN BLAZE</div>
 
-    <button id="boy" class="char selected" onclick="selectCharacter('boy')">
-      <div class="char-face"></div>
-      <div class="char-body"></div>
-      BOY
-    </button>
+<div class="sub">Forest Runner</div>
 
-    <button id="girl" class="char" onclick="selectCharacter('girl')">
-      <div class="char-face"></div>
-      <div class="char-body"></div>
-      GIRL
-    </button>
+<div style="font-weight:800;margin-bottom:10px">
+Choose Runner
+</div>
 
-  </div>
+<div class="characters">
 
-  <button class="play" onclick="startGame()">PLAY</button>
+<button class="charBtn active" id="boyBtn">
+<div class="charPreview">
+<canvas id="boyPreview" width="70" height="80"></canvas>
+</div>
+BOY
+</button>
 
-  <div class="small">RUN • JUMP • SLIDE • SURVIVE</div>
+<button class="charBtn" id="girlBtn">
+<div class="charPreview">
+<canvas id="girlPreview" width="70" height="80"></canvas>
+</div>
+GIRL
+</button>
 
 </div>
+
+<button class="mainBtn" id="playBtn">
+PLAY
+</button>
+
+<button class="smallBtn" id="settingsBtn">
+SETTINGS
+</button>
+
+<div class="note">
+Swipe ← → to move
+</div>
+
+<div class="note">
+Swipe ↑ to jump • Swipe ↓ to slide
+</div>
+
+<div class="note">
+Playtech Studio
+</div>
+
+</div>
+</div>
+
+
+<div id="game" class="screen">
+
+<canvas id="canvas"></canvas>
 
 <div id="hud">
 
-  <div class="hudbox">
-    SCORE <span id="score">0</span>
-  </div>
+<div class="hudBox">
+SCORE <span id="score">0</span>
+</div>
 
-  <div class="hudbox">
-    COINS <span id="coins">0</span>
-  </div>
+<div class="hudBox">
+COINS <span id="coins">0</span>
+</div>
+
+<div class="hudBox">
+KEYS <span id="keys">0</span>
+</div>
+
+<div class="hudBox">
+BEST <span id="best">0</span>
+</div>
 
 </div>
 
-<div id="controls">
+<div id="hint">
+SWIPE TO MOVE • JUMP • SLIDE
+</div>
 
-  <button class="ctrl" id="leftBtn">←</button>
-  <button class="ctrl" id="jumpBtn">↑</button>
-  <button class="ctrl" id="slideBtn">↓</button>
-  <button class="ctrl" id="rightBtn">→</button>
+<div id="gameOver">
+
+<div class="card">
+
+<h2>GAME OVER</h2>
+
+<div class="stats">
+
+<div>
+SCORE<br>
+<span id="finalScore">0</span>
+</div>
+
+<div>
+COINS<br>
+<span id="finalCoins">0</span>
+</div>
 
 </div>
 
-<div id="gameOver" class="screen">
+<button class="mainBtn" id="againBtn">
+PLAY AGAIN
+</button>
 
-  <div class="over-title">GAME OVER</div>
-
-  <div class="over-score">
-    SCORE: <span id="finalScore">0</span>
-  </div>
-
-  <button class="play" onclick="startGame()">PLAY AGAIN</button>
-
-  <div class="studio">PLAYTECH STUDIO</div>
+<button class="smallBtn" id="homeBtn">
+HOME
+</button>
 
 </div>
+</div>
+</div>
+
+
+<div id="settingsPanel" class="panel">
+
+<div class="card">
+
+<h2>SETTINGS</h2>
+
+<button class="rowBtn primary" id="withdrawBtn">
+WITHDRAWAL
+</button>
+
+<button class="rowBtn" id="soundBtn">
+SOUND: ON
+</button>
+
+<button class="rowBtn" id="privacyBtn">
+PRIVACY
+</button>
+
+<button class="rowBtn close" id="closeSettings">
+CLOSE
+</button>
+
+</div>
+</div>
+
+
+<div id="withdrawPanel" class="panel">
+
+<div class="card">
+
+<h2>WITHDRAWAL</h2>
+
+<p style="opacity:.7;margin-bottom:10px">
+Choose withdrawal method
+</p>
+
+<button class="rowBtn" id="upiBtn">
+UPI
+</button>
+
+<button class="rowBtn" id="bankBtn">
+BANK ACCOUNT
+</button>
+
+<button class="rowBtn" id="paypalBtn">
+PAYPAL
+</button>
+
+<button class="rowBtn close" id="backSettings">
+BACK
+</button>
+
+</div>
+</div>
+
 
 <script>
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+"use strict";
 
-const home = document.getElementById("home");
-const hud = document.getElementById("hud");
-const controls = document.getElementById("controls");
-const gameOver = document.getElementById("gameOver");
+const home=document.getElementById("home");
+const game=document.getElementById("game");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
 
-const scoreEl = document.getElementById("score");
-const coinsEl = document.getElementById("coins");
-const finalScoreEl = document.getElementById("finalScore");
+let W=innerWidth;
+let H=innerHeight;
 
-let W = 0;
-let H = 0;
+let selected="boy";
+let running=false;
+
+let score=0;
+let coins=0;
+let keys=0;
+
+let best=Number(
+localStorage.getItem("runBlazeBest")||0
+);
+
+let lane=0;
+let targetLane=0;
+
+let jump=0;
+let slide=0;
+
+let speed=.42;
+let objects=[];
+
+let spawnTimer=.3;
+let last=0;
+let phase=0;
+
+let magnet=0;
+let booster=0;
+let shoes=0;
+
+let sx=0;
+let sy=0;
+
+document.getElementById("best").textContent=best;
+
+
+/* RESIZE */
 
 function resize(){
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
+
+W=innerWidth;
+H=innerHeight;
+
+const d=Math.min(
+devicePixelRatio||1,
+2
+);
+
+canvas.width=W*d;
+canvas.height=H*d;
+
+ctx.setTransform(
+d,0,0,d,0,0
+);
 }
 
-window.addEventListener("resize",resize);
+addEventListener("resize",resize);
 resize();
 
-let selectedCharacter = "boy";
 
-let running = false;
-let score = 0;
-let coins = 0;
-let speed = 7;
+/* CHARACTER */
 
-let lane = 1;
-let targetLane = 1;
+function runner(c,x,y,s,type,t){
 
-let jump = 0;
-let jumping = false;
-let sliding = false;
+c.save();
 
-let objects = [];
-let lastTime = 0;
-let spawnTimer = 0;
+c.translate(x,y);
+c.scale(s,s);
 
-function selectCharacter(type){
+const bob=
+Math.sin(t*8)*2;
 
-  selectedCharacter = type;
+const leg=
+Math.sin(t*8)*11;
 
-  document.getElementById("boy").classList.toggle(
-    "selected",
-    type === "boy"
-  );
+const arm=
+Math.sin(t*8+Math.PI)*10;
 
-  document.getElementById("girl").classList.toggle(
-    "selected",
-    type === "girl"
-  );
+
+/* legs */
+
+c.strokeStyle="#17222a";
+c.lineWidth=7;
+c.lineCap="round";
+
+c.beginPath();
+c.moveTo(-5,27);
+c.lineTo(-10+leg,52);
+c.stroke();
+
+c.beginPath();
+c.moveTo(5,27);
+c.lineTo(10-leg,52);
+c.stroke();
+
+
+/* arms */
+
+c.beginPath();
+c.moveTo(-11,5);
+c.lineTo(-19+arm,24);
+c.stroke();
+
+c.beginPath();
+c.moveTo(11,5);
+c.lineTo(19-arm,24);
+c.stroke();
+
+
+/* body */
+
+c.fillStyle=
+type==="boy"
+?"#1976b8"
+:"#c42d73";
+
+c.beginPath();
+c.roundRect(
+-14,0,28,34,8
+);
+c.fill();
+
+
+/* head */
+
+c.fillStyle="#d99b73";
+
+c.beginPath();
+
+c.arc(
+0,
+-14+bob,
+14,
+0,
+Math.PI*2
+);
+
+c.fill();
+
+
+/* hair */
+
+c.fillStyle="#17202a";
+
+if(type==="boy"){
+
+c.beginPath();
+
+c.arc(
+0,
+-19+bob,
+14,
+Math.PI,
+Math.PI*2
+);
+
+c.fill();
+
+}else{
+
+c.beginPath();
+
+c.arc(
+0,
+-20+bob,
+15,
+Math.PI,
+Math.PI*2
+);
+
+c.fill();
+
+c.fillRect(
+-15,
+-19+bob,
+5,
+25
+);
+
+c.fillRect(
+10,
+-19+bob,
+5,
+25
+);
 }
+
+c.restore();
+}
+
+
+function preview(id,type){
+
+const c=
+document.getElementById(id)
+.getContext("2d");
+
+c.clearRect(0,0,70,80);
+
+runner(
+c,
+35,
+25,
+.9,
+type,
+0
+);
+}
+
+preview("boyPreview","boy");
+preview("girlPreview","girl");
+
+
+document.getElementById("boyBtn")
+.onclick=()=>{
+
+selected="boy";
+
+document.getElementById(
+"boyBtn"
+).classList.add("active");
+
+document.getElementById(
+"girlBtn"
+).classList.remove("active");
+};
+
+
+document.getElementById("girlBtn")
+.onclick=()=>{
+
+selected="girl";
+
+document.getElementById(
+"girlBtn"
+).classList.add("active");
+
+document.getElementById(
+"boyBtn"
+).classList.remove("active");
+};
+
+
+/* GAME START */
 
 function startGame(){
 
-  home.style.display = "none";
-  gameOver.style.display = "none";
+home.style.display="none";
+game.style.display="block";
 
-  hud.style.display = "flex";
-  controls.style.display = "flex";
+document.getElementById(
+"gameOver"
+).style.display="none";
 
-  score = 0;
-  coins = 0;
-  speed = 7;
+running=true;
 
-  lane = 1;
-  targetLane = 1;
+score=0;
+coins=0;
+keys=0;
 
-  jump = 0;
-  jumping = false;
-  sliding = false;
+lane=0;
+targetLane=0;
 
-  objects = [];
+jump=0;
+slide=0;
 
-  running = true;
+magnet=0;
+booster=0;
+shoes=0;
 
-  lastTime = performance.now();
+speed=.42;
 
-  requestAnimationFrame(loop);
+objects=[];
+
+spawnTimer=.2;
+
+last=performance.now();
+
+document.getElementById("score")
+.textContent="0";
+
+document.getElementById("coins")
+.textContent="0";
+
+document.getElementById("keys")
+.textContent="0";
+
+requestAnimationFrame(loop);
 }
+
+document.getElementById(
+"playBtn"
+).onclick=startGame;
+
+document.getElementById(
+"againBtn"
+).onclick=startGame;
+
+
+/* HOME */
+
+document.getElementById(
+"homeBtn"
+).onclick=()=>{
+
+running=false;
+
+game.style.display="none";
+home.style.display="flex";
+
+document.getElementById(
+"gameOver"
+).style.display="none";
+};
+
+
+/* SWIPE */
+
+function left(){
+
+targetLane=
+Math.max(-1,targetLane-1);
+}
+
+function right(){
+
+targetLane=
+Math.min(1,targetLane+1);
+}
+
+function jumpUp(){
+
+if(jump<=0)
+jump=1;
+}
+
+function slideDown(){
+
+if(jump<=0)
+slide=.55;
+}
+
+
+addEventListener(
+"touchstart",
+e=>{
+
+if(!running)return;
+
+const t=e.changedTouches[0];
+
+sx=t.clientX;
+sy=t.clientY;
+
+},
+{passive:true}
+);
+
+
+addEventListener(
+"touchend",
+e=>{
+
+if(!running)return;
+
+const t=e.changedTouches[0];
+
+const dx=t.clientX-sx;
+const dy=t.clientY-sy;
+
+if(
+Math.max(
+Math.abs(dx),
+Math.abs(dy)
+)<30
+)return;
+
+if(
+Math.abs(dx)>
+Math.abs(dy)
+){
+
+dx>0?right():left();
+
+}else{
+
+dy<0?jumpUp():slideDown();
+}
+
+},
+{passive:true}
+);
+
+
+/* KEYBOARD */
+
+addEventListener(
+"keydown",
+e=>{
+
+if(!running)return;
+
+if(e.key==="ArrowLeft")
+left();
+
+if(e.key==="ArrowRight")
+right();
+
+if(e.key==="ArrowUp"||e.key===" ")
+jumpUp();
+
+if(e.key==="ArrowDown")
+slideDown();
+
+}
+);
+
+
+/* ROAD */
+
+function roadX(l){
+
+return W/2+
+l*Math.min(W*.22,180);
+}
+
+
+function forest(){
+
+const horizon=H*.30;
+
+ctx.fillStyle="#79a36e";
+ctx.fillRect(0,0,W,H);
+
+ctx.fillStyle="#274e2c";
+ctx.fillRect(
+0,
+horizon,
+W,
+H-horizon
+);
+
+
+/* path */
+
+ctx.fillStyle="#4d3d2d";
+
+ctx.beginPath();
+
+ctx.moveTo(
+W*.43,
+horizon
+);
+
+ctx.lineTo(
+W*.57,
+horizon
+);
+
+ctx.lineTo(
+W*.78,
+H
+);
+
+ctx.lineTo(
+W*.22,
+H
+);
+
+ctx.closePath();
+
+ctx.fill();
+
+
+/* trees */
+
+for(
+let i=0;
+i<18;
+i++
+){
+
+const side=
+i%2===0?-1:1;
+
+const x=
+side*
+(
+W*.30+
+(i%5)*35
+)+W/2;
+
+const y=
+horizon-
+(i%6)*35;
+
+ctx.fillStyle="#493a27";
+
+ctx.fillRect(
+x-5,
+y,
+10,
+80
+);
+
+ctx.fillStyle=
+i%2
+?"#163d20"
+:"#20572b";
+
+ctx.beginPath();
+
+ctx.arc(
+x,
+y-10,
+28,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.beginPath();
+
+ctx.arc(
+x-20,
+y+10,
+22,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.beginPath();
+
+ctx.arc(
+x+20,
+y+10,
+22,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+}
+
+
+/* lane lines */
+
+ctx.strokeStyle="#b89b63";
+ctx.lineWidth=3;
+
+for(
+const n of [-.06,.06]
+){
+
+ctx.beginPath();
+
+ctx.moveTo(
+W/2+n*W,
+horizon
+);
+
+ctx.lineTo(
+W/2+n*W*3,
+H
+);
+
+ctx.stroke();
+}
+
+}
+
+
+/* OBJECT CREATION */
+
+function add(type,l,z){
+
+objects.push({
+type:type,
+lane:l,
+z:z,
+hit:false
+});
+}
+
+
+function spawn(){
+
+const l=
+Math.floor(
+Math.random()*3
+)-1;
+
+const r=Math.random();
+
+
+if(r<.48){
+
+add("coin",l,1);
+
+if(Math.random()<.6)
+add("coin",l,1.18);
+
+if(Math.random()<.4)
+add("coin",l,1.36);
+
+
+}else if(r<.58){
+
+add("key",l,1);
+
+}else if(r<.68){
+
+add("magnet",l,1);
+
+}else if(r<.77){
+
+add("booster",l,1);
+
+}else if(r<.86){
+
+add("shoes",l,1);
+
+}else{
+
+add("stone",l,1);
+}
+
+}
+
+
+/* OBJECT DRAW */
+
+function project(z){
+
+const h=H*.30;
+
+const t=1-Math.max(
+0,
+Math.min(1,z)
+);
+
+return{
+
+y:h+t*(H-h),
+
+s:.25+t*1.05
+
+};
+}
+
+
+function objectDraw(o){
+
+const p=project(o.z);
+
+const x=roadX(o.lane);
+
+ctx.save();
+
+ctx.translate(
+x,
+p.y
+);
+
+ctx.scale(
+p.s,
+p.s
+);
+
+
+if(o.type==="coin"){
+
+ctx.fillStyle="#ffd34d";
+
+ctx.beginPath();
+
+ctx.arc(
+0,-18,
+12,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.strokeStyle="#9b6900";
+ctx.lineWidth=3;
+ctx.stroke();
+
+
+}else if(o.type==="key"){
+
+ctx.strokeStyle="#ffe066";
+ctx.lineWidth=7;
+
+ctx.beginPath();
+
+ctx.arc(
+-5,-22,
+8,
+0,
+Math.PI*2
+);
+
+ctx.stroke();
+
+ctx.beginPath();
+
+ctx.moveTo(
+3,-15
+);
+
+ctx.lineTo(
+20,-2
+);
+
+ctx.stroke();
+
+
+}else if(o.type==="magnet"){
+
+ctx.strokeStyle="#e52e3d";
+ctx.lineWidth=9;
+
+ctx.beginPath();
+
+ctx.arc(
+0,-18,
+14,
+0,
+Math.PI
+);
+
+ctx.stroke();
+
+
+}else if(o.type==="booster"){
+
+ctx.fillStyle="#49d7ff";
+
+ctx.beginPath();
+
+ctx.moveTo(
+0,-45
+);
+
+ctx.lineTo(
+15,-15
+);
+
+ctx.lineTo(
+5,-15
+);
+
+ctx.lineTo(
+12,5
+);
+
+ctx.lineTo(
+-15,-25
+);
+
+ctx.lineTo(
+-4,-25
+);
+
+ctx.closePath();
+
+ctx.fill();
+
+
+}else if(o.type==="shoes"){
+
+ctx.fillStyle="#ff6b35";
+
+ctx.fillRect(
+-20,-20,
+35,
+15
+);
+
+ctx.fillRect(
+-10,-8,
+30,
+10
+);
+
+
+}else{
+
+/* stone / barricade */
+
+ctx.fillStyle="#655040";
+
+ctx.beginPath();
+
+ctx.roundRect(
+-30,-50,
+60,
+50,
+9
+);
+
+ctx.fill();
+
+ctx.fillStyle="#8c7058";
+
+ctx.fillRect(
+-23,-40,
+45,
+8
+);
+
+ctx.fillStyle="#d0c09d";
+
+ctx.fillRect(
+-25,-24,
+50,
+8
+);
+
+}
+
+ctx.restore();
+}
+
+
+/* UPDATE */
+
+function update(dt){
+
+lane+=
+(targetLane-lane)*
+Math.min(
+1,
+dt*12
+);
+
+
+if(jump>0)
+jump=Math.max(
+0,
+jump-dt/.75
+);
+
+
+if(slide>0)
+slide=Math.max(
+0,
+slide-dt
+);
+
+
+speed=Math.min(
+.72,
+speed+dt*.004
+);
+
+
+score+=
+dt*100*speed;
+
+
+document.getElementById(
+"score"
+).textContent=
+Math.floor(score);
+
+
+spawnTimer-=dt;
+
+if(spawnTimer<=0){
+
+spawn();
+
+spawnTimer=
+.55+
+Math.random()*.4;
+}
+
+
+for(
+let i=objects.length-1;
+i>=0;
+i--
+){
+
+const o=objects[i];
+
+o.z-=speed*dt;
+
+
+if(
+magnet>0 &&
+o.type==="coin" &&
+o.z<.45
+){
+
+o.lane=lane;
+}
+
+
+const sameLane=
+Math.abs(o.lane-lane)<.34;
+
+
+if(
+o.z<.08 &&
+o.z>-.12 &&
+sameLane &&
+!o.hit
+){
+
+o.hit=true;
+
+
+if(o.type==="stone"){
+
+/* STONE = GAME OVER */
+
+if(jump<.25){
+
+endGame();
+
+return;
+}
+
+}else{
+
+collect(o);
+}
+
+}
+
+
+if(o.z<-.2){
+
+objects.splice(i,1);
+}
+
+}
+
+
+if(magnet>0)
+magnet-=dt;
+
+if(booster>0)
+booster-=dt;
+
+if(shoes>0)
+shoes-=dt;
+}
+
+
+/* COLLECT */
+
+function collect(o){
+
+if(o.type==="coin"){
+
+coins++;
+
+document.getElementById(
+"coins"
+).textContent=coins;
+
+score+=50;
+
+}
+
+if(o.type==="key"){
+
+keys++;
+
+document.getElementById(
+"keys"
+).textContent=keys;
+
+score+=100;
+}
+
+if(o.type==="magnet"){
+
+magnet=8;
+
+score+=150;
+}
+
+if(o.type==="booster"){
+
+booster=6;
+
+speed=Math.min(
+.9,
+speed+.25
+);
+
+score+=200;
+}
+
+if(o.type==="shoes"){
+
+shoes=8;
+
+score+=150;
+}
+}
+
+
+/* GAME OVER */
 
 function endGame(){
 
-  if(!running) return;
+if(!running)return;
 
-  running = false;
+running=false;
 
-  finalScoreEl.textContent = Math.floor(score);
+if(score>best){
 
-  hud.style.display = "none";
-  controls.style.display = "none";
-  gameOver.style.display = "flex";
+best=Math.floor(score);
+
+localStorage.setItem(
+"runBlazeBest",
+best
+);
 }
 
-function moveLeft(){
+document.getElementById(
+"finalScore"
+).textContent=
+Math.floor(score);
 
-  if(!running) return;
+document.getElementById(
+"finalCoins"
+).textContent=
+coins;
 
-  targetLane = Math.max(0,targetLane - 1);
+document.getElementById(
+"gameOver"
+).style.display=
+"flex";
 }
 
-function moveRight(){
 
-  if(!running) return;
+/* DRAW */
 
-  targetLane = Math.min(2,targetLane + 1);
+function draw(){
+
+forest();
+
+
+const cx=roadX(lane);
+
+let lift=0;
+
+if(jump>0){
+
+lift=
+-Math.sin(
+(1-jump)*Math.PI
+)*H*.24;
 }
 
-function doJump(){
 
-  if(!running || jumping) return;
+if(slide>0){
 
-  jumping = true;
-  jump = 1;
-}
+ctx.save();
 
-function doSlide(){
-
-  if(!running || jumping) return;
-
-  sliding = true;
-
-  setTimeout(()=>{
-    sliding = false;
-  },650);
-}
-
-document.getElementById("leftBtn").onclick = moveLeft;
-document.getElementById("rightBtn").onclick = moveRight;
-document.getElementById("jumpBtn").onclick = doJump;
-document.getElementById("slideBtn").onclick = doSlide;
-
-document.addEventListener("keydown",e=>{
-
-  if(e.key==="ArrowLeft" || e.key==="a") moveLeft();
-  if(e.key==="ArrowRight" || e.key==="d") moveRight();
-  if(e.key==="ArrowUp" || e.key==="w" || e.key===" ") doJump();
-  if(e.key==="ArrowDown" || e.key==="s") doSlide();
-
-});
-function laneX(l){
-  return W * (0.30 + l * 0.20);
-}
-
-function drawBackground(){
-
-  const sky = ctx.createLinearGradient(0,0,0,H);
-  sky.addColorStop(0,"#071a2b");
-  sky.addColorStop(0.55,"#31566c");
-  sky.addColorStop(1,"#111820");
-
-  ctx.fillStyle = sky;
-  ctx.fillRect(0,0,W,H);
-
-  // distant city
-  ctx.fillStyle="#172936";
-
-  for(let i=0;i<18;i++){
-    const bw=25+(i%4)*18;
-    const bh=70+(i%6)*25;
-    const x=i*38;
-    ctx.fillRect(x,H*0.34-bh,bw,bh);
-  }
-
-  // railway area
-  ctx.fillStyle="#20262b";
-  ctx.fillRect(0,H*0.43,W,H*0.57);
-
-  // tracks
-  ctx.strokeStyle="#777d80";
-  ctx.lineWidth=6;
-
-  ctx.beginPath();
-  ctx.moveTo(W*0.18,H);
-  ctx.lineTo(W*0.38,H*0.43);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(W*0.82,H);
-  ctx.lineTo(W*0.62,H*0.43);
-  ctx.stroke();
-
-  ctx.strokeStyle="#343a3e";
-  ctx.lineWidth=3;
-
-  for(let y=H*0.50;y<H;y+=45){
-    ctx.beginPath();
-    ctx.moveTo(W*0.15,y);
-    ctx.lineTo(W*0.85,y);
-    ctx.stroke();
-  }
-}
-
-function drawTrainTop(){
-
-  const topY=H*0.47;
-  const bottomY=H;
-
-  ctx.fillStyle="#26343c";
-
-  ctx.beginPath();
-  ctx.moveTo(W*0.17,topY);
-  ctx.lineTo(W*0.83,topY);
-  ctx.lineTo(W*0.94,bottomY);
-  ctx.lineTo(W*0.06,bottomY);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle="#9aa8ae";
-  ctx.lineWidth=4;
-
-  ctx.beginPath();
-  ctx.moveTo(W*0.17,topY);
-  ctx.lineTo(W*0.06,bottomY);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(W*0.83,topY);
-  ctx.lineTo(W*0.94,bottomY);
-  ctx.stroke();
-
-  // lane lines
-  ctx.strokeStyle="#65757c";
-  ctx.lineWidth=3;
-
-  for(let l=1;l<3;l++){
-
-    const topX=W*(0.17+l*0.22);
-    const bottomX=W*(0.06+l*0.293);
-
-    ctx.beginPath();
-    ctx.moveTo(topX,topY);
-    ctx.lineTo(bottomX,bottomY);
-    ctx.stroke();
-  }
-}
-
-function drawRunner(){
-
-  const x=laneX(lane);
-  const ground=H*0.78;
-
-  const jumpHeight=jump*145;
-  const y=ground-jumpHeight;
-
-  ctx.save();
-  ctx.translate(x,y);
-
-  const run=Math.sin(performance.now()/55)*5;
-
-  // shadow
-  ctx.fillStyle="#00000055";
-  ctx.beginPath();
-  ctx.ellipse(0,35+jumpHeight*0.2,28,8,0,0,Math.PI*2);
-  ctx.fill();
-
-  // legs
-  ctx.strokeStyle="#17202a";
-  ctx.lineWidth=10;
-  ctx.lineCap="round";
-
-  ctx.beginPath();
-  ctx.moveTo(-8,18);
-  ctx.lineTo(-15+run,48);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(8,18);
-  ctx.lineTo(15-run,48);
-  ctx.stroke();
-
-  // shoes
-  ctx.strokeStyle="#f2f2f2";
-  ctx.lineWidth=8;
-
-  ctx.beginPath();
-  ctx.moveTo(-15+run,48);
-  ctx.lineTo(-25+run,48);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(15-run,48);
-  ctx.lineTo(25-run,48);
-  ctx.stroke();
-
-  // body
-  ctx.fillStyle =
-    selectedCharacter==="boy" ? "#1769d1" : "#d52d70";
-
-  ctx.beginPath();
-  ctx.roundRect(-18,-5,36,40,10);
-  ctx.fill();
-
-  // arms
-  ctx.strokeStyle="#e1a078";
-  ctx.lineWidth=9;
-
-  ctx.beginPath();
-  ctx.moveTo(-16,2);
-  ctx.lineTo(-30,18+run);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(16,2);
-  ctx.lineTo(30,18-run);
-  ctx.stroke();
-
-  // head
-  ctx.fillStyle="#e1a078";
-  ctx.beginPath();
-  ctx.arc(0,-25,19,0,Math.PI*2);
-  ctx.fill();
-
-  // hair
-  ctx.fillStyle="#191919";
-
-  if(selectedCharacter==="boy"){
-    ctx.beginPath();
-    ctx.arc(0,-31,19,Math.PI,Math.PI*2);
-    ctx.fill();
-  }else{
-    ctx.beginPath();
-    ctx.arc(0,-30,20,Math.PI,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillRect(-20,-31,7,28);
-    ctx.fillRect(13,-31,7,28);
-  }
-
-  ctx.restore();
-}
-
-function drawCoin(o){
-
-  const x=laneX(o.lane);
-  const y=H*0.46+o.z*H*0.34;
-  const r=8+o.z*16;
-
-  ctx.fillStyle="#ffd21c";
-
-  ctx.beginPath();
-  ctx.arc(x,y,r,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.strokeStyle="#fff4a0";
-  ctx.lineWidth=3;
-  ctx.stroke();
-
-  ctx.fillStyle="#a66b00";
-  ctx.font=Math.max(10,r)+"px Arial";
-  ctx.textAlign="center";
-  ctx.textBaseline="middle";
-  ctx.fillText("C",x,y);
-}
-
-function drawStar(o){
-
-  const x=laneX(o.lane);
-  const y=H*0.46+o.z*H*0.34;
-  const r=9+o.z*14;
-
-  ctx.fillStyle="#fff45c";
-
-  ctx.beginPath();
-
-  for(let i=0;i<10;i++){
-
-    const a=-Math.PI/2+i*Math.PI/5;
-    const rr=i%2===0?r:r*0.45;
-
-    const px=x+Math.cos(a)*rr;
-    const py=y+Math.sin(a)*rr;
-
-    if(i===0) ctx.moveTo(px,py);
-    else ctx.lineTo(px,py);
-  }
-
-  ctx.closePath();
-  ctx.fill();
-}
-
-function drawKey(o){
-
-  const x=laneX(o.lane);
-  const y=H*0.46+o.z*H*0.34;
-  const r=8+o.z*12;
-
-  ctx.strokeStyle="#6ee7ff";
-  ctx.lineWidth=5;
-
-  ctx.beginPath();
-  ctx.arc(x-5,y-4,r*0.65,0,Math.PI*2);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(x+1,y+3);
-  ctx.lineTo(x+18,y+20);
-  ctx.lineTo(x+11,y+27);
-  ctx.moveTo(x+8,y+11);
-  ctx.lineTo(x+16,y+3);
-  ctx.stroke();
-}
-
-function drawObstacle(o){
-
-  const x=laneX(o.lane);
-  const y=H*0.46+o.z*H*0.34;
-
-  const w=35+o.z*55;
-  const h=22+o.z*38;
-
-  ctx.fillStyle="#bd432f";
-
-  ctx.beginPath();
-  ctx.roundRect(
-    x-w/2,
-    y-h,
-    w,
-    h,
-    6
-  );
-  ctx.fill();
-
-  ctx.fillStyle="#f4d35e";
-
-  for(let i=0;i<4;i++){
-
-    ctx.fillRect(
-      x-w/2+i*w/4,
-      y-h+5,
-      w/8,
-      h-10
-    );
-  }
-}
-
-function spawnObject(){
-
-  const r=Math.random();
-
-  const lanePick=Math.floor(Math.random()*3);
-
-  if(r<0.52){
-
-    objects.push({
-      type:"coin",
-      lane:lanePick,
-      z:0,
-      collected:false
-    });
-
-  }else if(r<0.68){
-
-    objects.push({
-      type:"star",
-      lane:lanePick,
-      z:0,
-      collected:false
-    });
-
-  }else if(r<0.78){
-
-    objects.push({
-      type:"key",
-      lane:lanePick,
-      z:0,
-      collected:false
-    });
-
-  }else{
-
-    objects.push({
-      type:"obstacle",
-      lane:lanePick,
-      z:0,
-      collected:false
-    });
-  }
-}
-function updateObjects(dt){
-
-  for(let i=objects.length-1;i>=0;i--){
-
-    const o=objects[i];
-
-    o.z += speed * dt * 0.00045;
-
-    if(o.z > 1.05){
-      objects.splice(i,1);
-      continue;
-    }
-
-    const close = o.z > 0.78;
-
-    if(close && !o.collected && o.lane === lane){
-
-      if(o.type === "obstacle"){
-
-        if(jump < 0.45){
-
-          endGame();
-          return;
-
-        }
-
-      }else{
-
-        o.collected = true;
-
-        if(o.type === "coin"){
-          coins++;
-          score += 25;
-        }
-
-        if(o.type === "star"){
-          score += 75;
-        }
-
-        if(o.type === "key"){
-          score += 100;
-        }
-
-      }
-    }
-
-    if(o.collected){
-      objects.splice(i,1);
-    }
-  }
-}
-
-function updatePlayer(dt){
-
-  const moveSpeed = 7 * dt;
-
-  if(lane < targetLane){
-    lane += moveSpeed;
-
-    if(lane > targetLane){
-      lane = targetLane;
-    }
-  }
-
-  if(lane > targetLane){
-    lane -= moveSpeed;
-
-    if(lane < targetLane){
-      lane = targetLane;
-    }
-  }
-
-  if(jumping){
-
-    jump += dt * 0.0018;
-
-    if(jump >= 1){
-      jump = 0;
-      jumping = false;
-    }
-  }
-}
-
-function drawObjects(){
-
-  for(const o of objects){
-
-    if(o.collected) continue;
-
-    if(o.type === "coin"){
-      drawCoin(o);
-    }
-
-    if(o.type === "star"){
-      drawStar(o);
-    }
-
-    if(o.type === "key"){
-      drawKey(o);
-    }
-
-    if(o.type === "obstacle"){
-      drawObstacle(o);
-    }
-  }
-}
-
-function drawGame(){
-
-  drawBackground();
-  drawTrainTop();
-  drawObjects();
-  drawRunner();
-}
-
-function loop(time){
-
-  if(!running) return;
-
-  const dt = Math.min(32,time-lastTime);
-
-  lastTime = time;
-
-  score += dt * 0.025;
-
-  speed += dt * 0.00015;
-
-  spawnTimer += dt;
-
-  if(spawnTimer > Math.max(480,900-speed*30)){
-
-    spawnObject();
-
-    spawnTimer = 0;
-  }
-
-  updatePlayer(dt);
-  updateObjects(dt);
-
-  scoreEl.textContent = Math.floor(score);
-  coinsEl.textContent = coins;
-
-  drawGame();
-
-  requestAnimationFrame(loop);
-}
-
-let touchStartX=0;
-let touchStartY=0;
-
-canvas.addEventListener("touchstart",e=>{
-
-  const t=e.touches[0];
-
-  touchStartX=t.clientX;
-  touchStartY=t.clientY;
-
-},{passive:true});
-
-canvas.addEventListener("touchend",e=>{
-
-  const t=e.changedTouches[0];
-
-  const dx=t.clientX-touchStartX;
-  const dy=t.clientY-touchStartY;
-
-  if(Math.abs(dx)>Math.abs(dy)){
-
-    if(Math.abs(dx)>35){
-
-      if(dx>0){
-        moveRight();
-      }else{
-        moveLeft();
-      }
-    }
-
-  }else{
-
-    if(Math.abs(dy)>35){
-
-      if(dy<0){
-        doJump();
-      }else{
-        doSlide();
-      }
-    }
-  }
-
-},{passive:true});
-
-function preventScroll(e){
-  e.preventDefault();
-}
-
-document.addEventListener(
-  "touchmove",
-  preventScroll,
-  {passive:false}
+ctx.translate(
+cx,
+H*.79+lift+20
 );
 
-window.addEventListener("blur",()=>{
+ctx.scale(
+1.25,
+.7
+);
 
-  if(running){
-    lastTime=performance.now();
-  }
+runner(
+ctx,
+0,
+0,
+1.15,
+selected,
+phase
+);
 
-});
-  </script>
-</div>
+ctx.restore();
+
+}else{
+
+runner(
+ctx,
+cx,
+H*.79+lift,
+1.15,
+selected,
+phase
+);
+}
+
+
+for(
+const o of objects
+){
+
+objectDraw(o);
+}
+}
+
+
+/* LOOP */
+
+function loop(now){
+
+if(!running)return;
+
+const dt=Math.min(
+.035,
+(now-last)/1000
+);
+
+last=now;
+
+phase+=dt;
+
+update(dt);
+
+draw();
+
+if(running)
+requestAnimationFrame(loop);
+}
+
+
+/* SETTINGS */
+
+const settings=
+document.getElementById(
+"settingsPanel"
+);
+
+const withdrawal=
+document.getElementById(
+"withdrawPanel"
+);
+
+
+document.getElementById(
+"settingsBtn"
+).onclick=()=>{
+
+settings.style.display="flex";
+};
+
+
+document.getElementById(
+"closeSettings"
+).onclick=()=>{
+
+settings.style.display="none";
+};
+
+
+document.getElementById(
+"withdrawBtn"
+).onclick=()=>{
+
+settings.style.display="none";
+
+withdrawal.style.display="flex";
+};
+
+
+document.getElementById(
+"backSettings"
+).onclick=()=>{
+
+withdrawal.style.display="none";
+
+settings.style.display="flex";
+};
+
+
+document.getElementById(
+"soundBtn"
+).onclick=function(){
+
+this.textContent=
+this.textContent==="SOUND: ON"
+?"SOUND: OFF"
+:"SOUND: ON";
+};
+
+
+document.getElementById(
+"privacyBtn"
+).onclick=()=>{
+
+alert(
+"Privacy settings will be connected before Play Store launch."
+);
+};
+
+
+/* WITHDRAWAL METHODS */
+
+function withdrawal(method){
+
+alert(
+method+
+" selected. Real-money withdrawal requires a compliant payout backend and required approvals."
+);
+}
+
+
+document.getElementById(
+"upiBtn"
+).onclick=()=>{
+withdrawal("UPI");
+};
+
+
+document.getElementById(
+"bankBtn"
+).onclick=()=>{
+withdrawal("Bank Account");
+};
+
+
+document.getElementById(
+"paypalBtn"
+).onclick=()=>{
+withdrawal("PayPal");
+};
+
+
+/* STOP PAGE SCROLL WHILE PLAYING */
+
+addEventListener(
+"touchmove",
+e=>{
+
+if(running)
+e.preventDefault();
+
+},
+{passive:false}
+);
+
+</script>
+
 </body>
 </html>
