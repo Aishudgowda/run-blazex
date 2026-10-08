@@ -1,1616 +1,1722 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#07130d">
 <title>Run Blaze</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:#07150c;font-family:Arial,sans-serif;color:#fff}
-button{font:inherit}
-.screen{position:fixed;inset:0}
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:#06100a;
+  color:white;
+}
+
+button{
+  border:0;
+  border-radius:14px;
+  padding:14px 20px;
+  font-size:17px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.screen{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.screen.active{
+  display:flex;
+}
 
 #home{
-display:flex;
-align-items:center;
-justify-content:center;
-background:linear-gradient(#0b2818,#07150c);
-}
-
-.homeCard{
-width:min(430px,92vw);
-padding:25px 20px;
-text-align:center;
-background:#10261a;
-border-radius:28px;
-box-shadow:0 20px 70px #0009;
-}
-
-.logo{font-size:42px;font-weight:900}
-.sub{opacity:.7;margin:5px 0 20px}
-
-.characters{
-display:flex;
-gap:12px;
-}
-
-.charBtn{
-flex:1;
-padding:12px;
-border:2px solid #38533f;
-border-radius:18px;
-background:#172f20;
-color:#fff;
-font-weight:800;
-}
-
-.charBtn.active{
-border-color:#ffd34d;
-}
-
-.charPreview{
-height:75px;
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-.mainBtn,.smallBtn,.rowBtn{
-width:100%;
-padding:14px;
-margin-top:10px;
-border:0;
-border-radius:15px;
-font-weight:900;
-}
-
-.mainBtn{
-background:#ffd34d;
-color:#08120b;
-font-size:20px;
-}
-
-.smallBtn{
-background:#d9e6df;
-color:#07150c;
-}
-
-.note{
-font-size:12px;
-opacity:.6;
-margin-top:12px;
-}
-
-#game{display:none;background:#07150c}
-
-canvas{
-width:100%;
-height:100%;
-display:block;
-}
-
-#hud{
-position:absolute;
-top:12px;
-left:12px;
-right:12px;
-display:flex;
-justify-content:space-between;
-font-weight:900;
-pointer-events:none;
-}
-
-.hudBox{
-padding:8px 11px;
-background:#07150cdd;
-border-radius:11px;
-font-size:13px;
-}
-
-#hint{
-position:absolute;
-bottom:16px;
-left:50%;
-transform:translateX(-50%);
-background:#07150ccc;
-padding:8px 12px;
-border-radius:12px;
-font-size:11px;
-white-space:nowrap;
-opacity:.75;
-}
-
-#gameOver{
-display:none;
-position:absolute;
-inset:0;
-align-items:center;
-justify-content:center;
-background:#000b;
-}
-
-.card{
-width:min(380px,90vw);
-padding:25px;
-border-radius:24px;
-background:#10261a;
-text-align:center;
-}
-
-.card h2{font-size:32px;margin-bottom:15px}
-
-.stats{
-display:flex;
-justify-content:space-around;
-margin:15px 0;
-font-weight:800;
+  background:
+  radial-gradient(circle at 50% 20%,#237c4b 0,#0a3925 38%,#020805 100%);
 }
 
 .panel{
-display:none;
-position:fixed;
-inset:0;
-z-index:50;
-align-items:center;
-justify-content:center;
-background:#000c;
-padding:20px;
+  width:min(92%,430px);
+  padding:28px;
+  border-radius:28px;
+  background:rgba(0,0,0,.50);
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 20px 70px #0008;
+  backdrop-filter:blur(10px);
 }
 
-.rowBtn{
-background:#1b3926;
-color:#fff;
+.logo{
+  font-size:46px;
+  font-weight:1000;
+  letter-spacing:3px;
+  text-shadow:0 5px 20px #000;
 }
 
-.rowBtn.primary{
-background:#ffd34d;
-color:#07150c;
+.tag{
+  opacity:.8;
+  margin:8px 0 22px;
 }
 
-.close{
-background:#718579;
+.choice{
+  display:flex;
+  gap:10px;
+  margin:14px 0;
 }
 
+.choice button{
+  flex:1;
+  background:#183c2a;
+  color:white;
+  border:2px solid transparent;
+}
+
+.choice button.selected{
+  border-color:#ffd34e;
+  background:#245b3e;
+}
+
+.primary{
+  width:100%;
+  background:#ffd34e;
+  color:#111;
+  margin-top:10px;
+}
+
+.secondary{
+  width:100%;
+  background:#ffffff18;
+  color:white;
+  margin-top:10px;
+}
+
+.studio{
+  margin-top:28px;
+  font-size:13px;
+  opacity:.7;
+  letter-spacing:2px;
+}
+
+#game{
+  background:#050b07;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  touch-action:none;
+}
+
+.hud{
+  position:absolute;
+  top:12px;
+  left:12px;
+  right:12px;
+  display:flex;
+  justify-content:space-between;
+  pointer-events:none;
+  z-index:5;
+}
+
+.hudbox{
+  background:#0009;
+  padding:9px 12px;
+  border-radius:13px;
+  font-weight:800;
+  backdrop-filter:blur(6px);
+}
+
+.powers{
+  position:absolute;
+  top:58px;
+  left:12px;
+  display:flex;
+  gap:7px;
+  z-index:5;
+  pointer-events:none;
+}
+
+.power{
+  background:#0009;
+  border-radius:12px;
+  padding:7px 9px;
+  font-size:13px;
+}
+
+.hint{
+  position:absolute;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#0008;
+  border-radius:20px;
+  padding:8px 15px;
+  font-size:12px;
+  z-index:5;
+  opacity:.85;
+  white-space:nowrap;
+}
+
+#settings,
+#over{
+  background:linear-gradient(#07160d,#020603);
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:13px 0;
+  border-bottom:1px solid #ffffff18;
+}
+
+.row button{
+  padding:9px 13px;
+  background:#ffffff18;
+  color:white;
+}
+
+.withdraw{
+  margin-top:18px;
+  padding-top:10px;
+  border-top:1px solid #ffffff20;
+}
+
+.withdraw button{
+  width:100%;
+  margin:5px 0;
+  background:#173b29;
+  color:white;
+}
+
+.small{
+  font-size:12px;
+  opacity:.7;
+  line-height:1.5;
+}
+
+#withdrawMsg{
+  margin-top:10px;
+  color:#ffd34e;
+}
 </style>
 </head>
 
 <body>
 
-<div id="home" class="screen">
+<!-- HOME -->
+<section id="home" class="screen active">
+  <div class="panel">
 
-<div class="homeCard">
+    <div class="logo">RUN BLAZE</div>
 
-<div class="logo">RUN BLAZE</div>
+    <div class="tag">
+      Endless Forest Runner
+    </div>
 
-<div class="sub">Forest Runner</div>
+    <div class="choice">
+      <button id="boyBtn" class="selected">
+        🏃 Boy
+      </button>
 
-<div style="font-weight:800;margin-bottom:10px">
-Choose Runner
-</div>
+      <button id="girlBtn">
+        🏃‍♀️ Girl
+      </button>
+    </div>
 
-<div class="characters">
+    <button id="playBtn" class="primary">
+      ▶ PLAY
+    </button>
 
-<button class="charBtn active" id="boyBtn">
-<div class="charPreview">
-<canvas id="boyPreview" width="70" height="80"></canvas>
-</div>
-BOY
-</button>
+    <button id="settingsBtn" class="secondary">
+      ⚙ SETTINGS
+    </button>
 
-<button class="charBtn" id="girlBtn">
-<div class="charPreview">
-<canvas id="girlPreview" width="70" height="80"></canvas>
-</div>
-GIRL
-</button>
+    <div class="studio">
+      PLAYTECH STUDIO
+    </div>
 
-</div>
-
-<button class="mainBtn" id="playBtn">
-PLAY
-</button>
-
-<button class="smallBtn" id="settingsBtn">
-SETTINGS
-</button>
-
-<div class="note">
-Swipe ← → to move
-</div>
-
-<div class="note">
-Swipe ↑ to jump • Swipe ↓ to slide
-</div>
-
-<div class="note">
-Playtech Studio
-</div>
-
-</div>
-</div>
+  </div>
+</section>
 
 
-<div id="game" class="screen">
+<!-- GAME -->
+<section id="game" class="screen">
 
-<canvas id="canvas"></canvas>
+  <canvas id="gameCanvas"></canvas>
 
-<div id="hud">
+  <div class="hud">
 
-<div class="hudBox">
-SCORE <span id="score">0</span>
-</div>
+    <div class="hudbox">
+      🏃 <span id="score">0</span>
+    </div>
 
-<div class="hudBox">
-COINS <span id="coins">0</span>
-</div>
+    <div class="hudbox">
+      🪙 <span id="coins">0</span>
+      &nbsp;
+      ⭐ <span id="stars">0</span>
+      &nbsp;
+      🔑 <span id="keys">0</span>
+    </div>
 
-<div class="hudBox">
-KEYS <span id="keys">0</span>
-</div>
+  </div>
 
-<div class="hudBox">
-BEST <span id="best">0</span>
-</div>
+  <div class="powers">
 
-</div>
+    <div class="power">
+      🧲 <span id="magnet">0</span>
+    </div>
 
-<div id="hint">
-SWIPE TO MOVE • JUMP • SLIDE
-</div>
+    <div class="power">
+      🛡️ <span id="shield">0</span>
+    </div>
 
-<div id="gameOver">
+    <div class="power">
+      👟 <span id="booster">0</span>
+    </div>
 
-<div class="card">
+  </div>
 
-<h2>GAME OVER</h2>
+  <div class="hint">
+    Swipe ← → lanes • ↑ jump • ↓ slide
+  </div>
 
-<div class="stats">
-
-<div>
-SCORE<br>
-<span id="finalScore">0</span>
-</div>
-
-<div>
-COINS<br>
-<span id="finalCoins">0</span>
-</div>
-
-</div>
-
-<button class="mainBtn" id="againBtn">
-PLAY AGAIN
-</button>
-
-<button class="smallBtn" id="homeBtn">
-HOME
-</button>
-
-</div>
-</div>
-</div>
+</section>
 
 
-<div id="settingsPanel" class="panel">
+<!-- SETTINGS -->
+<section id="settings" class="screen">
 
-<div class="card">
+  <div class="panel">
 
-<h2>SETTINGS</h2>
+    <h1>⚙ Settings</h1>
 
-<button class="rowBtn primary" id="withdrawBtn">
-WITHDRAWAL
-</button>
+    <div class="row">
+      <span>Sound</span>
+      <button id="soundBtn">ON</button>
+    </div>
 
-<button class="rowBtn" id="soundBtn">
-SOUND: ON
-</button>
+    <div class="row">
+      <span>Controls</span>
+      <span class="small">
+        Swipe only
+      </span>
+    </div>
 
-<button class="rowBtn" id="privacyBtn">
-PRIVACY
-</button>
+    <div class="withdraw">
 
-<button class="rowBtn close" id="closeSettings">
-CLOSE
-</button>
+      <h3>💰 Withdrawal</h3>
 
-</div>
-</div>
+      <p class="small">
+        Withdrawal options are UI only.
+        Real payouts require a secure verified
+        backend and payment provider.
+      </p>
+
+      <button data-method="UPI">
+        🇮🇳 UPI
+      </button>
+
+      <button data-method="Bank Account">
+        🏦 Bank Account
+      </button>
+
+      <button data-method="PayPal">
+        🅿️ PayPal
+      </button>
+
+      <div id="withdrawMsg" class="small"></div>
+
+    </div>
+
+    <button id="backBtn" class="secondary">
+      ← Back
+    </button>
+
+    <div class="studio">
+      PLAYTECH STUDIO
+    </div>
+
+  </div>
+
+</section>
 
 
-<div id="withdrawPanel" class="panel">
+<!-- GAME OVER -->
+<section id="over" class="screen">
 
-<div class="card">
+  <div class="panel">
 
-<h2>WITHDRAWAL</h2>
+    <h1>💥 GAME OVER</h1>
 
-<p style="opacity:.7;margin-bottom:10px">
-Choose withdrawal method
-</p>
+    <p>
+      Score:
+      <b id="finalScore">0</b>
+    </p>
 
-<button class="rowBtn" id="upiBtn">
-UPI
-</button>
+    <p>
+      Coins:
+      <b id="finalCoins">0</b>
+      • Stars:
+      <b id="finalStars">0</b>
+      • Keys:
+      <b id="finalKeys">0</b>
+    </p>
 
-<button class="rowBtn" id="bankBtn">
-BANK ACCOUNT
-</button>
+    <p>
+      Best:
+      <b id="bestScore">0</b>
+    </p>
 
-<button class="rowBtn" id="paypalBtn">
-PAYPAL
-</button>
+    <button id="againBtn" class="primary">
+      ↻ RUN AGAIN
+    </button>
 
-<button class="rowBtn close" id="backSettings">
-BACK
-</button>
+    <button id="homeBtn" class="secondary">
+      ⌂ HOME
+    </button>
 
-</div>
-</div>
+  </div>
+
+</section>
 
 
 <script>
+(function(){
 
 "use strict";
 
-const home=document.getElementById("home");
-const game=document.getElementById("game");
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
 
-let W=innerWidth;
-let H=innerHeight;
+/* =========================
+   BASIC SETUP
+========================= */
 
-let selected="boy";
-let running=false;
+const $ = id => document.getElementById(id);
 
-let score=0;
-let coins=0;
-let keys=0;
+const canvas = $("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-let best=Number(
-localStorage.getItem("runBlazeBest")||0
-);
-
-let lane=0;
-let targetLane=0;
-
-let jump=0;
-let slide=0;
-
-let speed=.42;
-let objects=[];
-
-let spawnTimer=.3;
-let last=0;
-let phase=0;
-
-let magnet=0;
-let booster=0;
-let shoes=0;
-
-let sx=0;
-let sy=0;
-
-document.getElementById("best").textContent=best;
+const screens = {
+  home:$("home"),
+  game:$("game"),
+  settings:$("settings"),
+  over:$("over")
+};
 
 
-/* RESIZE */
+/* =========================
+   GAME STATE
+========================= */
+
+let runner = "boy";
+
+let soundOn = true;
+
+let playing = false;
+
+let lane = 1;
+let targetLane = 1;
+
+let score = 0;
+let coins = 0;
+let stars = 0;
+let keys = 0;
+
+let distance = 0;
+
+let speed = 0.32;
+
+let magnet = 0;
+let shield = 0;
+let booster = 0;
+
+let jumping = false;
+let sliding = false;
+
+let jumpTime = 0;
+let slideTime = 0;
+
+let objects = [];
+
+let spawnTimer = 0;
+
+let lastTime = 0;
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+
+/* =========================
+   SCREEN
+========================= */
+
+function showScreen(name){
+
+  Object.values(screens).forEach(screen=>{
+    screen.classList.remove("active");
+  });
+
+  screens[name].classList.add("active");
+}
+
+
+/* =========================
+   RESIZE
+========================= */
 
 function resize(){
 
-W=innerWidth;
-H=innerHeight;
+  const d = Math.min(
+    window.devicePixelRatio || 1,
+    2
+  );
 
-const d=Math.min(
-devicePixelRatio||1,
-2
-);
+  canvas.width =
+    window.innerWidth * d;
 
-canvas.width=W*d;
-canvas.height=H*d;
+  canvas.height =
+    window.innerHeight * d;
 
-ctx.setTransform(
-d,0,0,d,0,0
-);
+  canvas.style.width =
+    window.innerWidth + "px";
+
+  canvas.style.height =
+    window.innerHeight + "px";
+
+  ctx.setTransform(
+    d,
+    0,
+    0,
+    d,
+    0,
+    0
+  );
 }
 
-addEventListener("resize",resize);
+window.addEventListener(
+  "resize",
+  resize
+);
+
 resize();
 
 
-/* CHARACTER */
+/* =========================
+   CHARACTER SELECT
+========================= */
 
-function runner(c,x,y,s,type,t){
+$("boyBtn").onclick = function(){
 
-c.save();
+  runner = "boy";
 
-c.translate(x,y);
-c.scale(s,s);
+  $("boyBtn")
+    .classList.add("selected");
 
-const bob=
-Math.sin(t*8)*2;
-
-const leg=
-Math.sin(t*8)*11;
-
-const arm=
-Math.sin(t*8+Math.PI)*10;
-
-
-/* legs */
-
-c.strokeStyle="#17222a";
-c.lineWidth=7;
-c.lineCap="round";
-
-c.beginPath();
-c.moveTo(-5,27);
-c.lineTo(-10+leg,52);
-c.stroke();
-
-c.beginPath();
-c.moveTo(5,27);
-c.lineTo(10-leg,52);
-c.stroke();
-
-
-/* arms */
-
-c.beginPath();
-c.moveTo(-11,5);
-c.lineTo(-19+arm,24);
-c.stroke();
-
-c.beginPath();
-c.moveTo(11,5);
-c.lineTo(19-arm,24);
-c.stroke();
-
-
-/* body */
-
-c.fillStyle=
-type==="boy"
-?"#1976b8"
-:"#c42d73";
-
-c.beginPath();
-c.roundRect(
--14,0,28,34,8
-);
-c.fill();
-
-
-/* head */
-
-c.fillStyle="#d99b73";
-
-c.beginPath();
-
-c.arc(
-0,
--14+bob,
-14,
-0,
-Math.PI*2
-);
-
-c.fill();
-
-
-/* hair */
-
-c.fillStyle="#17202a";
-
-if(type==="boy"){
-
-c.beginPath();
-
-c.arc(
-0,
--19+bob,
-14,
-Math.PI,
-Math.PI*2
-);
-
-c.fill();
-
-}else{
-
-c.beginPath();
-
-c.arc(
-0,
--20+bob,
-15,
-Math.PI,
-Math.PI*2
-);
-
-c.fill();
-
-c.fillRect(
--15,
--19+bob,
-5,
-25
-);
-
-c.fillRect(
-10,
--19+bob,
-5,
-25
-);
-}
-
-c.restore();
-}
-
-
-function preview(id,type){
-
-const c=
-document.getElementById(id)
-.getContext("2d");
-
-c.clearRect(0,0,70,80);
-
-runner(
-c,
-35,
-25,
-.9,
-type,
-0
-);
-}
-
-preview("boyPreview","boy");
-preview("girlPreview","girl");
-
-
-document.getElementById("boyBtn")
-.onclick=()=>{
-
-selected="boy";
-
-document.getElementById(
-"boyBtn"
-).classList.add("active");
-
-document.getElementById(
-"girlBtn"
-).classList.remove("active");
+  $("girlBtn")
+    .classList.remove("selected");
 };
 
 
-document.getElementById("girlBtn")
-.onclick=()=>{
+$("girlBtn").onclick = function(){
 
-selected="girl";
+  runner = "girl";
 
-document.getElementById(
-"girlBtn"
-).classList.add("active");
+  $("girlBtn")
+    .classList.add("selected");
 
-document.getElementById(
-"boyBtn"
-).classList.remove("active");
+  $("boyBtn")
+    .classList.remove("selected");
 };
 
 
-/* GAME START */
+/* =========================
+   BUTTONS
+========================= */
+
+$("playBtn").onclick =
+  startGame;
+
+$("settingsBtn").onclick =
+  function(){
+    showScreen("settings");
+  };
+
+$("backBtn").onclick =
+  function(){
+    showScreen("home");
+  };
+
+$("homeBtn").onclick =
+  function(){
+
+    playing = false;
+
+    showScreen("home");
+  };
+
+$("againBtn").onclick =
+  startGame;
+
+
+$("soundBtn").onclick =
+  function(){
+
+    soundOn = !soundOn;
+
+    $("soundBtn").textContent =
+      soundOn ? "ON" : "OFF";
+  };
+
+
+/* =========================
+   WITHDRAWAL UI
+========================= */
+
+document
+.querySelectorAll("[data-method]")
+.forEach(button=>{
+
+  button.onclick = function(){
+
+    $("withdrawMsg").textContent =
+      button.dataset.method +
+      " selected. Connect a verified payout backend before enabling real withdrawals.";
+
+  };
+
+});
+
+
+/* =========================
+   LANE
+========================= */
+
+function laneX(n,z){
+
+  const center =
+    window.innerWidth / 2;
+
+  const roadWidth =
+    window.innerWidth *
+    (0.12 + 0.58 * z);
+
+  return center +
+    (n - 1) *
+    roadWidth *
+    0.34;
+}
+
+
+/* =========================
+   ROAD Y
+========================= */
+
+function roadY(z){
+
+  return (
+    window.innerHeight * 0.30
+  ) +
+  z *
+  window.innerHeight *
+  0.70;
+}
+
+
+/* =========================
+   SPAWN
+========================= */
+
+function spawnObject(){
+
+  const laneNumber =
+    Math.floor(
+      Math.random() * 3
+    );
+
+  const r =
+    Math.random();
+
+  let type;
+
+  if(r < 0.30)
+    type = "coin";
+
+  else if(r < 0.39)
+    type = "star";
+
+  else if(r < 0.47)
+    type = "key";
+
+  else if(r < 0.53)
+    type = "magnet";
+
+  else if(r < 0.59)
+    type = "shield";
+
+  else if(r < 0.65)
+    type = "booster";
+
+  else if(r < 0.82)
+    type = "stone";
+
+  else
+    type = "barricade";
+
+
+  objects.push({
+
+    type:type,
+
+    lane:laneNumber,
+
+    z:0
+
+  });
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetGame(){
+
+  score = 0;
+
+  coins = 0;
+
+  stars = 0;
+
+  keys = 0;
+
+  distance = 0;
+
+  speed = 0.32;
+
+  lane = 1;
+
+  targetLane = 1;
+
+  magnet = 0;
+
+  shield = 0;
+
+  booster = 0;
+
+  jumping = false;
+
+  sliding = false;
+
+  jumpTime = 0;
+
+  slideTime = 0;
+
+  objects = [];
+
+  spawnTimer = 0;
+
+  lastTime = 0;
+}
+
+
+/* =========================
+   START
+========================= */
 
 function startGame(){
 
-home.style.display="none";
-game.style.display="block";
+  resetGame();
 
-document.getElementById(
-"gameOver"
-).style.display="none";
+  playing = true;
 
-running=true;
+  showScreen("game");
 
-score=0;
-coins=0;
-keys=0;
-
-lane=0;
-targetLane=0;
-
-jump=0;
-slide=0;
-
-magnet=0;
-booster=0;
-shoes=0;
-
-speed=.42;
-
-objects=[];
-
-spawnTimer=.2;
-
-last=performance.now();
-
-document.getElementById("score")
-.textContent="0";
-
-document.getElementById("coins")
-.textContent="0";
-
-document.getElementById("keys")
-.textContent="0";
-
-requestAnimationFrame(loop);
-}
-
-document.getElementById(
-"playBtn"
-).onclick=startGame;
-
-document.getElementById(
-"againBtn"
-).onclick=startGame;
-
-
-/* HOME */
-
-document.getElementById(
-"homeBtn"
-).onclick=()=>{
-
-running=false;
-
-game.style.display="none";
-home.style.display="flex";
-
-document.getElementById(
-"gameOver"
-).style.display="none";
-};
-
-
-/* SWIPE */
-
-function left(){
-
-targetLane=
-Math.max(-1,targetLane-1);
-}
-
-function right(){
-
-targetLane=
-Math.min(1,targetLane+1);
-}
-
-function jumpUp(){
-
-if(jump<=0)
-jump=1;
-}
-
-function slideDown(){
-
-if(jump<=0)
-slide=.55;
+  requestAnimationFrame(loop);
 }
 
 
-addEventListener(
-"touchstart",
-e=>{
+/* =========================
+   MOVEMENT
+========================= */
 
-if(!running)return;
+function moveLeft(){
 
-const t=e.changedTouches[0];
+  if(!playing)return;
 
-sx=t.clientX;
-sy=t.clientY;
-
-},
-{passive:true}
-);
-
-
-addEventListener(
-"touchend",
-e=>{
-
-if(!running)return;
-
-const t=e.changedTouches[0];
-
-const dx=t.clientX-sx;
-const dy=t.clientY-sy;
-
-if(
-Math.max(
-Math.abs(dx),
-Math.abs(dy)
-)<30
-)return;
-
-if(
-Math.abs(dx)>
-Math.abs(dy)
-){
-
-dx>0?right():left();
-
-}else{
-
-dy<0?jumpUp():slideDown();
+  targetLane =
+    Math.max(
+      0,
+      targetLane - 1
+    );
 }
 
-},
-{passive:true}
-);
+
+function moveRight(){
+
+  if(!playing)return;
+
+  targetLane =
+    Math.min(
+      2,
+      targetLane + 1
+    );
+}
 
 
-/* KEYBOARD */
+function jump(){
 
-addEventListener(
+  if(
+    playing &&
+    !jumping &&
+    !sliding
+  ){
+
+    jumping = true;
+
+    jumpTime = 0;
+  }
+}
+
+
+function slide(){
+
+  if(
+    playing &&
+    !jumping
+  ){
+
+    sliding = true;
+
+    slideTime = 0;
+  }
+}
+
+
+/* =========================
+   KEYBOARD
+========================= */
+
+window.addEventListener(
 "keydown",
-e=>{
+function(e){
 
-if(!running)return;
+  if(e.key === "ArrowLeft")
+    moveLeft();
 
-if(e.key==="ArrowLeft")
-left();
+  if(e.key === "ArrowRight")
+    moveRight();
 
-if(e.key==="ArrowRight")
-right();
+  if(
+    e.key === "ArrowUp" ||
+    e.key === " "
+  )
+    jump();
 
-if(e.key==="ArrowUp"||e.key===" ")
-jumpUp();
+  if(e.key === "ArrowDown")
+    slide();
 
-if(e.key==="ArrowDown")
-slideDown();
-
-}
-);
-
-
-/* ROAD */
-
-function roadX(l){
-
-return W/2+
-l*Math.min(W*.22,180);
-}
-
-
-function forest(){
-
-const horizon=H*.30;
-
-ctx.fillStyle="#79a36e";
-ctx.fillRect(0,0,W,H);
-
-ctx.fillStyle="#274e2c";
-ctx.fillRect(
-0,
-horizon,
-W,
-H-horizon
-);
-
-
-/* path */
-
-ctx.fillStyle="#4d3d2d";
-
-ctx.beginPath();
-
-ctx.moveTo(
-W*.43,
-horizon
-);
-
-ctx.lineTo(
-W*.57,
-horizon
-);
-
-ctx.lineTo(
-W*.78,
-H
-);
-
-ctx.lineTo(
-W*.22,
-H
-);
-
-ctx.closePath();
-
-ctx.fill();
-
-
-/* trees */
-
-for(
-let i=0;
-i<18;
-i++
-){
-
-const side=
-i%2===0?-1:1;
-
-const x=
-side*
-(
-W*.30+
-(i%5)*35
-)+W/2;
-
-const y=
-horizon-
-(i%6)*35;
-
-ctx.fillStyle="#493a27";
-
-ctx.fillRect(
-x-5,
-y,
-10,
-80
-);
-
-ctx.fillStyle=
-i%2
-?"#163d20"
-:"#20572b";
-
-ctx.beginPath();
-
-ctx.arc(
-x,
-y-10,
-28,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-ctx.beginPath();
-
-ctx.arc(
-x-20,
-y+10,
-22,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-ctx.beginPath();
-
-ctx.arc(
-x+20,
-y+10,
-22,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-}
-
-
-/* lane lines */
-
-ctx.strokeStyle="#b89b63";
-ctx.lineWidth=3;
-
-for(
-const n of [-.06,.06]
-){
-
-ctx.beginPath();
-
-ctx.moveTo(
-W/2+n*W,
-horizon
-);
-
-ctx.lineTo(
-W/2+n*W*3,
-H
-);
-
-ctx.stroke();
-}
-
-}
-
-
-/* OBJECT CREATION */
-
-function add(type,l,z){
-
-objects.push({
-type:type,
-lane:l,
-z:z,
-hit:false
 });
-}
 
 
-function spawn(){
+/* =========================
+   TOUCH
+========================= */
 
-const l=
-Math.floor(
-Math.random()*3
-)-1;
+canvas.addEventListener(
+"touchstart",
+function(e){
 
-const r=Math.random();
+  const t =
+    e.changedTouches[0];
 
+  touchStartX =
+    t.clientX;
 
-if(r<.48){
+  touchStartY =
+    t.clientY;
 
-add("coin",l,1);
-
-if(Math.random()<.6)
-add("coin",l,1.18);
-
-if(Math.random()<.4)
-add("coin",l,1.36);
-
-
-}else if(r<.58){
-
-add("key",l,1);
-
-}else if(r<.68){
-
-add("magnet",l,1);
-
-}else if(r<.77){
-
-add("booster",l,1);
-
-}else if(r<.86){
-
-add("shoes",l,1);
-
-}else{
-
-add("stone",l,1);
-}
-
-}
-
-
-/* OBJECT DRAW */
-
-function project(z){
-
-const h=H*.30;
-
-const t=1-Math.max(
-0,
-Math.min(1,z)
-);
-
-return{
-
-y:h+t*(H-h),
-
-s:.25+t*1.05
-
-};
-}
-
-
-function objectDraw(o){
-
-const p=project(o.z);
-
-const x=roadX(o.lane);
-
-ctx.save();
-
-ctx.translate(
-x,
-p.y
-);
-
-ctx.scale(
-p.s,
-p.s
+},
+{passive:true}
 );
 
 
-if(o.type==="coin"){
+canvas.addEventListener(
+"touchend",
+function(e){
 
-ctx.fillStyle="#ffd34d";
+  const t =
+    e.changedTouches[0];
 
-ctx.beginPath();
+  const dx =
+    t.clientX -
+    touchStartX;
 
-ctx.arc(
-0,-18,
-12,
-0,
-Math.PI*2
-);
+  const dy =
+    t.clientY -
+    touchStartY;
 
-ctx.fill();
-
-ctx.strokeStyle="#9b6900";
-ctx.lineWidth=3;
-ctx.stroke();
-
-
-}else if(o.type==="key"){
-
-ctx.strokeStyle="#ffe066";
-ctx.lineWidth=7;
-
-ctx.beginPath();
-
-ctx.arc(
--5,-22,
-8,
-0,
-Math.PI*2
-);
-
-ctx.stroke();
-
-ctx.beginPath();
-
-ctx.moveTo(
-3,-15
-);
-
-ctx.lineTo(
-20,-2
-);
-
-ctx.stroke();
+  if(
+    Math.max(
+      Math.abs(dx),
+      Math.abs(dy)
+    ) < 35
+  )
+    return;
 
 
-}else if(o.type==="magnet"){
+  if(
+    Math.abs(dx) >
+    Math.abs(dy)
+  ){
 
-ctx.strokeStyle="#e52e3d";
-ctx.lineWidth=9;
+    if(dx > 0)
+      moveRight();
 
-ctx.beginPath();
+    else
+      moveLeft();
 
-ctx.arc(
-0,-18,
-14,
-0,
-Math.PI
-);
+  }else{
 
-ctx.stroke();
+    if(dy < 0)
+      jump();
 
+    else
+      slide();
 
-}else if(o.type==="booster"){
+  }
 
-ctx.fillStyle="#49d7ff";
-
-ctx.beginPath();
-
-ctx.moveTo(
-0,-45
-);
-
-ctx.lineTo(
-15,-15
-);
-
-ctx.lineTo(
-5,-15
-);
-
-ctx.lineTo(
-12,5
-);
-
-ctx.lineTo(
--15,-25
-);
-
-ctx.lineTo(
--4,-25
-);
-
-ctx.closePath();
-
-ctx.fill();
-
-
-}else if(o.type==="shoes"){
-
-ctx.fillStyle="#ff6b35";
-
-ctx.fillRect(
--20,-20,
-35,
-15
-);
-
-ctx.fillRect(
--10,-8,
-30,
-10
+},
+{passive:true}
 );
 
 
-}else{
-
-/* stone / barricade */
-
-ctx.fillStyle="#655040";
-
-ctx.beginPath();
-
-ctx.roundRect(
--30,-50,
-60,
-50,
-9
-);
-
-ctx.fill();
-
-ctx.fillStyle="#8c7058";
-
-ctx.fillRect(
--23,-40,
-45,
-8
-);
-
-ctx.fillStyle="#d0c09d";
-
-ctx.fillRect(
--25,-24,
-50,
-8
-);
-
-}
-
-ctx.restore();
-}
-
-
-/* UPDATE */
-
-function update(dt){
-
-lane+=
-(targetLane-lane)*
-Math.min(
-1,
-dt*12
-);
-
-
-if(jump>0)
-jump=Math.max(
-0,
-jump-dt/.75
-);
-
-
-if(slide>0)
-slide=Math.max(
-0,
-slide-dt
-);
-
-
-speed=Math.min(
-.72,
-speed+dt*.004
-);
-
-
-score+=
-dt*100*speed;
-
-
-document.getElementById(
-"score"
-).textContent=
-Math.floor(score);
-
-
-spawnTimer-=dt;
-
-if(spawnTimer<=0){
-
-spawn();
-
-spawnTimer=
-.55+
-Math.random()*.4;
-}
-
-
-for(
-let i=objects.length-1;
-i>=0;
-i--
-){
-
-const o=objects[i];
-
-o.z-=speed*dt;
-
-
-if(
-magnet>0 &&
-o.type==="coin" &&
-o.z<.45
-){
-
-o.lane=lane;
-}
-
-
-const sameLane=
-Math.abs(o.lane-lane)<.34;
-
-
-if(
-o.z<.08 &&
-o.z>-.12 &&
-sameLane &&
-!o.hit
-){
-
-o.hit=true;
-
-
-if(o.type==="stone"){
-
-/* STONE = GAME OVER */
-
-if(jump<.25){
-
-endGame();
-
-return;
-}
-
-}else{
-
-collect(o);
-}
-
-}
-
-
-if(o.z<-.2){
-
-objects.splice(i,1);
-}
-
-}
-
-
-if(magnet>0)
-magnet-=dt;
-
-if(booster>0)
-booster-=dt;
-
-if(shoes>0)
-shoes-=dt;
-}
-
-
-/* COLLECT */
+/* =========================
+   COLLECT
+========================= */
 
 function collect(o){
 
-if(o.type==="coin"){
+  if(o.type === "coin")
+    coins++;
 
-coins++;
+  if(o.type === "star")
+    stars++;
 
-document.getElementById(
-"coins"
-).textContent=coins;
+  if(o.type === "key")
+    keys++;
 
-score+=50;
+  if(o.type === "magnet")
+    magnet = 8;
+
+  if(o.type === "shield")
+    shield = 8;
+
+  if(o.type === "booster")
+    booster = 6;
 
 }
 
-if(o.type==="key"){
 
-keys++;
+/* =========================
+   COLLISION
+========================= */
 
-document.getElementById(
-"keys"
-).textContent=keys;
+function collision(o){
 
-score+=100;
-}
-
-if(o.type==="magnet"){
-
-magnet=8;
-
-score+=150;
-}
-
-if(o.type==="booster"){
-
-booster=6;
-
-speed=Math.min(
-.9,
-speed+.25
-);
-
-score+=200;
-}
-
-if(o.type==="shoes"){
-
-shoes=8;
-
-score+=150;
-}
-}
+  if(
+    o.z < 0.86 ||
+    o.z > 1.03 ||
+    o.lane !== Math.round(lane)
+  )
+    return false;
 
 
-/* GAME OVER */
+  if(
+    o.type === "stone" ||
+    o.type === "barricade"
+  ){
 
-function endGame(){
+    if(jumping)
+      return false;
 
-if(!running)return;
 
-running=false;
+    if(shield > 0){
 
-if(score>best){
+      shield = 0;
 
-best=Math.floor(score);
+      return false;
+    }
 
-localStorage.setItem(
-"runBlazeBest",
-best
-);
-}
+    return true;
+  }
 
-document.getElementById(
-"finalScore"
-).textContent=
-Math.floor(score);
-
-document.getElementById(
-"finalCoins"
-).textContent=
-coins;
-
-document.getElementById(
-"gameOver"
-).style.display=
-"flex";
+  return false;
 }
 
 
-/* DRAW */
+/* =========================
+   UPDATE
+========================= */
+
+function update(dt){
+
+  lane +=
+    (targetLane - lane) *
+    Math.min(
+      1,
+      dt * 12
+    );
+
+
+  if(jumping){
+
+    jumpTime += dt;
+
+    if(jumpTime > 0.72)
+      jumping = false;
+  }
+
+
+  if(sliding){
+
+    slideTime += dt;
+
+    if(slideTime > 0.62)
+      sliding = false;
+  }
+
+
+  magnet =
+    Math.max(
+      0,
+      magnet - dt
+    );
+
+  shield =
+    Math.max(
+      0,
+      shield - dt
+    );
+
+  booster =
+    Math.max(
+      0,
+      booster - dt
+    );
+
+
+  speed =
+    0.32 +
+    (booster > 0 ? 0.15 : 0) +
+    Math.min(
+      0.22,
+      distance / 9000
+    );
+
+
+  distance +=
+    speed *
+    dt *
+    100;
+
+
+  score =
+    Math.floor(distance);
+
+
+  spawnTimer -= dt;
+
+
+  if(spawnTimer <= 0){
+
+    spawnObject();
+
+    spawnTimer =
+      Math.max(
+        0.35,
+        0.72 -
+        speed * 0.35
+      );
+  }
+
+
+  for(
+    let i = objects.length - 1;
+    i >= 0;
+    i--
+  ){
+
+    const o =
+      objects[i];
+
+    o.z +=
+      speed * dt;
+
+
+    if(
+      magnet > 0 &&
+      o.type === "coin" &&
+      o.z > 0.65 &&
+      o.z < 1.03 &&
+      Math.abs(
+        o.lane -
+        Math.round(lane)
+      ) <= 1
+    ){
+
+      o.lane =
+        Math.round(lane);
+    }
+
+
+    if(
+      o.z > 0.86 &&
+      o.z < 1.02 &&
+      o.lane === Math.round(lane) &&
+      (
+        o.type === "coin" ||
+        o.type === "star" ||
+        o.type === "key" ||
+        o.type === "magnet" ||
+        o.type === "shield" ||
+        o.type === "booster"
+      )
+    ){
+
+      collect(o);
+
+      objects.splice(i,1);
+
+      continue;
+    }
+
+
+    if(collision(o)){
+
+      endGame();
+
+      return;
+    }
+
+
+    if(o.z > 1.1){
+
+      objects.splice(i,1);
+    }
+
+  }
+
+
+  $("score").textContent =
+    score;
+
+  $("coins").textContent =
+    coins;
+
+  $("stars").textContent =
+    stars;
+
+  $("keys").textContent =
+    keys;
+
+  $("magnet").textContent =
+    Math.ceil(magnet);
+
+  $("shield").textContent =
+    Math.ceil(shield);
+
+  $("booster").textContent =
+    Math.ceil(booster);
+}
+
+
+/* =========================
+   BACKGROUND
+========================= */
+
+function drawBackground(){
+
+  const sky =
+    ctx.createLinearGradient(
+      0,
+      0,
+      0,
+      window.innerHeight
+    );
+
+  sky.addColorStop(
+    0,
+    "#071b29"
+  );
+
+  sky.addColorStop(
+    0.48,
+    "#153f29"
+  );
+
+  sky.addColorStop(
+    1,
+    "#061008"
+  );
+
+  ctx.fillStyle = sky;
+
+  ctx.fillRect(
+    0,
+    0,
+    window.innerWidth,
+    window.innerHeight
+  );
+
+
+  ctx.fillStyle =
+    "#dff3c0";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    window.innerWidth * 0.82,
+    window.innerHeight * 0.13,
+    32,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  for(
+    let i = 0;
+    i < 16;
+    i++
+  ){
+
+    const x =
+      (i * 97) %
+      window.innerWidth;
+
+    const h =
+      90 +
+      (i * 37) % 100;
+
+    ctx.fillStyle =
+      i % 2
+      ? "#0a2c1a"
+      : "#0d3a21";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      x,
+      window.innerHeight * 0.48
+    );
+
+    ctx.lineTo(
+      x + 35,
+      window.innerHeight * 0.48 - h
+    );
+
+    ctx.lineTo(
+      x + 70,
+      window.innerHeight * 0.48
+    );
+
+    ctx.fill();
+  }
+}
+
+
+/* =========================
+   ROAD
+========================= */
+
+function drawRoad(){
+
+  const y0 =
+    window.innerHeight * 0.30;
+
+  const y1 =
+    window.innerHeight;
+
+
+  ctx.fillStyle =
+    "#292d2b";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    window.innerWidth * 0.47,
+    y0
+  );
+
+  ctx.lineTo(
+    window.innerWidth * 0.53,
+    y0
+  );
+
+  ctx.lineTo(
+    window.innerWidth * 0.92,
+    y1
+  );
+
+  ctx.lineTo(
+    window.innerWidth * 0.08,
+    y1
+  );
+
+  ctx.closePath();
+
+  ctx.fill();
+
+
+  ctx.strokeStyle =
+    "#e8dfad";
+
+  ctx.lineWidth = 3;
+
+
+  for(
+    const k of [-0.17,0.17]
+  ){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      window.innerWidth *
+      (0.5 + k * 0.08),
+      y0
+    );
+
+    ctx.lineTo(
+      window.innerWidth *
+      (0.5 + k),
+      y1
+    );
+
+    ctx.stroke();
+  }
+}
+
+
+/* =========================
+   OBJECTS
+========================= */
+
+function drawObject(o){
+
+  const y =
+    roadY(o.z);
+
+  const x =
+    laneX(
+      o.lane,
+      o.z
+    );
+
+  const s =
+    10 +
+    o.z * 42;
+
+
+  ctx.save();
+
+  ctx.translate(
+    x,
+    y
+  );
+
+
+  if(o.type === "coin"){
+
+    ctx.fillStyle =
+      "#ffd34e";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      0,
+      -s * 0.8,
+      s * 0.42,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+  }
+
+
+  else if(o.type === "star"){
+
+    ctx.fillStyle =
+      "#ffe85a";
+
+    ctx.font =
+      s + "px Arial";
+
+    ctx.textAlign =
+      "center";
+
+    ctx.fillText(
+      "★",
+      0,
+      -s * 0.65
+    );
+
+  }
+
+
+  else if(o.type === "key"){
+
+    ctx.font =
+      s + "px Arial";
+
+    ctx.textAlign =
+      "center";
+
+    ctx.fillText(
+      "🔑",
+      0,
+      -s * 0.65
+    );
+
+  }
+
+
+  else if(
+    o.type === "magnet" ||
+    o.type === "shield" ||
+    o.type === "booster"
+  ){
+
+    ctx.font =
+      s * 0.8 + "px Arial";
+
+    ctx.textAlign =
+      "center";
+
+    const icon =
+      o.type === "magnet"
+      ? "🧲"
+      : o.type === "shield"
+      ? "🛡️"
+      : "👟";
+
+    ctx.fillText(
+      icon,
+      0,
+      -s * 0.65
+    );
+
+  }
+
+
+  else if(o.type === "stone"){
+
+    ctx.fillStyle =
+      "#777";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      0,
+      -s * 0.55,
+      s * 0.55,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+  }
+
+
+  else if(o.type === "barricade"){
+
+    ctx.fillStyle =
+      "#a93428";
+
+    ctx.fillRect(
+      -s * 0.7,
+      -s * 0.9,
+      s * 1.4,
+      s * 0.9
+    );
+
+    ctx.strokeStyle =
+      "#f2d16b";
+
+    ctx.lineWidth = 3;
+
+    ctx.strokeRect(
+      -s * 0.7,
+      -s * 0.9,
+      s * 1.4,
+      s * 0.9
+    );
+
+  }
+
+
+  ctx.restore();
+}
+
+
+/* =========================
+   PLAYER
+========================= */
+
+function drawPlayer(){
+
+  const x =
+    laneX(
+      Math.round(lane),
+      1
+    );
+
+  const base =
+    window.innerHeight * 0.86;
+
+  let lift = 0;
+
+
+  if(jumping){
+
+    lift =
+      -Math.sin(
+        Math.min(
+          1,
+          jumpTime / 0.72
+        ) * Math.PI
+      ) *
+      window.innerHeight *
+      0.20;
+  }
+
+
+  const y =
+    base + lift;
+
+
+  ctx.save();
+
+  ctx.translate(
+    x,
+    y
+  );
+
+
+  ctx.fillStyle =
+    "#0005";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    10,
+    30,
+    9,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle =
+    runner === "boy"
+    ? "#2877d5"
+    : "#d94c91";
+
+  ctx.fillRect(
+    -14,
+    -64,
+    28,
+    47
+  );
+
+
+  ctx.fillStyle =
+    "#f1b48b";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    -78,
+    15,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle =
+    "#222";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    -85,
+    15,
+    Math.PI,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.strokeStyle =
+    "#f1b48b";
+
+  ctx.lineWidth = 7;
+
+
+  if(!sliding){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      -10,
+      -18
+    );
+
+    ctx.lineTo(
+      -20,
+      8
+    );
+
+    ctx.moveTo(
+      10,
+      -18
+    );
+
+    ctx.lineTo(
+      20,
+      8
+    );
+
+    ctx.stroke();
+  }
+
+
+  ctx.restore();
+}
+
+
+/* =========================
+   DRAW
+========================= */
 
 function draw(){
 
-forest();
+  drawBackground();
 
+  drawRoad();
 
-const cx=roadX(lane);
+  objects
+    .slice()
+    .sort(
+      (a,b)=>a.z-b.z
+    )
+    .forEach(drawObject);
 
-let lift=0;
-
-if(jump>0){
-
-lift=
--Math.sin(
-(1-jump)*Math.PI
-)*H*.24;
+  drawPlayer();
 }
 
 
-if(slide>0){
+/* =========================
+   GAME OVER
+========================= */
 
-ctx.save();
+function endGame(){
 
-ctx.translate(
-cx,
-H*.79+lift+20
-);
+  if(!playing)
+    return;
+  function endGame(){
 
-ctx.scale(
-1.25,
-.7
-);
+  if(!playing)
+    return;
 
-runner(
-ctx,
-0,
-0,
-1.15,
-selected,
-phase
-);
+  playing = false;
 
-ctx.restore();
+  const oldBest =
+    Number(
+      localStorage.getItem("runBlazeBest") || 0
+    );
 
-}else{
+  const best =
+    Math.max(oldBest, score);
 
-runner(
-ctx,
-cx,
-H*.79+lift,
-1.15,
-selected,
-phase
-);
+  localStorage.setItem(
+    "runBlazeBest",
+    best
+  );
+
+  $("finalScore").textContent = score;
+  $("finalCoins").textContent = coins;
+  $("finalStars").textContent = stars;
+  $("finalKeys").textContent = keys;
+  $("bestScore").textContent = best;
+
+  showScreen("over");
 }
 
 
-for(
-const o of objects
-){
+/* =========================
+   GAME LOOP
+========================= */
 
-objectDraw(o);
+function loop(time){
+
+  if(!playing)
+    return;
+
+  if(!lastTime)
+    lastTime = time;
+
+  const dt =
+    Math.min(
+      0.035,
+      (time - lastTime) / 1000
+    );
+
+  lastTime = time;
+
+  update(dt);
+
+  draw();
+
+  if(playing)
+    requestAnimationFrame(loop);
 }
-}
 
 
-/* LOOP */
+/* =========================
+   START
+========================= */
 
-function loop(now){
-
-if(!running)return;
-
-const dt=Math.min(
-.035,
-(now-last)/1000
-);
-
-last=now;
-
-phase+=dt;
-
-update(dt);
+showScreen("home");
 
 draw();
 
-if(running)
-requestAnimationFrame(loop);
-}
-
-
-/* SETTINGS */
-
-const settings=
-document.getElementById(
-"settingsPanel"
-);
-
-const withdrawal=
-document.getElementById(
-"withdrawPanel"
-);
-
-
-document.getElementById(
-"settingsBtn"
-).onclick=()=>{
-
-settings.style.display="flex";
-};
-
-
-document.getElementById(
-"closeSettings"
-).onclick=()=>{
-
-settings.style.display="none";
-};
-
-
-document.getElementById(
-"withdrawBtn"
-).onclick=()=>{
-
-settings.style.display="none";
-
-withdrawal.style.display="flex";
-};
-
-
-document.getElementById(
-"backSettings"
-).onclick=()=>{
-
-withdrawal.style.display="none";
-
-settings.style.display="flex";
-};
-
-
-document.getElementById(
-"soundBtn"
-).onclick=function(){
-
-this.textContent=
-this.textContent==="SOUND: ON"
-?"SOUND: OFF"
-:"SOUND: ON";
-};
-
-
-document.getElementById(
-"privacyBtn"
-).onclick=()=>{
-
-alert(
-"Privacy settings will be connected before Play Store launch."
-);
-};
-
-
-/* WITHDRAWAL METHODS */
-
-function withdrawal(method){
-
-alert(
-method+
-" selected. Real-money withdrawal requires a compliant payout backend and required approvals."
-);
-}
-
-
-document.getElementById(
-"upiBtn"
-).onclick=()=>{
-withdrawal("UPI");
-};
-
-
-document.getElementById(
-"bankBtn"
-).onclick=()=>{
-withdrawal("Bank Account");
-};
-
-
-document.getElementById(
-"paypalBtn"
-).onclick=()=>{
-withdrawal("PayPal");
-};
-
-
-/* STOP PAGE SCROLL WHILE PLAYING */
-
-addEventListener(
-"touchmove",
-e=>{
-
-if(running)
-e.preventDefault();
-
-},
-{passive:false}
-);
-
+})();
 </script>
 
 </body>
