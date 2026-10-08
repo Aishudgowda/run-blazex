@@ -1,6 +1,7 @@
 {
   "background_color": "#ffffff",
   "dir": "ltr",
+  
   "display": "standalone",
   "name": "Run Blaze",
   "orientation": "any",
@@ -9,4 +10,4 @@
   "start_url": "/",
   "theme_color": "#06120a",
   "id": "run-blaze"
-}
+}-
