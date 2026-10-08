@@ -1,14 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#07130d">
+<meta name="theme-color" content="#07140c">
 <title>Run Blaze</title>
 
 <style>
 *{box-sizing:border-box}
-
 html,body{
   margin:0;
   width:100%;
@@ -16,95 +15,79 @@ html,body{
   overflow:hidden;
   font-family:Arial,sans-serif;
   background:#06100a;
-  color:white;
+  color:#fff;
 }
-
 button{
   border:0;
   border-radius:14px;
   padding:14px 20px;
   font-size:17px;
-  font-weight:800;
-  cursor:pointer;
+  font-weight:bold;
 }
-
 .screen{
   position:absolute;
   inset:0;
   display:none;
   align-items:center;
   justify-content:center;
-  text-align:center;
 }
-
-.screen.active{
-  display:flex;
-}
+.screen.active{display:flex}
 
 #home{
+  text-align:center;
   background:
-  radial-gradient(circle at 50% 20%,#237c4b 0,#0a3925 38%,#020805 100%);
+  radial-gradient(circle at 50% 15%,#2b8b50,#0b3b25 40%,#020704 100%);
 }
 
 .panel{
   width:min(92%,430px);
   padding:28px;
   border-radius:28px;
-  background:rgba(0,0,0,.50);
-  border:1px solid rgba(255,255,255,.15);
-  box-shadow:0 20px 70px #0008;
-  backdrop-filter:blur(10px);
+  background:#0009;
+  border:1px solid #ffffff22;
+  box-shadow:0 20px 70px #000;
 }
 
 .logo{
   font-size:46px;
   font-weight:1000;
   letter-spacing:3px;
-  text-shadow:0 5px 20px #000;
 }
-
 .tag{
   opacity:.8;
   margin:8px 0 22px;
 }
-
 .choice{
   display:flex;
   gap:10px;
-  margin:14px 0;
+  margin-bottom:12px;
 }
-
 .choice button{
   flex:1;
   background:#183c2a;
   color:white;
   border:2px solid transparent;
 }
-
-.choice button.selected{
+.choice .selected{
   border-color:#ffd34e;
-  background:#245b3e;
 }
-
 .primary{
   width:100%;
   background:#ffd34e;
   color:#111;
-  margin-top:10px;
+  margin-top:8px;
 }
-
 .secondary{
   width:100%;
   background:#ffffff18;
   color:white;
-  margin-top:10px;
+  margin-top:8px;
 }
-
 .studio{
-  margin-top:28px;
-  font-size:13px;
-  opacity:.7;
+  margin-top:25px;
+  font-size:12px;
   letter-spacing:2px;
+  opacity:.7;
 }
 
 #game{
@@ -126,77 +109,74 @@ canvas{
   right:12px;
   display:flex;
   justify-content:space-between;
+  z-index:10;
   pointer-events:none;
-  z-index:5;
 }
-
-.hudbox{
+.box{
   background:#0009;
   padding:9px 12px;
-  border-radius:13px;
-  font-weight:800;
-  backdrop-filter:blur(6px);
+  border-radius:12px;
+  font-weight:bold;
 }
 
-.powers{
+.powerbar{
   position:absolute;
   top:58px;
   left:12px;
   display:flex;
-  gap:7px;
-  z-index:5;
+  gap:6px;
+  z-index:10;
   pointer-events:none;
 }
-
 .power{
   background:#0009;
-  border-radius:12px;
   padding:7px 9px;
+  border-radius:10px;
   font-size:13px;
 }
 
 .hint{
   position:absolute;
-  bottom:18px;
+  bottom:15px;
   left:50%;
   transform:translateX(-50%);
-  background:#0008;
+  background:#0009;
+  padding:8px 14px;
   border-radius:20px;
-  padding:8px 15px;
   font-size:12px;
-  z-index:5;
-  opacity:.85;
   white-space:nowrap;
+  z-index:10;
 }
 
-#settings,
-#over{
+#settings,#gameover{
   background:linear-gradient(#07160d,#020603);
+  text-align:center;
 }
 
 .row{
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   padding:13px 0;
   border-bottom:1px solid #ffffff18;
 }
 
 .row button{
-  padding:9px 13px;
+  padding:8px 13px;
   background:#ffffff18;
   color:white;
 }
 
 .withdraw{
   margin-top:18px;
+  border-top:1px solid #ffffff22;
   padding-top:10px;
-  border-top:1px solid #ffffff20;
 }
 
 .withdraw button{
+  display:block;
   width:100%;
-  margin:5px 0;
+  margin:6px 0;
   background:#173b29;
   color:white;
 }
@@ -206,10 +186,9 @@ canvas{
   opacity:.7;
   line-height:1.5;
 }
-
 #withdrawMsg{
-  margin-top:10px;
   color:#ffd34e;
+  margin-top:10px;
 }
 </style>
 </head>
@@ -217,102 +196,67 @@ canvas{
 <body>
 
 <!-- HOME -->
-<section id="home" class="screen active">
+<div id="home" class="screen active">
   <div class="panel">
 
     <div class="logo">RUN BLAZE</div>
-
-    <div class="tag">
-      Endless Forest Runner
-    </div>
+    <div class="tag">Endless Forest Runner</div>
 
     <div class="choice">
-      <button id="boyBtn" class="selected">
-        🏃 Boy
-      </button>
-
-      <button id="girlBtn">
-        🏃‍♀️ Girl
-      </button>
+      <button id="boy" class="selected">🏃 Boy</button>
+      <button id="girl">🏃‍♀️ Girl</button>
     </div>
 
-    <button id="playBtn" class="primary">
-      ▶ PLAY
-    </button>
+    <button id="play" class="primary">▶ PLAY</button>
+    <button id="settingsButton" class="secondary">⚙ SETTINGS</button>
 
-    <button id="settingsBtn" class="secondary">
-      ⚙ SETTINGS
-    </button>
-
-    <div class="studio">
-      PLAYTECH STUDIO
-    </div>
-
+    <div class="studio">PLAYTECH STUDIO</div>
   </div>
-</section>
+</div>
 
 
 <!-- GAME -->
-<section id="game" class="screen">
+<div id="game" class="screen">
 
-  <canvas id="gameCanvas"></canvas>
+  <canvas id="canvas"></canvas>
 
   <div class="hud">
+    <div class="box">🏃 <span id="score">0</span></div>
 
-    <div class="hudbox">
-      🏃 <span id="score">0</span>
-    </div>
-
-    <div class="hudbox">
+    <div class="box">
       🪙 <span id="coins">0</span>
-      &nbsp;
       ⭐ <span id="stars">0</span>
-      &nbsp;
       🔑 <span id="keys">0</span>
     </div>
-
   </div>
 
-  <div class="powers">
-
-    <div class="power">
-      🧲 <span id="magnet">0</span>
-    </div>
-
-    <div class="power">
-      🛡️ <span id="shield">0</span>
-    </div>
-
-    <div class="power">
-      👟 <span id="booster">0</span>
-    </div>
-
+  <div class="powerbar">
+    <div class="power">🧲 <span id="magnet">0</span></div>
+    <div class="power">🛡️ <span id="shield">0</span></div>
+    <div class="power">👟 <span id="booster">0</span></div>
   </div>
 
   <div class="hint">
-    Swipe ← → lanes • ↑ jump • ↓ slide
+    Swipe ← → lane • ↑ jump • ↓ slide
   </div>
 
-</section>
+</div>
 
 
 <!-- SETTINGS -->
-<section id="settings" class="screen">
-
+<div id="settings" class="screen">
   <div class="panel">
 
     <h1>⚙ Settings</h1>
 
     <div class="row">
       <span>Sound</span>
-      <button id="soundBtn">ON</button>
+      <button id="sound">ON</button>
     </div>
 
     <div class="row">
       <span>Controls</span>
-      <span class="small">
-        Swipe only
-      </span>
+      <span class="small">Swipe only</span>
     </div>
 
     <div class="withdraw">
@@ -320,77 +264,55 @@ canvas{
       <h3>💰 Withdrawal</h3>
 
       <p class="small">
-        Withdrawal options are UI only.
-        Real payouts require a secure verified
-        backend and payment provider.
+        Demo UI only. Real withdrawals require a secure
+        verified backend and payment provider.
       </p>
 
-      <button data-method="UPI">
+      <button class="withdrawBtn" data-method="UPI">
         🇮🇳 UPI
       </button>
 
-      <button data-method="Bank Account">
+      <button class="withdrawBtn" data-method="Bank Account">
         🏦 Bank Account
       </button>
 
-      <button data-method="PayPal">
+      <button class="withdrawBtn" data-method="PayPal">
         🅿️ PayPal
       </button>
 
-      <div id="withdrawMsg" class="small"></div>
+      <div id="withdrawMsg"></div>
 
     </div>
 
-    <button id="backBtn" class="secondary">
-      ← Back
-    </button>
+    <button id="back" class="secondary">← BACK</button>
 
-    <div class="studio">
-      PLAYTECH STUDIO
-    </div>
-
+    <div class="studio">PLAYTECH STUDIO</div>
   </div>
-
-</section>
+</div>
 
 
 <!-- GAME OVER -->
-<section id="over" class="screen">
-
+<div id="gameover" class="screen">
   <div class="panel">
 
     <h1>💥 GAME OVER</h1>
 
-    <p>
-      Score:
-      <b id="finalScore">0</b>
-    </p>
+    <p>Score: <b id="finalScore">0</b></p>
+    <p>Coins: <b id="finalCoins">0</b></p>
+    <p>Stars: <b id="finalStars">0</b></p>
+    <p>Keys: <b id="finalKeys">0</b></p>
+    <p>Best: <b id="best">0</b></p>
 
-    <p>
-      Coins:
-      <b id="finalCoins">0</b>
-      • Stars:
-      <b id="finalStars">0</b>
-      • Keys:
-      <b id="finalKeys">0</b>
-    </p>
-
-    <p>
-      Best:
-      <b id="bestScore">0</b>
-    </p>
-
-    <button id="againBtn" class="primary">
+    <button id="again" class="primary">
       ↻ RUN AGAIN
     </button>
 
-    <button id="homeBtn" class="secondary">
+    <button id="home" class="secondary">
       ⌂ HOME
     </button>
 
   </div>
-
-</section>
+</div>
 
 
 <script>
@@ -398,32 +320,26 @@ canvas{
 
 "use strict";
 
+/* ---------- ELEMENTS ---------- */
 
-/* =========================
-   BASIC SETUP
-========================= */
-
-const $ = id => document.getElementById(id);
-
-const canvas = $("gameCanvas");
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const screens = {
-  home:$("home"),
-  game:$("game"),
-  settings:$("settings"),
-  over:$("over")
-};
+const homeScreen = document.getElementById("home");
+const gameScreen = document.getElementById("game");
+const settingsScreen = document.getElementById("settings");
+const overScreen = document.getElementById("gameover");
 
+const homeButton = document.getElementById("homeButton");
+const playButton = document.getElementById("play");
+const settingsButton = document.getElementById("settingsButton");
+const backButton = document.getElementById("backButton");
+const againButton = document.getElementById("again");
+const boyButton = document.getElementById("boy");
+const girlButton = document.getElementById("girl");
+const soundButton = document.getElementById("soundButton");
 
-/* =========================
-   GAME STATE
-========================= */
-
-let runner = "boy";
-
-let soundOn = true;
-
+let playerType = "boy";
 let playing = false;
 
 let lane = 1;
@@ -434,13 +350,12 @@ let coins = 0;
 let stars = 0;
 let keys = 0;
 
-let distance = 0;
-
-let speed = 0.32;
-
 let magnet = 0;
 let shield = 0;
 let booster = 0;
+
+let distance = 0;
+let speed = 0.30;
 
 let jumping = false;
 let sliding = false;
@@ -449,294 +364,130 @@ let jumpTime = 0;
 let slideTime = 0;
 
 let objects = [];
-
 let spawnTimer = 0;
-
 let lastTime = 0;
 
-let touchStartX = 0;
-let touchStartY = 0;
+let touchX = 0;
+let touchY = 0;
+
+let soundOn = true;
 
 
-/* =========================
-   SCREEN
-========================= */
+/* ---------- SCREEN ---------- */
 
-function showScreen(name){
+function showScreen(name) {
+  homeScreen.style.display
+  homeScreen.style.display = "none";
+gameScreen.style.display = "none";
+settingsScreen.style.display = "none";
+overScreen.style.display = "none";
 
-  Object.values(screens).forEach(screen=>{
-    screen.classList.remove("active");
-  });
+if (name === "home") {
+  homeScreen.style.display = "flex";
+}
 
-  screens[name].classList.add("active");
+if (name === "game") {
+  gameScreen.style.display = "block";
+}
+
+if (name === "settings") {
+  settingsScreen.style.display = "flex";
+}
+
+if (name === "gameover") {
+  overScreen.style.display = "flex";
 }
 
 
-/* =========================
-   RESIZE
-========================= */
+/* ---------- RESIZE ---------- */
 
-function resize(){
-
-  const d = Math.min(
-    window.devicePixelRatio || 1,
-    2
-  );
-
-  canvas.width =
-    window.innerWidth * d;
-
-  canvas.height =
-    window.innerHeight * d;
-
-  canvas.style.width =
-    window.innerWidth + "px";
-
-  canvas.style.height =
-    window.innerHeight + "px";
-
-  ctx.setTransform(
-    d,
-    0,
-    0,
-    d,
-    0,
-    0
-  );
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = Math.max(500, window.innerHeight);
 }
 
-window.addEventListener(
-  "resize",
-  resize
-);
+window.addEventListener("resize", resize);
 
 resize();
 
 
-/* =========================
-   CHARACTER SELECT
-========================= */
+/* ---------- PLAYER SELECT ---------- */
 
-$("boyBtn").onclick = function(){
+boyButton.onclick = function () {
+  playerType = "boy";
+  boyButton.classList.add("selected");
+  girlButton.classList.remove("selected");
+};
 
-  runner = "boy";
-
-  $("boyBtn")
-    .classList.add("selected");
-
-  $("girlBtn")
-    .classList.remove("selected");
+girlButton.onclick = function () {
+  playerType = "girl";
+  girlButton.classList.add("selected");
+  boyButton.classList.remove("selected");
 };
 
 
-$("girlBtn").onclick = function(){
+/* ---------- RESET ---------- */
 
-  runner = "girl";
+function resetGame() {
 
-  $("girlBtn")
-    .classList.add("selected");
+  lane = 1;
+  targetLane = 1;
 
-  $("boyBtn")
-    .classList.remove("selected");
-};
+  score = 0;
+  coins = 0;
+  stars = 0;
+  keys = 0;
 
+  magnet = 0;
+  shield = 0;
+  booster = 0;
 
-/* =========================
-   BUTTONS
-========================= */
+  distance = 0;
+  speed = 0.30;
 
-$("playBtn").onclick =
-  startGame;
+  jumping = false;
+  sliding = false;
 
-$("settingsBtn").onclick =
-  function(){
-    showScreen("settings");
-  };
+  jumpTime = 0;
+  slideTime = 0;
 
-$("backBtn").onclick =
-  function(){
-    showScreen("home");
-  };
-
-$("homeBtn").onclick =
-  function(){
-
-    playing = false;
-
-    showScreen("home");
-  };
-
-$("againBtn").onclick =
-  startGame;
+  objects = [];
+  spawnTimer = 0;
+}
 
 
-$("soundBtn").onclick =
-  function(){
+/* ---------- LANE ---------- */
 
-    soundOn = !soundOn;
+function laneX(n, z) {
 
-    $("soundBtn").textContent =
-      soundOn ? "ON" : "OFF";
-  };
-
-
-/* =========================
-   WITHDRAWAL UI
-========================= */
-
-document
-.querySelectorAll("[data-method]")
-.forEach(button=>{
-
-  button.onclick = function(){
-
-    $("withdrawMsg").textContent =
-      button.dataset.method +
-      " selected. Connect a verified payout backend before enabling real withdrawals.";
-
-  };
-
-});
-
-
-/* =========================
-   LANE
-========================= */
-
-function laneX(n,z){
-
-  const center =
-    window.innerWidth / 2;
+  const center = canvas.width / 2;
 
   const roadWidth =
-    window.innerWidth *
-    (0.12 + 0.58 * z);
+    canvas.width * (0.18 + z * 0.72);
 
   return center +
     (n - 1) *
     roadWidth *
-    0.34;
+    0.32;
 }
 
 
-/* =========================
-   ROAD Y
-========================= */
+/* ---------- ROAD Y ---------- */
 
-function roadY(z){
+function roadY(z) {
 
-  return (
-    window.innerHeight * 0.30
-  ) +
-  z *
-  window.innerHeight *
-  0.70;
+  const horizon =
+    canvas.height * 0.34;
+
+  return horizon +
+    z *
+    (canvas.height * 0.66);
 }
 
 
-/* =========================
-   SPAWN
-========================= */
+/* ---------- START GAME ---------- */
 
-function spawnObject(){
-
-  const laneNumber =
-    Math.floor(
-      Math.random() * 3
-    );
-
-  const r =
-    Math.random();
-
-  let type;
-
-  if(r < 0.30)
-    type = "coin";
-
-  else if(r < 0.39)
-    type = "star";
-
-  else if(r < 0.47)
-    type = "key";
-
-  else if(r < 0.53)
-    type = "magnet";
-
-  else if(r < 0.59)
-    type = "shield";
-
-  else if(r < 0.65)
-    type = "booster";
-
-  else if(r < 0.82)
-    type = "stone";
-
-  else
-    type = "barricade";
-
-
-  objects.push({
-
-    type:type,
-
-    lane:laneNumber,
-
-    z:0
-
-  });
-
-}
-
-
-/* =========================
-   RESET
-========================= */
-
-function resetGame(){
-
-  score = 0;
-
-  coins = 0;
-
-  stars = 0;
-
-  keys = 0;
-
-  distance = 0;
-
-  speed = 0.32;
-
-  lane = 1;
-
-  targetLane = 1;
-
-  magnet = 0;
-
-  shield = 0;
-
-  booster = 0;
-
-  jumping = false;
-
-  sliding = false;
-
-  jumpTime = 0;
-
-  slideTime = 0;
-
-  objects = [];
-
-  spawnTimer = 0;
-
-  lastTime = 0;
-}
-
-
-/* =========================
-   START
-========================= */
-
-function startGame(){
+function startGame() {
 
   resetGame();
 
@@ -744,17 +495,17 @@ function startGame(){
 
   showScreen("game");
 
+  lastTime = performance.now();
+
   requestAnimationFrame(loop);
 }
 
 
-/* =========================
-   MOVEMENT
-========================= */
+/* ---------- LEFT ---------- */
 
-function moveLeft(){
+function moveLeft() {
 
-  if(!playing)return;
+  if (!playing) return;
 
   targetLane =
     Math.max(
@@ -764,9 +515,11 @@ function moveLeft(){
 }
 
 
-function moveRight(){
+/* ---------- RIGHT ---------- */
 
-  if(!playing)return;
+function moveRight() {
+
+  if (!playing) return;
 
   targetLane =
     Math.min(
@@ -776,759 +529,990 @@ function moveRight(){
 }
 
 
-function jump(){
+/* ---------- JUMP ---------- */
 
-  if(
-    playing &&
-    !jumping &&
-    !sliding
-  ){
+function jump() {
+
+  if (!playing) return;
+
+  if (!jumping && !sliding) {
 
     jumping = true;
-
     jumpTime = 0;
+
   }
 }
 
 
-function slide(){
+/* ---------- SLIDE ---------- */
 
-  if(
-    playing &&
-    !jumping
-  ){
+function slide() {
+
+  if (!playing) return;
+
+  if (!jumping && !sliding) {
 
     sliding = true;
-
     slideTime = 0;
+
   }
 }
 
 
-/* =========================
-   KEYBOARD
-========================= */
+/* ---------- KEYBOARD ---------- */
 
 window.addEventListener(
-"keydown",
-function(e){
+  "keydown",
+  function (e) {
 
-  if(e.key === "ArrowLeft")
-    moveLeft();
+    if (!playing) return;
 
-  if(e.key === "ArrowRight")
-    moveRight();
+    if (e.key === "ArrowLeft") {
 
-  if(
-    e.key === "ArrowUp" ||
-    e.key === " "
-  )
-    jump();
-
-  if(e.key === "ArrowDown")
-    slide();
-
-});
-
-
-/* =========================
-   TOUCH
-========================= */
-
-canvas.addEventListener(
-"touchstart",
-function(e){
-
-  const t =
-    e.changedTouches[0];
-
-  touchStartX =
-    t.clientX;
-
-  touchStartY =
-    t.clientY;
-
-},
-{passive:true}
-);
-
-
-canvas.addEventListener(
-"touchend",
-function(e){
-
-  const t =
-    e.changedTouches[0];
-
-  const dx =
-    t.clientX -
-    touchStartX;
-
-  const dy =
-    t.clientY -
-    touchStartY;
-
-  if(
-    Math.max(
-      Math.abs(dx),
-      Math.abs(dy)
-    ) < 35
-  )
-    return;
-
-
-  if(
-    Math.abs(dx) >
-    Math.abs(dy)
-  ){
-
-    if(dx > 0)
-      moveRight();
-
-    else
+      e.preventDefault();
       moveLeft();
 
-  }else{
+    }
 
-    if(dy < 0)
+    if (e.key === "ArrowRight") {
+
+      e.preventDefault();
+      moveRight();
+
+    }
+
+    if (
+      e.key === "ArrowUp" ||
+      e.key === " "
+    ) {
+
+      e.preventDefault();
       jump();
 
-    else
+    }
+
+    if (e.key === "ArrowDown") {
+
+      e.preventDefault();
       slide();
 
-  }
+    }
 
-},
-{passive:true}
+  }
 );
 
 
-/* =========================
-   COLLECT
-========================= */
+/* ---------- TOUCH ---------- */
 
-function collect(o){
+canvas.addEventListener(
+  "touchstart",
+  function (e) {
 
-  if(o.type === "coin")
-    coins++;
+    if (!playing) return;
 
-  if(o.type === "star")
-    stars++;
+    const t =
+      e.changedTouches[0];
 
-  if(o.type === "key")
-    keys++;
+    touchX = t.clientX;
+    touchY = t.clientY;
 
-  if(o.type === "magnet")
-    magnet = 8;
-
-  if(o.type === "shield")
-    shield = 8;
-
-  if(o.type === "booster")
-    booster = 6;
-
-}
+  },
+  { passive: true }
+);
 
 
-/* =========================
-   COLLISION
-========================= */
+canvas.addEventListener(
+  "touchend",
+  function (e) {
 
-function collision(o){
+    if (!playing) return;
 
-  if(
-    o.z < 0.86 ||
-    o.z > 1.03 ||
-    o.lane !== Math.round(lane)
-  )
-    return false;
+    const t =
+      e.changedTouches[0];
 
+    const dx =
+      t.clientX - touchX;
 
-  if(
-    o.type === "stone" ||
-    o.type === "barricade"
-  ){
+    const dy =
+      t.clientY - touchY;
 
-    if(jumping)
-      return false;
+    const minSwipe = 35;
 
 
-    if(shield > 0){
+    if (
+      Math.abs(dx) >
+      Math.abs(dy)
+    ) {
 
-      shield = 0;
+      if (Math.abs(dx) > minSwipe) {
 
-      return false;
+        if (dx < 0) {
+          moveLeft();
+        } else {
+          moveRight();
+        }
+
+      }
+
+    } else {
+
+      if (Math.abs(dy) > minSwipe) {
+
+        if (dy < 0) {
+          jump();
+        } else {
+          slide();
+        }
+
+      }
+
     }
 
-    return true;
-  }
+  },
+  { passive: true }
+);
 
-  return false;
+
+/* ---------- SPAWN ---------- */
+
+function spawnObject() {
+
+  const types = [
+    "coin",
+    "coin",
+    "coin",
+    "star",
+    "key",
+    "magnet",
+    "shield",
+    "booster",
+    "stone",
+    "barricade"
+  ];
+
+  const type =
+    types[
+      Math.floor(
+        Math.random() *
+        types.length
+      )
+    ];
+
+  objects.push({
+
+    type: type,
+
+    lane:
+      Math.floor(
+        Math.random() * 3
+      ),
+
+    z: 0
+
+  });
+
 }
 
 
-/* =========================
-   UPDATE
-========================= */
+/* ---------- COLLECT ---------- */
 
-function update(dt){
+function collect(o) {
 
-  lane +=
-    (targetLane - lane) *
-    Math.min(
-      1,
-      dt * 12
+  if (o.type === "coin") {
+    coins++;
+    score += 10;
+  }
+
+  if (o.type === "star") {
+    stars++;
+    score += 25;
+  }
+
+  if (o.type === "key") {
+    keys++;
+    score += 50;
+  }
+
+  if (o.type === "magnet") {
+    magnet = 8;
+    score += 20;
+  }
+
+  if (o.type === "shield") {
+    shield = 8;
+    score += 20;
+  }
+
+  if (o.type === "booster") {
+    booster = 6;
+    speed = 0.50;
+    score += 30;
+  }
+
+}
+
+
+/* ---------- COLLISION ---------- */
+
+function hit(o) {
+
+  if (o.lane !== Math.round(lane)) {
+    return false;
+  }
+
+  if (
+    o.type !== "stone" &&
+    o.type !== "barricade"
+  ) {
+    return false;
+  }
+
+  if (jumping) {
+    return false;
+  }
+
+  if (
+    sliding &&
+    o.type === "barricade"
+  ) {
+    return false;
+  }
+
+  if (shield > 0) {
+
+    shield = 0;
+
+    return false;
+  }
+
+  return true;
+}
+
+
+/* ---------- HUD ---------- */
+
+function updateHUD() {
+
+  const scoreEl =
+    document.getElementById("score");
+
+  const coinsEl =
+    document.getElementById("coins");
+
+  const starsEl =
+    document.getElementById("stars");
+
+  const keysEl =
+    document.getElementById("keys");
+
+
+  if (scoreEl) {
+    scoreEl.textContent =
+      Math.floor(score);
+  }
+
+  if (coinsEl) {
+    coinsEl.textContent =
+      coins;
+  }
+
+  if (starsEl) {
+    starsEl.textContent =
+      stars;
+  }
+
+  if (keysEl) {
+    keysEl.textContent =
+      keys;
+  }
+
+}
+  function updatePowerups(dt) {
+
+  if (magnet > 0) {
+    magnet -= dt;
+
+    if (magnet < 0) {
+      magnet = 0;
+    }
+  }
+
+  if (shield > 0) {
+    shield -= dt;
+
+    if (shield < 0) {
+      shield = 0;
+    }
+  }
+
+  if (booster > 0) {
+
+    booster -= dt;
+
+    if (booster <= 0) {
+      booster = 0;
+      speed = 0.30;
+    }
+  }
+}
+
+
+/* ---------- UPDATE ---------- */
+
+function update(dt) {
+
+  distance += speed * dt;
+
+  score += speed * dt * 10;
+
+  updatePowerups(dt);
+
+
+  /* Lane movement */
+
+  if (lane < targetLane) {
+
+    lane += Math.min(
+      0.12,
+      dt * 6
     );
 
+    if (lane > targetLane) {
+      lane = targetLane;
+    }
+  }
 
-  if(jumping){
+
+  if (lane > targetLane) {
+
+    lane -= Math.min(
+      0.12,
+      dt * 6
+    );
+
+    if (lane < targetLane) {
+      lane = targetLane;
+    }
+  }
+
+
+  /* Jump */
+
+  if (jumping) {
 
     jumpTime += dt;
 
-    if(jumpTime > 0.72)
+    if (jumpTime > 0.85) {
       jumping = false;
+      jumpTime = 0;
+    }
   }
 
 
-  if(sliding){
+  /* Slide */
+
+  if (sliding) {
 
     slideTime += dt;
 
-    if(slideTime > 0.62)
+    if (slideTime > 0.65) {
       sliding = false;
+      slideTime = 0;
+    }
   }
 
 
-  magnet =
-    Math.max(
-      0,
-      magnet - dt
-    );
+  /* Spawn */
 
-  shield =
-    Math.max(
-      0,
-      shield - dt
-    );
+  spawnTimer += dt;
 
-  booster =
-    Math.max(
-      0,
-      booster - dt
-    );
+  if (spawnTimer > 0.75) {
 
-
-  speed =
-    0.32 +
-    (booster > 0 ? 0.15 : 0) +
-    Math.min(
-      0.22,
-      distance / 9000
-    );
-
-
-  distance +=
-    speed *
-    dt *
-    100;
-
-
-  score =
-    Math.floor(distance);
-
-
-  spawnTimer -= dt;
-
-
-  if(spawnTimer <= 0){
+    spawnTimer = 0;
 
     spawnObject();
-
-    spawnTimer =
-      Math.max(
-        0.35,
-        0.72 -
-        speed * 0.35
-      );
   }
 
 
-  for(
+  /* Objects */
+
+  for (
     let i = objects.length - 1;
     i >= 0;
     i--
-  ){
+  ) {
 
-    const o =
-      objects[i];
+    const o = objects[i];
 
-    o.z +=
-      speed * dt;
+    o.z += speed * dt;
 
 
-    if(
-      magnet > 0 &&
-      o.type === "coin" &&
-      o.z > 0.65 &&
-      o.z < 1.03 &&
-      Math.abs(
-        o.lane -
-        Math.round(lane)
-      ) <= 1
-    ){
+    /* Collision / collect */
 
-      o.lane =
-        Math.round(lane);
+    if (
+      o.z > 0.82 &&
+      o.z < 0.96
+    ) {
+
+      if (
+        o.lane === Math.round(lane)
+      ) {
+
+        if (
+          o.type === "coin" ||
+          o.type === "star" ||
+          o.type === "key" ||
+          o.type === "magnet" ||
+          o.type === "shield" ||
+          o.type === "booster"
+        ) {
+
+          collect(o);
+
+          objects.splice(i, 1);
+
+          continue;
+        }
+
+
+        if (hit(o)) {
+
+          gameOver();
+
+          return;
+        }
+      }
     }
 
 
-    if(
-      o.z > 0.86 &&
-      o.z < 1.02 &&
-      o.lane === Math.round(lane) &&
-      (
+    /* Magnet */
+
+    if (magnet > 0) {
+
+      if (
         o.type === "coin" ||
         o.type === "star" ||
-        o.type === "key" ||
-        o.type === "magnet" ||
-        o.type === "shield" ||
-        o.type === "booster"
-      )
-    ){
+        o.type === "key"
+      ) {
 
-      collect(o);
+        if (
+          o.lane === Math.round(lane) &&
+          o.z > 0.45 &&
+          o.z < 0.90
+        ) {
+          collect(o);
 
-      objects.splice(i,1);
+objects.splice(i, 1);
 
-      continue;
+continue;
+
+        }
+      }
     }
 
 
-    if(collision(o)){
+    /* Remove old objects */
 
-      endGame();
+    if (o.z > 1.05) {
 
-      return;
-    }
+      objects.splice(i, 1);
 
-
-    if(o.z > 1.1){
-
-      objects.splice(i,1);
     }
 
   }
 
 
-  $("score").textContent =
-    score;
+  updateHUD();
 
-  $("coins").textContent =
-    coins;
-
-  $("stars").textContent =
-    stars;
-
-  $("keys").textContent =
-    keys;
-
-  $("magnet").textContent =
-    Math.ceil(magnet);
-
-  $("shield").textContent =
-    Math.ceil(shield);
-
-  $("booster").textContent =
-    Math.ceil(booster);
 }
 
 
-/* =========================
-   BACKGROUND
-========================= */
+/* ---------- DRAW OBJECT ---------- */
 
-function drawBackground(){
+function drawObj(o) {
 
-  const sky =
-    ctx.createLinearGradient(
+  const z =
+    Math.max(
       0,
-      0,
-      0,
-      window.innerHeight
+      Math.min(1, o.z)
     );
 
-  sky.addColorStop(
-    0,
-    "#071b29"
-  );
+  const x =
+    laneX(o.lane, z);
 
-  sky.addColorStop(
-    0.48,
-    "#153f29"
-  );
+  const y =
+    roadY(z);
 
-  sky.addColorStop(
-    1,
-    "#061008"
-  );
-
-  ctx.fillStyle = sky;
-
-  ctx.fillRect(
-    0,
-    0,
-    window.innerWidth,
-    window.innerHeight
-  );
+  const size =
+    12 +
+    z *
+    Math.min(
+      canvas.width,
+      canvas.height
+    ) *
+    0.045;
 
 
-  ctx.fillStyle =
-    "#dff3c0";
+  ctx.save();
 
-  ctx.beginPath();
-
-  ctx.arc(
-    window.innerWidth * 0.82,
-    window.innerHeight * 0.13,
-    32,
-    0,
-    Math.PI * 2
-  );
-
-  ctx.fill();
+  ctx.translate(x, y);
 
 
-  for(
-    let i = 0;
-    i < 16;
-    i++
-  ){
+  /* COIN */
 
-    const x =
-      (i * 97) %
-      window.innerWidth;
+  if (o.type === "coin") {
 
-    const h =
-      90 +
-      (i * 37) % 100;
+    ctx.fillStyle = "#ffd700";
 
-    ctx.fillStyle =
-      i % 2
-      ? "#0a2c1a"
-      : "#0d3a21";
+    ctx.beginPath();
+
+    ctx.arc(
+      0,
+      -size * 0.7,
+      size * 0.42,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle = "#fff4a0";
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+
+  }
+
+
+  /* STAR */
+
+  if (o.type === "star") {
+
+    drawStar(
+      0,
+      -size * 0.7,
+      size * 0.55
+    );
+
+  }
+
+
+  /* KEY */
+
+  if (o.type === "key") {
+
+    ctx.strokeStyle = "#ffe66d";
+
+    ctx.lineWidth =
+      Math.max(
+        2,
+        size * 0.12
+      );
+
+    ctx.beginPath();
+
+    ctx.arc(
+      -size * 0.18,
+      -size * 0.75,
+      size * 0.22,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.stroke();
+
 
     ctx.beginPath();
 
     ctx.moveTo(
-      x,
-      window.innerHeight * 0.48
+      0,
+      -size * 0.75
     );
 
     ctx.lineTo(
-      x + 35,
-      window.innerHeight * 0.48 - h
+      size * 0.55,
+      -size * 0.75
     );
 
     ctx.lineTo(
-      x + 70,
-      window.innerHeight * 0.48
+      size * 0.42,
+      -size * 0.58
     );
 
-    ctx.fill();
+    ctx.stroke();
+
   }
+
+
+  /* MAGNET */
+
+  if (o.type === "magnet") {
+
+    ctx.strokeStyle = "#ff4d6d";
+
+    ctx.lineWidth =
+      Math.max(
+        3,
+        size * 0.18
+      );
+
+    ctx.beginPath();
+
+    ctx.arc(
+      0,
+      -size * 0.7,
+      size * 0.4,
+      0,
+      Math.PI
+    );
+
+    ctx.stroke();
+
+  }
+
+
+  /* SHIELD */
+
+  if (o.type === "shield") {
+
+    ctx.fillStyle = "#4da6ff";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      0,
+      -size * 1.15
+    );
+
+    ctx.lineTo(
+      size * 0.55,
+      -size * 0.85
+    );
+
+    ctx.lineTo(
+      size * 0.40,
+      -size * 0.35
+    );
+
+    ctx.lineTo(
+      0,
+      -size * 0.15
+    );
+
+    ctx.lineTo(
+      -size * 0.40,
+      -size * 0.35
+    );
+
+    ctx.lineTo(
+      -size * 0.55,
+      -size * 0.
+      -size * 0.85
+);
+
+ctx.closePath();
+
+ctx.fill();
+
 }
 
 
-/* =========================
-   ROAD
-========================= */
+/* ---------- SHIELD ---------- */
 
-function drawRoad(){
+if (o.type === "shield") {
 
-  const y0 =
-    window.innerHeight * 0.30;
-
-  const y1 =
-    window.innerHeight;
-
-
-  ctx.fillStyle =
-    "#292d2b";
+  ctx.fillStyle = "#4da6ff";
 
   ctx.beginPath();
 
   ctx.moveTo(
-    window.innerWidth * 0.47,
-    y0
+    0,
+    -size * 1.15
   );
 
   ctx.lineTo(
-    window.innerWidth * 0.53,
-    y0
+    size * 0.55,
+    -size * 0.85
   );
 
   ctx.lineTo(
-    window.innerWidth * 0.92,
-    y1
+    size * 0.40,
+    -size * 0.35
   );
 
   ctx.lineTo(
-    window.innerWidth * 0.08,
-    y1
+    0,
+    -size * 0.15
+  );
+
+  ctx.lineTo(
+    -size * 0.40,
+    -size * 0.35
+  );
+
+  ctx.lineTo(
+    -size * 0.55,
+    -size * 0.85
   );
 
   ctx.closePath();
 
   ctx.fill();
 
-
-  ctx.strokeStyle =
-    "#e8dfad";
-
-  ctx.lineWidth = 3;
-
-
-  for(
-    const k of [-0.17,0.17]
-  ){
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      window.innerWidth *
-      (0.5 + k * 0.08),
-      y0
-    );
-
-    ctx.lineTo(
-      window.innerWidth *
-      (0.5 + k),
-      y1
-    );
-
-    ctx.stroke();
-  }
 }
 
 
-/* =========================
-   OBJECTS
-========================= */
+/* ---------- BOOSTER ---------- */
 
-function drawObject(o){
+if (o.type === "booster") {
 
-  const y =
-    roadY(o.z);
+  ctx.fillStyle = "#ff8a00";
 
-  const x =
-    laneX(
-      o.lane,
-      o.z
-    );
+  ctx.beginPath();
 
-  const s =
-    10 +
-    o.z * 42;
-
-
-  ctx.save();
-
-  ctx.translate(
-    x,
-    y
+  ctx.moveTo(
+    0,
+    -size * 1.25
   );
 
+  ctx.lineTo(
+    size * 0.32,
+    -size * 0.70
+  );
 
-  if(o.type === "coin"){
+  ctx.lineTo(
+    size * 0.08,
+    -size * 0.70
+  );
 
-    ctx.fillStyle =
-      "#ffd34e";
+  ctx.lineTo(
+    size * 0.30,
+    -size * 0.20
+  );
 
-    ctx.beginPath();
+  ctx.lineTo(
+    -size * 0.35,
+    -size * 0.82
+  );
 
-    ctx.arc(
-      0,
-      -s * 0.8,
-      s * 0.42,
-      0,
-      Math.PI * 2
+  ctx.lineTo(
+    -size * 0.08,
+    -size * 0.82
+  );
+
+  ctx.closePath();
+
+  ctx.fill();
+
+}
+
+
+/* ---------- STONE ---------- */
+
+if (o.type === "stone") {
+
+  ctx.fillStyle = "#666";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    -size,
+    0
+  );
+
+  ctx.lineTo(
+    -size * 0.70,
+    -size
+  );
+
+  ctx.lineTo(
+    size * 0.55,
+    -size * 0.85
+  );
+
+  ctx.lineTo(
+    size,
+    0
+  );
+
+  ctx.closePath();
+
+  ctx.fill();
+
+}
+
+
+/* ---------- BARRICADE ---------- */
+
+if (o.type === "barricade") {
+
+  ctx.fillStyle = "#e65100";
+
+  ctx.fillRect(
+    -size * 1.15,
+    -size * 1.15,
+    size * 2.3,
+    size * 0.75
+  );
+
+  ctx.fillStyle = "#fff";
+
+  for (
+    let i = -1;
+    i <= 1;
+    i++
+  ) {
+
+    ctx.save();
+
+    ctx.translate(
+      i * size * 0.7,
+      -size * 0.78
     );
 
-    ctx.fill();
-
-  }
-
-
-  else if(o.type === "star"){
-
-    ctx.fillStyle =
-      "#ffe85a";
-
-    ctx.font =
-      s + "px Arial";
-
-    ctx.textAlign =
-      "center";
-
-    ctx.fillText(
-      "★",
-      0,
-      -s * 0.65
-    );
-
-  }
-
-
-  else if(o.type === "key"){
-
-    ctx.font =
-      s + "px Arial";
-
-    ctx.textAlign =
-      "center";
-
-    ctx.fillText(
-      "🔑",
-      0,
-      -s * 0.65
-    );
-
-  }
-
-
-  else if(
-    o.type === "magnet" ||
-    o.type === "shield" ||
-    o.type === "booster"
-  ){
-
-    ctx.font =
-      s * 0.8 + "px Arial";
-
-    ctx.textAlign =
-      "center";
-
-    const icon =
-      o.type === "magnet"
-      ? "🧲"
-      : o.type === "shield"
-      ? "🛡️"
-      : "👟";
-
-    ctx.fillText(
-      icon,
-      0,
-      -s * 0.65
-    );
-
-  }
-
-
-  else if(o.type === "stone"){
-
-    ctx.fillStyle =
-      "#777";
-
-    ctx.beginPath();
-
-    ctx.arc(
-      0,
-      -s * 0.55,
-      s * 0.55,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.fill();
-
-  }
-
-
-  else if(o.type === "barricade"){
-
-    ctx.fillStyle =
-      "#a93428";
+    ctx.rotate(-0.5);
 
     ctx.fillRect(
-      -s * 0.7,
-      -s * 0.9,
-      s * 1.4,
-      s * 0.9
+      -size * 0.12,
+      -size * 0.35,
+      size * 0.24,
+      size * 0.7
     );
 
-    ctx.strokeStyle =
-      "#f2d16b";
-
-    ctx.lineWidth = 3;
-
-    ctx.strokeRect(
-      -s * 0.7,
-      -s * 0.9,
-      s * 1.4,
-      s * 0.9
-    );
+    ctx.restore();
 
   }
 
+}
 
-  ctx.restore();
+ctx.restore();
+
 }
 
 
-/* =========================
-   PLAYER
-========================= */
+/* ---------- STAR ---------- */
 
-function drawPlayer(){
+function drawStar(x, y, r) {
 
-  const x =
-    laneX(
-      Math.round(lane),
-      1
-    );
+  ctx.save();
 
-  const base =
-    window.innerHeight * 0.86;
+  ctx.translate(x, y);
 
-  let lift = 0;
+  ctx.fillStyle = "#fff04a";
+
+  ctx.beginPath();
+
+  for (
+    let i = 0;
+    i < 10;
+    i++
+  ) {
+
+    const angle =
+      -Math.PI / 2 +
+      i * Math.PI / 5;
+
+    const radius =
+      i % 2 === 0
+        ? r
+        : r * 0.45;
+
+    const px =
+      Math.cos(angle) * radius;
+
+    const py =
+      Math.sin(angle) * radius;
+
+    if (i === 0) {
+      ctx.moveTo(px, py);
+    } else {
+      ctx.lineTo(px, py);
+    }
+
+  }
+
+  ctx.closePath();
+
+  ctx.fill()
+
+  ctx.restore();
+
+} 
+ /* ---------- PLAYER ---------- */
+
+function drawPlayer() {
+
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const baseY = H * 0.84;
+
+  let x = W / 2;
+
+  if (lane === 0) {
+    x = W * 0.38;
+  }
+
+  if (lane === 2) {
+    x = W * 0.62;
+  }
+
+  let y = baseY;
+  let scale = 1;
 
 
-  if(jumping){
+  /* JUMP */
 
-    lift =
-      -Math.sin(
-        Math.min(
-          1,
-          jumpTime / 0.72
-        ) * Math.PI
-      ) *
-      window.innerHeight *
+  if (jumping) {
+
+    const p =
+      Math.min(
+        1,
+        jumpTime / 0.85
+      );
+
+    const jumpHeight =
+      Math.sin(p * Math.PI) *
+      H *
       0.20;
+
+    y -= jumpHeight;
   }
 
 
-  const y =
-    base + lift;
+  /* SLIDE */
+
+  if (sliding) {
+
+    scale = 0.75;
+
+    y += H * 0.035;
+  }
 
 
   ctx.save();
 
-  ctx.translate(
-    x,
-    y
+  ctx.translate(x, y);
+
+  ctx.scale(
+    scale,
+    scale
   );
 
 
+  /* SHADOW */
+
   ctx.fillStyle =
-    "#0005";
+    "rgba(0,0,0,.30)";
 
   ctx.beginPath();
 
   ctx.ellipse(
     0,
+    12,
+    34,
     10,
-    30,
-    9,
     0,
     0,
     Math.PI * 2
@@ -1537,28 +1521,93 @@ function drawPlayer(){
   ctx.fill();
 
 
+  /* BODY */
+
   ctx.fillStyle =
-    runner === "boy"
-    ? "#2877d5"
-    : "#d94c91";
+    playerType === "boy"
+      ? "#2563eb"
+      : "#e83e8c";
 
   ctx.fillRect(
-    -14,
-    -64,
-    28,
-    47
+    -18,
+    -82,
+    36,
+    52
   );
 
 
-  ctx.fillStyle =
-    "#f1b48b";
+  /* LEGS */
+
+  ctx.strokeStyle = "#222";
+
+  ctx.lineWidth = 12;
+
+  ctx.lineCap = "round";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    -9,
+    -30
+  );
+
+  ctx.lineTo(
+    -15,
+    5
+  );
+
+  ctx.moveTo(
+    9,
+    -30
+  );
+
+  ctx.lineTo(
+    15,
+    5
+  );
+
+  ctx.stroke();
+
+
+  /* ARMS */
+
+  ctx.lineWidth = 9;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    -15,
+    -70
+  );
+
+  ctx.lineTo(
+    -32,
+    -45
+  );
+
+  ctx.moveTo(
+    15,
+    -70
+  );
+
+  ctx.lineTo(
+    32,
+    -45
+  );
+
+  ctx.stroke();
+
+
+  /* HEAD */
+
+  ctx.fillStyle = "#f0bd91";
 
   ctx.beginPath();
 
   ctx.arc(
     0,
-    -78,
-    15,
+    -103,
+    22,
     0,
     Math.PI * 2
   );
@@ -1566,15 +1615,19 @@ function drawPlayer(){
   ctx.fill();
 
 
+  /* HAIR */
+
   ctx.fillStyle =
-    "#222";
+    playerType === "boy"
+      ? "#2d1b0e"
+      : "#3b2415";
 
   ctx.beginPath();
 
   ctx.arc(
     0,
-    -85,
-    15,
+    -112,
+    22,
     Math.PI,
     Math.PI * 2
   );
@@ -1582,119 +1635,154 @@ function drawPlayer(){
   ctx.fill();
 
 
-  ctx.strokeStyle =
-    "#f1b48b";
-
-  ctx.lineWidth = 7;
-
-
-  if(!sliding){
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      -10,
-      -18
-    );
-
-    ctx.lineTo(
-      -20,
-      8
-    );
-
-    ctx.moveTo(
-      10,
-      -18
-    );
-
-    ctx.lineTo(
-      20,
-      8
-    );
-
-    ctx.stroke();
-  }
-
-
   ctx.restore();
+
 }
 
 
-/* =========================
-   DRAW
-========================= */
+/* ---------- DRAW GAME ---------- */
 
-function draw(){
+function draw() {
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
   drawBackground();
 
   drawRoad();
 
+
   objects
     .slice()
-    .sort(
-      (a,b)=>a.z-b.z
-    )
-    .forEach(drawObject);
+    .sort(function (a, b) {
+      return a.z - b.z;
+    })
+    .forEach(function (o) {
+      drawObj(o);
+    });
+
 
   drawPlayer();
+
 }
 
 
-/* =========================
-   GAME OVER
-========================= */
+/* ---------- GAME OVER ---------- */
 
-function endGame(){
+function gameOver() {
 
-  if(!playing)
-    return;
-  function endGame(){
-
-  if(!playing)
-    return;
+  if (!playing) return;
 
   playing = false;
 
-  const oldBest =
-    Number(
-      localStorage.getItem("runBlazeBest") || 0
+  const finalScore =
+    Math.floor(score);
+
+  let best = 0;
+
+
+  try {
+
+    best =
+      Number(
+        localStorage.getItem(
+          "runBlazeBest"
+        )
+      ) || 0;
+
+
+    if (finalScore > best) {
+
+      best = finalScore;
+
+      localStorage.setItem(
+        "runBlazeBest",
+        String(best)
+      );
+
+    }
+
+  } catch (e) {
+
+    best = finalScore;
+
+  }
+
+
+  const finalScoreEl =
+    document.getElementById(
+      "finalScore"
     );
 
-  const best =
-    Math.max(oldBest, score);
+  const bestScoreEl =
+    document.getElementById(
+      "bestScore"
+    );
 
-  localStorage.setItem(
-    "runBlazeBest",
-    best
-  );
+  const finalCoinsEl =
+    document.getElementById(
+      "finalCoins"
+    );
 
-  $("finalScore").textContent = score;
-  $("finalCoins").textContent = coins;
-  $("finalStars").textContent = stars;
-  $("finalKeys").textContent = keys;
-  $("bestScore").textContent = best;
+  const finalStarsEl =
+    document.getElementById(
+      "finalStars"
+    );
 
-  showScreen("over");
+  const finalKeysEl =
+    document.getElementById(
+      "finalKeys"
+    );
+
+
+  if (finalScoreEl) {
+    finalScoreEl.textContent =
+      finalScore;
+  }
+
+  if (bestScoreEl) {
+    bestScoreEl.textContent =
+      best;
+  }
+
+  if (finalCoinsEl) {
+    finalCoinsEl.textContent =
+      coins;
+  }
+
+  if (finalStarsEl) {
+    finalStarsEl.textContent =
+      stars;
+  }
+
+  if (finalKeysEl) {
+    finalKeysEl.textContent =
+      keys;
+  }
+
+
+  showScreen("gameover");
+
 }
 
 
-/* =========================
-   GAME LOOP
-========================= */
+/* ---------- GAME LOOP ---------- */
 
-function loop(time){
+function loop(time) {
 
-  if(!playing)
-    return;
-
-  if(!lastTime)
-    lastTime = time;
+  if (!playing) return;
 
   const dt =
     Math.min(
       0.035,
-      (time - lastTime) / 1000
+      Math.max(
+        0,
+        (time - lastTime) / 1000
+      )
     );
 
   lastTime = time;
@@ -1703,14 +1791,139 @@ function loop(time){
 
   draw();
 
-  if(playing)
+
+  if (playing) {
+
     requestAnimationFrame(loop);
+
+  }
+
 }
 
 
-/* =========================
-   START
-========================= */
+/* ---------- PLAY BUTTON ---------- */
+
+playButton.onclick =
+  function () {
+
+    startGame();
+
+  };
+
+
+/* ---------- SETTINGS ---------- */
+
+settingsButton.onclick =
+  function () {
+
+    showScreen("settings");
+
+  };
+
+
+/* ---------- BACK ---------- */
+
+backButton.onclick =
+  function () {
+
+    showScreen("home");
+
+  };
+
+
+/* ---------- AGAIN ---------- */
+
+againButton.onclick =
+  function () {
+
+    startGame();
+
+  };
+
+
+/* ---------- HOME ---------- */
+
+homeButton.onclick =
+  function () {
+
+    playing = false;
+
+    showScreen("home");
+
+    draw();
+
+  };
+
+
+/* ---------- SOUND ---------- */
+
+soundButton.onclick =
+  function () {
+
+    soundOn = !soundOn;
+
+    soundButton.textContent =
+      soundOn
+        ? "🔊 SOUND ON"
+        : "🔇 SOUND OFF";
+
+  }; 
+  /* ---------- WITHDRAWAL ---------- */
+
+const upiButton =
+  document.getElementById("upiButton");
+
+const bankButton =
+  document.getElementById("bankButton");
+
+const paypalButton =
+  document.getElementById("paypalButton");
+
+const withdrawalMessage =
+  document.getElementById("withdrawalMessage");
+
+
+function showWithdrawalMessage(method) {
+
+  if (!withdrawalMessage) {
+    return;
+  }
+
+  withdrawalMessage.textContent =
+    method +
+    " withdrawal option selected.";
+
+}
+
+
+if (upiButton) {
+
+  upiButton.onclick = function () {
+    showWithdrawalMessage("UPI");
+  };
+
+}
+
+
+if (bankButton) {
+
+  bankButton.onclick = function () {
+    showWithdrawalMessage("Bank Account");
+  };
+
+}
+
+
+if (paypalButton) {
+
+  paypalButton.onclick = function () {
+    showWithdrawalMessage("PayPal");
+  };
+
+}
+
+
+/* ---------- START HOME ---------- */
 
 showScreen("home");
 
