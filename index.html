@@ -1657,7 +1657,26 @@ requestAnimationFrame(gameLoop);
 
 
 showScreen("home");
+$("saveAccountBtn").addEventListener("click", () => {
+  const name = $("accountName").value.trim();
+  const bank = $("accountBank").value.trim();
+  const ifsc = $("accountIFSC").value.trim().toUpperCase();
+  const upi = $("accountUPI").value.trim();
+  const msg = $("accountSaveMsg");
 
+  if (!name || !bank || !ifsc || !upi) {
+    msg.textContent = "Please fill all fields.";
+    return;
+  }
+
+  if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) {
+    msg.textContent = "Please check your IFSC code.";
+    return;
+  }
+
+  msg.textContent =
+    "Details checked. Secure saving and real withdrawals are not connected yet.";
+});
 </script>
 
 </body>
