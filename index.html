@@ -325,7 +325,27 @@ PAYPAL
 </button>
 
 <div id="withdrawMsg" class="msg"></div>
+<div class="account-box">
+  <h3>🏦 ACCOUNT DETAILS</h3>
 
+  <label for="accountName">Account Holder Name</label>
+  <input id="accountName" type="text" placeholder="Enter full name" autocomplete="name">
+
+  <label for="accountBank">Bank Name</label>
+  <input id="accountBank" type="text" placeholder="Enter bank name" autocomplete="off">
+
+  <label for="accountNumber">Account Number</label>
+  <input id="accountNumber" type="password" inputmode="numeric" placeholder="Enter account number" autocomplete="off">
+
+  <label for="accountIFSC">IFSC Code</label>
+  <input id="accountIFSC" type="text" placeholder="Enter IFSC code" autocomplete="off">
+
+  <label for="accountUPI">UPI ID</label>
+  <input id="accountUPI" type="text" placeholder="example@upi" autocomplete="off">
+
+  <button id="saveAccountBtn" type="button">SAVE DETAILS</button>
+  <p id="accountSaveMsg" class="small"></p>
+</div>
 <button id="settingsBackBtn" class="secondary">
 ← HOME
 </button>
