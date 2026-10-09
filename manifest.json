@@ -6,9 +6,9 @@
   "description": "Run Blaze is an endless forest runner game by Playtech Studio.",
   "name": "Run Blaze",
   "orientation": "any",
-  "scope": "/",
+  scope": "/run-blazex/",
   "short_name": "Run Blaze",
-  "start_url": "/",
+"start_url": "/run-blazex/",
   "theme_color": "#06120a",
   "id": "run-blaze"
-}-
+}
