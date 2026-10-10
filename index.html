@@ -793,25 +793,25 @@ z:0
 
 
 function collectObject(o){
+  if(o.type==="coin"){
+    coins++;
 
-if(o.type==="coin")
-coins++;
+    // Save lifetime coin total
+    let total = Number(localStorage.getItem("runBlazeTotalCoins") || 0);
+    localStorage.setItem("runBlazeTotalCoins", total + 1);
 
-if(o.type==="star")
-stars++;
+    // Save today's coin total
+    const today = new Date().toISOString().slice(0,10);
+    const dailyKey = "runBlazeDailyCoins_" + today;
+    let daily = Number(localStorage.getItem(dailyKey) || 0);
+    localStorage.setItem(dailyKey, daily + 1);
+  }
 
-if(o.type==="key")
-keys++;
-
-if(o.type==="magnet")
-magnet=6;
-
-if(o.type==="shield")
-shield=6;
-
-if(o.type==="shoes")
-shoes=5;
-
+  if(o.type==="star") stars++;
+  if(o.type==="key") keys++;
+  if(o.type==="magnet") magnet=6;
+  if(o.type==="shield") shield=6;
+  if(o.type==="shoes") shoes=5;
 }
 
 
