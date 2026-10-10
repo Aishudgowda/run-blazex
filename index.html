@@ -1047,6 +1047,8 @@ coins;
 
 $("starsEl").textContent=
 stars;
+const totalCoins = Number(localStorage.getItem("runBlazeTotalCoins") || 0);
+$("totalCoinsEl") && ($("totalCoinsEl").textContent = totalCoins);  
 
 $("keysEl").textContent=
 keys;
