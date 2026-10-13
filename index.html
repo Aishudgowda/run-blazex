@@ -1147,82 +1147,19 @@ powers.join("   ");
 }
 
 
-function drawBackground(){
+const forestBg = new Image();
+forestBg.src = "WhatsApp Image 2026-10-13 at 2.59.34 PM (1).jpeg";
 
-const w=window.innerWidth;
-const h=window.innerHeight;
+function drawBackground() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
 
-const gradient=
-ctx.createLinearGradient(
-0,
-0,
-0,
-h
-);
-
-gradient.addColorStop(
-0,
-"#78caff"
-);
-
-gradient.addColorStop(
-.50,
-"#c9edff"
-);
-
-gradient.addColorStop(
-.51,
-"#4f963e"
-);
-
-gradient.addColorStop(
-1,
-"#173b1b"
-);
-
-ctx.fillStyle=gradient;
-
-ctx.fillRect(
-0,
-0,
-w,
-h
-);
-
-
-for(let i=0;i<24;i++){
-
-const x=
-(i*137)%w;
-
-const base=h*.52;
-
-ctx.fillStyle=
-i%2
-?"#245e2d"
-:"#194923";
-
-ctx.fillRect(
-x,
-base-100-(i%5)*20,
-18,
-100+(i%5)*20
-);
-
-ctx.beginPath();
-
-ctx.arc(
-x+9,
-base-100-(i%5)*20,
-42,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-}
-
+  if (forestBg.complete && forestBg.naturalWidth > 0) {
+    ctx.drawImage(forestBg, 0, 0, w, h);
+  } else {
+    ctx.fillStyle = "#245e2d";
+    ctx.fillRect(0, 0, w, h);
+  }
 }
 
 
