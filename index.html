@@ -812,7 +812,22 @@ z:0
 function collectObject(o){
   if(o.type==="coin"){
     coins++;
+    try {
+  const audio = new AudioContext();
+  const oscillator = audio.createOscillator();
+  const gain = audio.createGain();
 
+  oscillator.connect(gain);
+  gain.connect(audio.destination);
+
+  oscillator.frequency.value = 880;
+  gain.gain.value = 0.08;
+
+  oscillator.start();
+  oscillator.stop(audio.currentTime + 0.08);
+
+  oscillator.onended = () => audio.close();
+} catch (e) {}
     // Save lifetime coin total
     let total = Number(localStorage.getItem("runBlazeTotalCoins") || 0);
     localStorage.setItem("runBlazeTotalCoins", total + 1);
