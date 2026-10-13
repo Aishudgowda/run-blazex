@@ -1702,29 +1702,23 @@ showScreen("over");
 }
 
 
+let paused = false;
+
 function gameLoop(time){
+  if(!playing || paused) return;
 
-if(!playing)
-return;
+  const dt = Math.min(
+    .035,
+    Math.max(0, (time - lastTime) / 1000)
+  );
 
-const dt=
-Math.min(
-.035,
-Math.max(
-0,
-(time-lastTime)/1000
-)
-);
+  lastTime = time;
+  updateGame(dt);
+  drawGame();
 
-lastTime=time;
-
-updateGame(dt);
-
-drawGame();
-
-if(playing)
-requestAnimationFrame(gameLoop);
-
+  if(playing && !paused){
+    requestAnimationFrame(gameLoop);
+  }
 }
 
 
