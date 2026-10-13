@@ -531,6 +531,7 @@ $("continueBtn").onclick = () => {
     playing = true;
     showScreen("game");
     lastTime = performance.now();
+    drawGame();
     requestAnimationFrame(gameLoop);
   } else {
     alert("You need 1 key to continue!");
