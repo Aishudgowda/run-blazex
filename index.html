@@ -619,6 +619,25 @@ method+
 
 
 function resetGame(){
+  function pauseGame() {
+  if (!playing) return;
+
+  paused = true;
+  document.getElementById("pauseBtn").style.display = "none";
+  document.getElementById("resumeBtn").style.display = "inline-block";
+}
+
+function resumeGame() {
+  if (!playing || !paused) return;
+
+  paused = false;
+  lastTime = performance.now();
+
+  document.getElementById("pauseBtn").style.display = "inline-block";
+  document.getElementById("resumeBtn").style.display = "none";
+
+  requestAnimationFrame(gameLoop);
+}
 
 lane=1;
 targetLane=1;
