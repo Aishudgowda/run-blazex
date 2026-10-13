@@ -524,7 +524,19 @@ resizeCanvas();
 
 $("playBtn").onclick=()=>{
 showScreen("select");
-};
+}
+$("continueBtn").onclick = () => {
+  if (keys > 0) {
+    keys--;
+    playing = true;
+    showScreen("game");
+    lastTime = performance.now();
+    requestAnimationFrame(gameLoop);
+  } else {
+    alert("You need 1 key to continue!");
+  }
+};  ; 
+  
 
 $("settingsBtn").onclick=()=>{
 showScreen("settings");
