@@ -1163,18 +1163,6 @@ function drawBackground() {
   }
 }
 
-function drawBackground() {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-
-  if (forestBg.complete && forestBg.naturalWidth > 0) {
-    ctx.drawImage(forestBg, 0, 0, w, h);
-  } else {
-    ctx.fillStyle = "#245e2d";
-    ctx.fillRect(0, 0, w, h);
-  }
-}
-
 
 function drawRoad(){
 
