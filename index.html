@@ -1149,6 +1149,20 @@ powers.join("   ");
 
 const forestBg = new Image();
 forestBg.src = "WhatsApp Image 2026-10-13 at 2.59.34 PM (1).jpeg";
+  const forestBg = new Image();
+forestBg.src = "WhatsApp Image 2026-10-13 at 2.59.34 PM (1).jpeg";
+
+function drawBackground() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  if (forestBg.complete && forestBg.naturalWidth > 0) {
+    ctx.drawImage(forestBg, 0, 0, w, h);
+  } else {
+    ctx.fillStyle = "#245e2d";
+    ctx.fillRect(0, 0, w, h);
+  }
+}
 
 function drawBackground() {
   const w = window.innerWidth;
