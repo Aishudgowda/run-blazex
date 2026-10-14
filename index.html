@@ -1040,12 +1040,13 @@ dt*(speed+.08);
 
 
 if(
-magnet>0 &&
+magnet > 0 &&
 ["coin","star","key"].includes(o.type) &&
-o.lane===Math.round(true) &&
-o.z>.55 &&
-o.z<.96
+o.z > .55 &&
+o.z < .96
 ){
+  o.lane = Math.round(lane);
+}
 
 collectObject(o);
 
