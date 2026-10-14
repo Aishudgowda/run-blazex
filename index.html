@@ -1046,14 +1046,10 @@ o.z > .55 &&
 o.z < .96
 ){
   o.lane = Math.round(lane);
-}
 
-collectObject(o);
-
-objects.splice(i,1);
-
-continue;
-
+  collectObject(o);
+  objects.splice(i, 1);
+  continue;
 }
 
 
