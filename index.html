@@ -1447,144 +1447,95 @@ ctx.restore();
 
 
 function drawPlayer(){
+  const x = laneX(Math.round(lane), 1);
+  let y = window.innerHeight * 0.84;
 
-let x=
-laneX(
-Math.round(lane),
-1
-);
+  if (jumping) {
+    y -= Math.sin(Math.min(1, jumpTime / 0.85) * Math.PI)
+      * window.innerHeight * 0.20;
+  }
 
-let y=
-window.innerHeight*.84;
+  if (sliding) y += window.innerHeight * 0.03;
 
+  const t = performance.now() / 130;
+  const swing = Math.sin(t) * (sliding ? 0.15 : 0.65);
+  const armSwing = Math.sin(t + Math.PI) * 0.55;
+  const bodyColor = runner === "boy" ? "#2875e8" : "#e83e8c";
 
-if(jumping){
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(1, sliding ? 0.75 : 1);
 
-y -=
-Math.sin(
-Math.min(
-1,
-jumpTime/.85
-)*Math.PI
-)*
-window.innerHeight*.20;
+  // Shadow
+  ctx.fillStyle = "rgba(0,0,0,.3)";
+  ctx.beginPath();
+  ctx.ellipse(0, 10, 34, 9, 0, 0, Math.PI * 2);
+  ctx.fill();
 
-}
+  // Legs: animated running movement
+  ctx.strokeStyle = "#222";
+  ctx.lineWidth = 11;
+  ctx.lineCap = "round";
 
+  ctx.save();
+  ctx.translate(-8, -32);
+  ctx.rotate(swing);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-3, 29);
+  ctx.lineTo(-12, 39);
+  ctx.stroke();
+  ctx.restore();
 
-if(sliding){
+  ctx.save();
+  ctx.translate(8, -32);
+  ctx.rotate(-swing);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(3, 29);
+  ctx.lineTo(12, 39);
+  ctx.stroke();
+  ctx.restore();
 
-y+=
-window.innerHeight*.03;
+  // Body
+  ctx.fillStyle = bodyColor;
+  ctx.fillRect(-18, -82, 36, 52);
 
-}
+  // Arms: swing while running
+  ctx.strokeStyle = "#f0bd91";
+  ctx.lineWidth = 8;
 
+  ctx.save();
+  ctx.translate(-15, -70);
+  ctx.rotate(armSwing);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-9, 25);
+  ctx.stroke();
+  ctx.restore();
 
-ctx.save();
+  ctx.save();
+  ctx.translate(15, -70);
+  ctx.rotate(-armSwing);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(9, 25);
+  ctx.stroke();
+  ctx.restore();
 
-ctx.translate(x,y);
+  // Head
+  ctx.fillStyle = "#f0bd91";
+  ctx.beginPath();
+  ctx.arc(0, -103, 22, 0, Math.PI * 2);
+  ctx.fill();
 
-const scale=
-sliding ? .75 : 1;
+  // Hair
+  ctx.fillStyle = "#2d1b0e";
+  ctx.beginPath();
+  ctx.arc(0, -112, 22, Math.PI, Math.PI * 2);
+  ctx.fill();
 
-ctx.scale(
-scale,
-scale
-);
-
-
-ctx.fillStyle=
-"rgba(0,0,0,.3)";
-
-ctx.beginPath();
-
-ctx.ellipse(
-0,
-10,
-34,
-9,
-0,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-
-ctx.fillStyle=
-runner==="boy"
-?"#2875e8"
-:"#e83e8c";
-
-ctx.fillRect(
--18,
--82,
-36,
-52
-);
-
-
-ctx.strokeStyle="#222";
-
-ctx.lineWidth=11;
-
-ctx.lineCap="round";
-
-ctx.beginPath();
-
-ctx.moveTo(-9,-30);
-ctx.lineTo(-15,5);
-
-ctx.moveTo(9,-30);
-ctx.lineTo(15,5);
-
-ctx.stroke();
-
-
-ctx.lineWidth=8;
-
-ctx.beginPath();
-
-ctx.moveTo(-15,-70);
-ctx.lineTo(-31,-45);
-
-ctx.moveTo(15,-70);
-ctx.lineTo(31,-45);
-
-ctx.stroke();
-
-
-ctx.fillStyle="#f0bd91";
-
-ctx.beginPath();
-
-ctx.arc(
-0,
--103,
-22,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-
-ctx.fillStyle="#2d1b0e";
-
-ctx.beginPath();
-
-ctx.arc(
-0,
--112,
-22,
-Math.PI,
-Math.PI*2
-);
-
-ctx.fill();
-
-ctx.restore();
-
+  ctx.restore();
 }
 
 
