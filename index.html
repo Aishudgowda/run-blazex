@@ -1430,16 +1430,16 @@ ctx.restore();
 
 }
 
-function drawPlayer() {
-// ===== CHARACTER IMAGES =====
 const boyImage = new Image();
 boyImage.src = "run_blaze_boy.png";
 
 const girlImage = new Image();
 girlImage.src = "run_blaze_girl.png";
 
+function drawPlayer() {
+
 // ===== FUNCTION drawPlayer() =====
-c  const x = laneX(Math.round(lane), 1);
+  const x = laneX(Math.round(lane), 1);
   let y = window.innerHeight * 0.84;
 
   if (jumping) {
