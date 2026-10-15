@@ -190,6 +190,11 @@ function gameEnd(){
  playing=false;
  best=Math.max(best,Math.floor(score));
  try{localStorage.setItem("runBlazeBest",String(best))}catch(e){}
+ try {
+  let totalCoins = Number(localStorage.getItem("runBlazeTotalCoins") || 0);
+  totalCoins += coins;
+  localStorage.setItem("runBlazeTotalCoins", String(totalCoins));
+} catch(e) {}
  $("finalScore").textContent=Math.floor(score);
  $("finalCoins").textContent=coins;
  $("over").style.display="flex";
