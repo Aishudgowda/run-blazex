@@ -273,7 +273,11 @@ function drawPlayer(now,dt){
  const img=character==="boy"?boyImage:girlImage;
  const w=Math.min(100,W*.21),h=w*1.35;
  if(img.complete&&img.naturalWidth>0){
-  ctx.drawImage(img,x-w/2,y-h,w,h);
+  ctx.save();
+ctx.translate(x, 0);
+ctx.scale(-1, 1);
+ctx.drawImage(img, -w/2, y-h, w, h);
+ctx.restore();
  }else{
   ctx.font=`${w*.85}px Arial`;
   ctx.textAlign="center";ctx.textBaseline="bottom";
