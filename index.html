@@ -1438,7 +1438,31 @@ girlImage.src = "run_blaze_girl.png";
 
 // ===== FUNCTION drawPlayer() =====
 
-// ===== FUNCTION drawPlayer() =====
+function drawPlayer() {
+  const x = laneX(Math.round(lane), 1);
+  let y = window.innerHeight * 0.84;
+
+  if (jumping) {
+    y -= Math.sin(
+      Math.min(1, jumpTime / 0.85) * Math.PI
+    ) * window.innerHeight * 0.20;
+  }
+
+  if (sliding) {
+    y += window.innerHeight * 0.03;
+  }
+
+  const img = runner === "boy" ? boyImage : girlImage;
+
+  const t = performance.now() / 110;
+  const bob = jumping ? 0 : Math.abs(Math.sin(t)) * 5;
+
+  const w = Math.min(130, window.innerWidth * 0.25);
+  const h = w * 1.35;
+
+  if (img.complete && img.naturalWidth > 0) {
+    ctx.drawImage(
+
   const x = laneX(Math.round(lane), 1);
   let y = window.innerHeight * 0.84;
 
