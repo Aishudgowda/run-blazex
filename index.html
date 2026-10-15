@@ -1156,48 +1156,42 @@ function drawBackground() {
 
 
 function drawRoad(){
+  const w = window.innerWidth;
+  const h = window.innerHeight;
 
-const w=window.innerWidth;
-const h=window.innerHeight;
+  ctx.fillStyle = "#303236";
+  ctx.beginPath();
+  ctx.moveTo(w*.43,h*.35);
+  ctx.lineTo(w*.57,h*.35);
+  ctx.lineTo(w*.99,h);
+  ctx.lineTo(w*.01,h);
+  ctx.closePath();
+  ctx.fill();
 
-ctx.fillStyle="#303236";
+  // Moving lane markings
+  ctx.strokeStyle = "#f5f5f5";
+  ctx.lineWidth = 4;
 
-ctx.beginPath();
+  const travel = (performance.now() / 500) % 1;
 
-ctx.moveTo(w*.43,h*.35);
-ctx.lineTo(w*.57,h*.35);
-ctx.lineTo(w*.99,h);
-ctx.lineTo(w*.01,h);
+  for (const k of [.33, .67]) {
+    for (let i = 0; i < 9; i++) {
+      const z1 = (i / 9 + travel) % 1;
+      const z2 = Math.min(z1 + .035, 1);
 
-ctx.closePath();
+      const y1 = h * (.35 + .65 * z1);
+      const y2 = h * (.35 + .65 * z2);
 
-ctx.fill();
+      const x1 = w * (.43 + .14 * k) * (1-z1) + w*k*z1;
+      const x2 = w * (.43 + .14 * k) * (1-z2) + w*k*z2;
 
-ctx.strokeStyle="#f5f5f5";
-ctx.lineWidth=3;
-
-for(
-const k of [.33,.67]
-){
-
-ctx.beginPath();
-
-ctx.moveTo(
-w*(.43+.14*k),
-h*.35
-);
-
-ctx.lineTo(
-w*k,
-h
-);
-
-ctx.stroke();
-
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+  }
 }
-
-}
-
 
 function drawStar(x,y,r){
 
