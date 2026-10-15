@@ -2,1594 +2,303 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#06120a">
-<title>Run Blaze</title>
-<link rel="manifest" href="manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run Blaze | Playtech Studio</title>
 <style>
 *{box-sizing:border-box}
-html,body{
-margin:0;
-width:100%;
-height:100%;
-overflow:hidden;
-font-family:Arial,sans-serif;
-background:#06120a;
-color:white
-}
-.screen{
-display:none;
-width:100%;
-height:100vh;
-position:relative
-}
-.active{display:flex}
-
-button{
-border:0;
-border-radius:14px;
-padding:14px 25px;
-margin:7px;
-font-size:18px;
-font-weight:900;$
-cursor:pointer;
-background:#ffd21a;
-color:#111;
-box-shadow:0 5px 0 #9b7300
-}
-button:active{
-transform:translateY(3px);
-box-shadow:0 2px 0 #9b7300
-}
-.secondary{
-background:#26372b;
-color:#fff;
-box-shadow:0 5px 0 #111
-}
-
-/* HOME */
-#homeScreen{
-align-items:flex-end;
-justify-content:center;
-text-align:center;
-padding-bottom:35px;
-background:
-linear-gradient(
-rgba(0,0,0,.15),
-rgba(0,0,0,.75)
-),
-  url("WhatsApp Image 2026-10-08 at 7.05.34 AM.jpeg") center center/cover no-repeat
-}
-
-.homeContent{
-position:relative;
-z-index:5;
-width:100%;
-text-shadow:0 3px 10px #000
-}
-
-.brand{
-font-size:clamp(45px,13vw,85px);
-font-weight:1000;
-letter-spacing:4px
-}
-
-.studio{
-font-size:16px;
-font-weight:900;
-letter-spacing:6px;
-margin:5px 0 12px
-}
-
-.tag{
-font-size:13px;
-opacity:.9;
-margin-bottom:12px
-}
-
-/* SELECT */
-#selectScreen{
-align-items:center;
-justify-content:center;
-text-align:center;
-background:linear-gradient(#0b2a17,#06120a)
-}
-
-.panel{
-width:min(520px,94vw);
-padding:25px;
-border-radius:22px;
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.15);
-text-align:center
-}
-
-.choices{
-display:flex;
-justify-content:center;
-flex-wrap:wrap
-}
-
-.selected{
-outline:3px solid white
-}
-
-/* GAME */
-#gameScreen{
-background:#000;
-overflow:hidden
-}
-
-canvas{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-touch-action:none
-}
-
-.hud{
-position:absolute;
-top:10px;
-left:10px;
-right:10px;
-display:flex;
-justify-content:space-between;
-gap:6px;
-z-index:5;
-flex-wrap:wrap;
-pointer-events:none
-}
-
-.pill{
-background:rgba(0,0,0,.65);
-padding:8px 10px;
-border-radius:12px;
-font-weight:900
-}
-
-.power{
-position:absolute;
-top:55px;
-left:0;
-right:0;
-text-align:center;
-font-weight:900;
-z-index:5
-}
-
-.hint{
-position:absolute;
-bottom:10px;
-left:0;
-right:0;
-text-align:center;
-font-size:12px;
-opacity:.65;
-z-index:5
-}
-
-/* SETTINGS / GAME OVER */
-#settingsScreen,
-#overScreen{
-align-items:center;
-justify-content:center;
-text-align:center;
-background:linear-gradient(#0c2816,#06120a)
-}
-
-.small{
-font-size:13px;
-opacity:.7
-}
-
-.row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin:12px 0
-}
-
-.msg{
-min-height:25px;
-color:#ffd21a
-}
-    #accountScreen .panel,
-#settingsScreen .accountBox {
-width: min(92%, 480px);
-margin: 20px auto;
-padding: 24px 18px;
-box-sizing: border-box;
-border-radius: 20px;
-background: rgba(15, 35, 30, 0.96);
-border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-#accountScreen label,
-#settingsScreen label {
-display: block;
-margin: 14px 0 6px;
-text-align: left;
-}
-
-.account-box {
-width: 100%;
-margin: 20px auto;
-padding: 18px;
-box-sizing: border-box;
-border-radius: 20px;
-background: rgba(15, 35, 30, 0.96);
-border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.account-box input {
-display: block;
-width: 100%;
-padding: 12px;
-margin-bottom: 10px;
-border-radius: 10px;
-border: 1px solid #607568;
-background: #07130d;
-color: white;
-font-size: 16px;
-}
+body{margin:0;overflow:hidden;font-family:Arial;background:#122332;color:white}
+canvas{display:block;width:100vw;height:100dvh}
+button{padding:13px 18px;border:0;border-radius:12px;background:#f97316;color:white;font-weight:bold;font-size:17px;cursor:pointer}
+#home,#over{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#081725d9;padding:20px}
+.card{width:min(380px,100%);padding:25px;background:#142638;border:1px solid #516579;border-radius:22px;text-align:center}
+h1{font-size:44px;color:#fb923c;margin:5px}
+.choice{background:#304456;margin:5px}
+.selected{outline:3px solid #fb923c}
+#playBtn,#againBtn{width:100%;margin-top:15px}
+#over{display:none}
+#hud{position:absolute;top:12px;left:12px;right:12px;display:none;justify-content:space-between;gap:6px}
+.stat{padding:9px;background:#102235e8;border-radius:10px;font-weight:bold}
+#controls{position:absolute;bottom:15px;left:12px;right:12px;display:none;justify-content:space-between}
+#controls button{padding:12px;min-width:48px;background:#142638e8}
 </style>
-
 </head>
-
 <body>
+<canvas id="game"></canvas>
 
-<!-- HOME -->
-<section id="homeScreen" class="screen active">
-
-<div class="homeContent">
-
-<div class="brand">RUN BLAZE</div>
-
-<div class="studio">PLAYTECH STUDIO</div>
-
-<div class="tag">ENDLESS FOREST RUNNER</div>
-
-<button id="playBtn">▶ PLAY</button>
-
-<br>
-
-<button id="settingsBtn" class="secondary">
-⚙ SETTINGS
-</button>
-
+<div id="hud">
+ <div class="stat">Score: <span id="score">0</span></div>
+ <div class="stat">🪙 <span id="coins">0</span></div>
+ <div class="stat">⭐ <span id="stars">0</span></div>
+ <button id="pauseBtn">Ⅱ</button>
 </div>
 
-</section>
-
-
-<!-- CHARACTER SELECT -->
-<section id="selectScreen" class="screen">
-
-<div class="panel">
-
-<h1>CHOOSE RUNNER</h1>
-
-<div class="choices">
-
-<button id="boyBtn" class="selected">
-👦 BOY
-</button>
-
-<button id="girlBtn">
-👧 GIRL
-</button>
-
+<div id="home">
+ <div class="card">
+  <h1>RUN BLAZE</h1>
+  <p>Run. Collect. Survive.</p>
+  <p>Choose your character</p>
+  <button class="choice selected" id="boyBtn">Boy</button>
+  <button class="choice" id="girlBtn">Girl</button>
+  <br>
+  <button id="playBtn">▶ PLAY NOW</button>
+  <p>PLAYTECH STUDIO</p>
+ </div>
 </div>
 
-<button id="startBtn">
-🔥 START RUN
-</button>
-
-<br>
-
-<button id="selectBackBtn" class="secondary">
-← BACK
-</button>
-
+<div id="over">
+ <div class="card">
+  <h1>GAME OVER</h1>
+  <p>Your score: <b id="finalScore">0</b></p>
+  <p>Coins: <b id="finalCoins">0</b></p>
+  <button id="againBtn">PLAY AGAIN</button><br><br>
+  <button id="homeBtn">HOME</button>
+ </div>
 </div>
 
-</section>
-
-
-<!-- GAME -->
-<section id="gameScreen" class="screen">
-
-<canvas id="gameCanvas"></canvas>
-
-<div class="hud">
-
-<div class="pill">
-🏆 <span id="scoreEl">0</span>
+<div id="controls">
+ <div>
+  <button id="leftBtn">◀</button>
+  <button id="rightBtn">▶</button>
+ </div>
+ <div>
+  <button id="jumpBtn">⬆ Jump</button>
+  <button id="slideBtn">⬇ Slide</button>
+  <button id="boostBtn">⚡</button>
+ </div>
 </div>
-<div class="pill">
-  🔑 <span id="keysEl">0</span>
-</div>
-<div class="pill">
-🪙 <span id="coinsEl">0</span>
-</div>
-  <div class="pill">🏆 TOTAL COINS: <span id="totalCoinsEl">0</span></div>
-<div class="pill">
-⭐ <span id="starsEl">0</span> 
-  </div>
-
-</div>
-
-<div id="powerEl" class="power"></div>
-  <div id="pausePanel" style="position:absolute;top:70px;right:12px;z-index:20;">
-  <button id="pauseBtn" onclick="pauseGame()">⏸ PAUSE</button>
-  <button id="resumeBtn" onclick="resumeGame()" style="display:none;">▶ RESUME</button>
-</div>
-
-<div class="hint">
-SWIPE ← → CHANGE LANE • ↑ JUMP • ↓ SLIDE
-</div>
-
-</section>
-
-
-<!-- SETTINGS -->
-
-<section id="settingsScreen" class="screen">
-
-<div class="panel">
-
-<h2>⚙ SETTINGS</h2>
-
-<div class="row">
-
-<span>Sound</span>
-
-<button id="soundBtn">
-🔊 ON
-</button>
-
-</div>
-
-<h3>WITHDRAWAL</h3>
-
-<p class="small">
-UPI / Bank / PayPal withdrawal UI.
-Real payouts require a secure backend and compliance.
-</p>
-
-<button id="upiBtn">UPI</button>
-
-<button id="bankBtn">
-BANK ACCOUNT
-</button>
-
-<button id="paypalBtn">
-PAYPAL
-</button>
-
-<div id="withdrawMsg" class="msg"></div>
-<div class="account-box">
-  <h3>🏦 ACCOUNT DETAILS</h3>
-
-  <label for="accountName">Account Holder Name</label>
-  <input id="accountName" type="text" placeholder="Enter full name" autocomplete="name">
-
-  <label for="accountBank">Bank Name</label>
-  <input id="accountBank" type="text" placeholder="Enter bank name" autocomplete="off">
-
-  <label for="accountNumber">Account Number</label>
-  <input id="accountNumber" type="password" inputmode="numeric" placeholder="Enter account number" autocomplete="off">
-
-  <label for="accountIFSC">IFSC Code</label>
-  <input id="accountIFSC" type="text" placeholder="Enter IFSC code" autocomplete="off">
-
-  <label for="accountUPI">UPI ID</label>
-  <input id="accountUPI" type="text" placeholder="example@upi" autocomplete="off">
-
-  <button id="saveAccountBtn" type="button">SAVE DETAILS</button>
-  <p id="accountSaveMsg" class="small"></p>
-</div>
-<button id="settingsBackBtn" class="secondary">
-← HOME
-</button>
-
-</div>
-
-</section>
-
-
-<!-- GAME OVER -->
-
-<section id="overScreen" class="screen">
-
-<div class="panel">
-
-<h1>💥 GAME OVER</h1>
-
-<p>
-Score:
-<b id="finalScore">0</b>
-</p>
-
-<p>
-Best:
-<b id="bestScore">0</b>
-</p>
-
-<p>
-🪙 <b id="finalCoins">0</b>
-&nbsp;&nbsp;
-⭐ <b id="finalStars">0</b>
-&nbsp;&nbsp;
-🔑 <b id="finalKeys">0</b>
-</p>
-
-<button id="againBtn">
-▶ RUN AGAIN
-</button>
-<button id="continueBtn" class="secondary">
-  ▶ CONTINUE — 1 KEY
-</button>
-<button id="homeButton" class="secondary">
-⌂ HOME
-</button>
-
-</div>
-
-</section>
-
 
 <script>
+(function(){
 "use strict";
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+const $=id=>document.getElementById(id);
 
-const $ = id => document.getElementById(id);
-
-const canvas = $("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-const screens = {
-home:$("homeScreen"),
-select:$("selectScreen"),
-game:$("gameScreen"),
-settings:$("settingsScreen"),
-over:$("overScreen")
-};
-
-let runner="boy";
-let playing=false;
-
-let lane=1;
-let targetLane=1;
-
-let score=0;
-let coins=0;
-let stars=0;
-let keys=0;
-
-let magnet=0;
-let shield=0;
-let shoes=0;
-
-let jumping=false;
-let sliding=false;
-
-let jumpTime=0;
-let slideTime=0;
-
-let objects=[];
-let spawnTimer=0;
-
-let lastTime=0;
-let speed=.34;
-
-let touchStartX=0;
-let touchStartY=0;
-
-let sound=true;
-
-
-function showScreen(name){
-
-Object.values(screens).forEach(
-screen=>screen.classList.remove("active")
-);
-
-screens[name].classList.add("active");
-
+let W=innerWidth,H=innerHeight,dpr=1;
+function resize(){
+ W=innerWidth;H=innerHeight;
+ dpr=Math.min(devicePixelRatio||1,2);
+ canvas.width=W*dpr;canvas.height=H*dpr;
+ ctx.setTransform(dpr,0,0,dpr,0,0);
 }
-
-
-function resizeCanvas(){
-
-const dpr=window.devicePixelRatio||1;
-
-canvas.width=window.innerWidth*dpr;
-canvas.height=window.innerHeight*dpr;
-
-ctx.setTransform(
-dpr,
-0,
-0,
-dpr,
-0,
-0
-);
-
-}
-
-window.addEventListener(
-"resize",
-resizeCanvas
-);
-
-resizeCanvas();
-
-
-$("playBtn").onclick=()=>{
-showScreen("select");
-}
-$("continueBtn").onclick = () => {
-  if (keys > 0) {
-    keys--;
-    playing = true;
-    showScreen("game");
-    lastTime = performance.now();
-    drawGame();
-    requestAnimationFrame(gameLoop);
-  } else {
-    alert("You need 1 key to continue!");
-  }
-};
-  
-
-$("settingsBtn").onclick=()=>{
-showScreen("settings");
-};
-
-$("selectBackBtn").onclick=()=>{
-showScreen("home");
-};
-
-$("boyBtn").onclick=()=>{
-
-runner="boy";
-
-$("boyBtn").classList.add("selected");
-$("girlBtn").classList.remove("selected");
-
-};
-
-$("girlBtn").onclick=()=>{
-
-runner="girl";
-
-$("girlBtn").classList.add("selected");
-$("boyBtn").classList.remove("selected");
-
-};
-
-$("startBtn").onclick=startGame;
-
-$("againBtn").onclick=startGame;
-
-$("homeButton").onclick=()=>{
-
-playing=false;
-
-showScreen("home");
-
-};
-
-$("settingsBackBtn").onclick=()=>{
-showScreen("home");
-};
-
-
-$("soundBtn").onclick=()=>{
-
-sound=!sound;
-
-$("soundBtn").textContent=
-sound ? "🔊 ON" : "🔇 OFF";
-
-};
-
-
-$("upiBtn").onclick=()=>{
-withdraw("UPI");
-};
-
-$("bankBtn").onclick=()=>{
-withdraw("Bank Account");
-};
-
-$("paypalBtn").onclick=()=>{
-withdraw("PayPal");
-};
-
-
-function withdraw(method){
-
-$("withdrawMsg").textContent=
-method+
-" selected. Real withdrawal is not connected.";
-
-}
-
-
-function resetGame() {
-  paused = false;
-  lane = 1;
-  targetLane = 1;
-
-  score = 0;
-  coins = 0;
-  stars = 0;
-  keys = 0;
-
-  magnet = 0;
-  shield = 0;
-  shoes = 0;
-
-  jumping = false;
-  sliding = false;
-  jumpTime = 0;
-  slideTime = 0;
-
-  objects = [];
-  spawnTimer = 0.5;
-  speed = 0.34;
-  lastTime = performance.now();
-
-  $("pauseBtn").style.display = "inline-block";
-  $("resumeBtn").style.display = "none";
-
-  updateHUD();
-}
-
-function pauseGame() {
-  if (!playing || paused) return;
-  paused = true;
-  $("pauseBtn").style.display = "none";
-  $("resumeBtn").style.display = "inline-block";
-}
-
-function resumeGame() {
-  if (!playing || !paused) return;
-  paused = false;
-  lastTime = performance.now();
-  $("pauseBtn").style.display = "inline-block";
-  $("resumeBtn").style.display = "none";
-  requestAnimationFrame(gameLoop);
-}
-
-function startGame(){
-
-resetGame();
-
-playing=true;
-
-showScreen("game");
-
-requestAnimationFrame(gameLoop);
-
-}
-document.getElementById("playBtn").addEventListener("click", startGame);
-
-function moveLeft(){
-
-targetLane=
-Math.max(
-0,
-targetLane-1
-);
-
-}
-
-function moveRight(){
-
-targetLane=
-Math.min(
-2,
-targetLane+1
-);
-
-}
-
-function jump(){
-
-if(!jumping&&!sliding){
-
-jumping=true;
-
-jumpTime=0;
-
-}
-
-}
-
-function slide(){
-
-if(!jumping&&!sliding){
-
-sliding=true;
-
-slideTime=0;
-
-}
-
-}
-
-
-window.addEventListener(
-"keydown",
-event=>{
-
-if(!playing)return;
-
-if(event.key==="ArrowLeft")
-moveLeft();
-
-else if(event.key==="ArrowRight")
-moveRight();
-
-else if(
-event.key==="ArrowUp"||
-event.code==="Space"
-)
-jump();
-
-else if(event.key==="ArrowDown")
-slide();
-
-}
-);
-
-
-canvas.addEventListener(
-"touchstart",
-event=>{
-
-const t=event.changedTouches[0];
-
-touchStartX=t.clientX;
-touchStartY=t.clientY;
-
-},
-{passive:true}
-);
-
-
-canvas.addEventListener(
-"touchend",
-event=>{
-
-const t=event.changedTouches[0];
-
-const dx=t.clientX-touchStartX;
-const dy=t.clientY-touchStartY;
-
-if(
-Math.max(
-Math.abs(dx),
-Math.abs(dy)
-)<30
-)return;
-
-if(
-Math.abs(dx)>
-Math.abs(dy)
-){
-
-if(dx>0)
-moveRight();
-else
-moveLeft();
-
-}else{
-
-if(dy<0)
-jump();
-else
-slide();
-
-}
-
-},
-{passive:true}
-);
-
-
-function spawnObject(){
-
-const r=Math.random();
-
-let type;
-
-if(r<.30)
-type="coin";
-
-else if(r<.40)
-type="star";
-
-else if(r<.46)
-type="key";
-
-else if(r<.50)
-type="magnet";
-
-else if(r<.54)
-type="shield";
-
-else if(r<.58)
-type="shoes";
-
-else if(r<.80)
-type="stone";
-
-else
-type="barricade";
-
-
-objects.push({
-type:type,
-lane:Math.floor(Math.random()*3),
-z:0
-});
-
-}
-
-
-function collectObject(o){
-  if(o.type==="coin"){
-    coins++;
-    try {
-  const audio = new AudioContext();
-  const oscillator = audio.createOscillator();
-  const gain = audio.createGain();
-
-  oscillator.connect(gain);
-  gain.connect(audio.destination);
-
-  oscillator.frequency.value = 880;
-  gain.gain.value = 0.08;
-
-  oscillator.start();
-  oscillator.stop(audio.currentTime + 0.08);
-
-  oscillator.onended = () => audio.close();
-} catch (e) {}
-    // Save lifetime coin total
-    let total = Number(localStorage.getItem("runBlazeTotalCoins") || 0);
-    localStorage.setItem("runBlazeTotalCoins", total + 1);
-
-    // Save today's coin total
-    const today = new Date().toISOString().slice(0,10);
-    const dailyKey = "runBlazeDailyCoins_" + today;
-    let daily = Number(localStorage.getItem(dailyKey) || 0);
-    localStorage.setItem(dailyKey, daily + 1);
-  }
-
-  if(o.type==="star") stars++;
-  if(o.type==="key") keys++;
-  if(o.type==="magnet") magnet=6;
-  if(o.type==="shield") shield=6;
-  if(o.type==="shoes") shoes=5;
-}
-
-
-function laneX(laneNumber,z){
-
-const w=window.innerWidth;
-
-const roadWidth=
-w*(.10+.35*z);
-
-return(
-w/2+
-(laneNumber-1)*
-roadWidth*.78
-);
-
-}
-
-
-function roadY(z){
-
-return(
-window.innerHeight*
-(.25+.67*z)
-);
-
-}
-
-
-function obstacleHit(o){
-
-if(
-o.type!=="stone" &&
-o.type!=="barricade"
-)
-return false;
-
-if(
-o.lane!==Math.round(lane)
-)
-return false;
-
-if(
-o.z<.88 ||
-o.z>1.02
-)
-return false;
-
-if(shield>0){
-
-shield=0;
-
-return false;
-
-}
-
-return(
-!jumping &&
-!sliding
-);
-
-}
-
-
-function updateGame(dt){
-
-const smooth=
-Math.min(1,dt*10);
-
-lane +=
-(targetLane-lane)*
-smooth;
-
-if(
-Math.abs(targetLane-lane)<.01
-)
-lane=targetLane;
-
-
-score +=
-dt*
-(shoes>0 ? 180 : 100);
-
-
-speed=
-Math.min(
-.62,
-.34+score/25000
-);
-
-
-spawnTimer-=dt;
-
-if(spawnTimer<=0){
-
-spawnObject();
-
-spawnTimer=
-Math.max(
-.35,
-1-speed*.7+
-Math.random()*.5
-);
-
-}
-
-
-if(jumping){
-
-jumpTime+=dt;
-
-if(jumpTime>=.85){
-
-jumping=false;
-jumpTime=0;
-
-}
-
-}
-
-
-if(sliding){
-
-slideTime+=dt;
-
-if(slideTime>=.55){
-
-sliding=false;
-slideTime=0;
-
-}
-
-}
-
-
-magnet=
-Math.max(0,magnet-dt);
-
-shield=
-Math.max(0,shield-dt);
-
-shoes=
-Math.max(0,shoes-dt);
-
-
-for(
-let i=objects.length-1;
-i>=0;
-i--
-){
-
-const o=objects[i];
-
-o.z+=
-dt*(speed+.08);
-
-
-if(
-magnet > 0 &&
-["coin","star","key"].includes(o.type) &&
-o.z > .55 &&
-o.z < .96
-){
-  o.lane = Math.round(lane);
-
-  collectObject(o);
-  objects.splice(i, 1);
-  continue;
-}
-
-
-if(
-o.z>.88 &&
-o.z<1.02 &&
-o.lane===Math.round(lane)
-){
-
-if(obstacleHit(o)){
-
-endGame();
-
-return;
-
-}
-
-
-if(
-[
-"coin",
-"star",
-"key",
-"magnet",
-"shield",
-"shoes"
-].includes(o.type)
-){
-
-collectObject(o);
-
-objects.splice(i,1);
-
-continue;
-
-}
-
-}
-
-
-if(o.z>1.08){
-
-objects.splice(i,1);
-
-}
-
-}
-
-
-updateHUD();
-
-}
-
-
-function updateHUD(){
-
-$("scoreEl").textContent=
-Math.floor(score);
-
-$("coinsEl").textContent=
-coins;
-
-$("starsEl").textContent=
-stars;
-const totalCoins = Number(localStorage.getItem("runBlazeTotalCoins") || 0);
-$("totalCoinsEl") && ($("totalCoinsEl").textContent = totalCoins);  
-
-$("keysEl").textContent=
-keys;
-
-
-const powers=[];
-
-if(magnet>0)
-powers.push(
-"🧲 "+Math.ceil(magnet)
-);
-
-if(shield>0)
-powers.push(
-"🛡️ "+Math.ceil(shield)
-);
-
-if(shoes>0)
-powers.push(
-"👟 "+Math.ceil(shoes)
-);
-
-$("powerEl").textContent=
-powers.join("   ");
-
-}
-
-
-const forestBg = new Image();
-forestBg.src = "WhatsApp Image 2026-10-13 at 2.59.34 PM (1).jpeg";
-  
-
-function drawBackground() {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-
-  if (forestBg.complete && forestBg.naturalWidth > 0) {
-    ctx.drawImage(forestBg, 0, 0, w, h);
-  } else {
-    ctx.fillStyle = "#245e2d";
-    ctx.fillRect(0, 0, w, h);
-  }
-}
-
-
-function drawRoad(){
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-
-  ctx.fillStyle = "#303236";
-  ctx.beginPath();
-  ctx.moveTo(w*.43,h*.35);
-  ctx.lineTo(w*.57,h*.35);
-  ctx.lineTo(w*.99,h);
-  ctx.lineTo(w*.01,h);
-  ctx.closePath();
-  ctx.fill();
-
-  // Moving lane markings
-  ctx.strokeStyle = "#f5f5f5";
-  ctx.lineWidth = 4;
-
-  const travel = (performance.now() / 500) % 1;
-
-  for (const k of [.33, .67]) {
-    for (let i = 0; i < 9; i++) {
-      const z1 = (i / 9 + travel) % 1;
-      const z2 = Math.min(z1 + .035, 1);
-
-      const y1 = h * (.35 + .65 * z1);
-      const y2 = h * (.35 + .65 * z2);
-
-      const x1 = w * (.43 + .14 * k) * (1-z1) + w*k*z1;
-      const x2 = w * (.43 + .14 * k) * (1-z2) + w*k*z2;
-
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-    }
-  }
-}
-
-function drawStar(x,y,r){
-
-ctx.beginPath();
-
-for(let i=0;i<10;i++){
-
-const angle=
--Math.PI/2+
-i*Math.PI/5;
-
-const radius=
-i%2 ? r : r*.45;
-
-const px=
-x+Math.cos(angle)*radius;
-
-const py=
-y+Math.sin(angle)*radius;
-
-if(i===0)
-ctx.moveTo(px,py);
-else
-ctx.lineTo(px,py);
-
-}
-
-ctx.closePath();
-
-ctx.fill();
-
-}
-
-
-function drawObject(o){
-
-const z=Math.min(1,o.z);
-
-const x=laneX(o.lane,z);
-
-const y=roadY(z);
-
-const s=10+z*55;
-
-ctx.save();
-
-ctx.translate(x,y);
-
-
-if(o.type==="coin"){
-
-ctx.fillStyle="#ffd21a";
-
-ctx.beginPath();
-
-ctx.arc(
-0,
--s*.65,
-s*.34,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-}
-
-else if(o.type==="star"){
-
-ctx.fillStyle="#fff04a";
-
-drawStar(
-0,
--s*.65,
-s*.5
-);
-
-}
-
-else if(o.type==="key"){
-
-ctx.strokeStyle="#ffe36b";
-
-ctx.lineWidth=4;
-
-ctx.beginPath();
-
-ctx.arc(
--s*.15,
--s*.65,
-s*.2,
-0,
-Math.PI*2
-);
-
-ctx.stroke();
-
-ctx.beginPath();
-
-ctx.moveTo(
-0,
--s*.65
-);
-
-ctx.lineTo(
-s*.55,
--s*.65
-);
-
-ctx.stroke();
-
-}
-
-else if(o.type==="magnet"){
-
-ctx.strokeStyle="#ff426b";
-
-ctx.lineWidth=7;
-
-ctx.beginPath();
-
-ctx.arc(
-0,
--s*.65,
-s*.32,
-0,
-Math.PI
-);
-
-ctx.stroke();
-
-}
-
-else if(o.type==="shield"){
-
-ctx.fillStyle="#4da6ff";
-
-ctx.beginPath();
-
-ctx.moveTo(
-0,
--s*1.1
-);
-
-ctx.lineTo(
-s*.5,
--s*.8
-);
-
-ctx.lineTo(
-s*.35,
--s*.2
-);
-
-ctx.lineTo(
-0,
-0
-);
-
-ctx.lineTo(
--s*.35,
--s*.2
-);
-
-ctx.lineTo(
--s*.5,
--s*.8
-);
-
-ctx.closePath();
-
-ctx.fill();
-
-}
-
-else if(o.type==="shoes"){
-
-ctx.fillStyle="#ff8a00";
-
-ctx.fillRect(
--s*.5,
--s*.65,
-s,
-s*.22
-);
-
-}
-
-else if(o.type==="stone"){
-
-ctx.fillStyle="#777";
-
-ctx.beginPath();
-
-ctx.moveTo(-s,0);
-ctx.lineTo(-s*.7,-s);
-ctx.lineTo(s*.6,-s*.75);
-ctx.lineTo(s,0);
-
-ctx.closePath();
-
-ctx.fill();
-
-}
-
-else{
-
-ctx.fillStyle="#e65c16";
-
-ctx.fillRect(
--s,
--s*.8,
-2*s,
-.5*s
-);
-
-ctx.fillStyle="#fff";
-
-ctx.fillRect(
--s*.5,
--s*.85,
-s*.16,
-.6*s
-);
-
-ctx.fillRect(
-s*.2,
--s*.85,
-s*.16,
-.6*s
-);
-
-}
-
-ctx.restore();
-
-}
-
-const boyImage = new Image();
-boyImage.src = "run_blaze_boy.png";
-
-const girlImage = new Image();
-girlImage.src = "run_blaze_girl.png";
-
-// ===== FUNCTION drawPlayer() =====
-
-function drawPlayer() {
-  const x = laneX(Math.round(lane), 1);
-  let y = window.innerHeight * 0.84;
-
-  if (jumping) {
-    y -= Math.sin(
-      Math.min(1, jumpTime / 0.85) * Math.PI
-    ) * window.innerHeight * 0.20;
-  }
-
-  if (sliding) {
-    y += window.innerHeight * 0.03;
-  }
-
-  const img = runner === "boy" ? boyImage : girlImage;
-
-  const t = performance.now() / 110;
-  const bob = jumping ? 0 : Math.abs(Math.sin(t)) * 5;
-
-  const w = Math.min(130, window.innerWidth * 0.25);
-  const h = w * 1.35;
-
-  if (img.complete && img.naturalWidth > 0) {
-    ctx.drawImage(
-
-  const x = laneX(Math.round(lane), 1);
-  let y = window.innerHeight * 0.84;
-
-  if (jumping) {
-    y -= Math.sin(
-      Math.min(1, jumpTime / 0.85) * Math.PI
-    ) * window.innerHeight * 0.20;
-  }
-
-  if (sliding) {
-    y += window.innerHeight * 0.03;
-  }
-
-  const img = runner === "boy" ? boyImage : girlImage;
-
-  const t = performance.now() / 110;
-  const bob = jumping ? 0 : Math.abs(Math.sin(t)) * 5;
-
-  const w = Math.min(130, window.innerWidth * 0.25);
-  const h = w * 1.35;
-
-  if (img.complete && img.naturalWidth > 0) {
-    ctx.drawImage(
-      img,
-      x - w / 2,
-      y - h + bob,
-      w,
-      h
-    );
-  }
-}
-
-
-function endGame(){
-
-playing=false;
-
-const finalScore=
-Math.floor(score);
-
+addEventListener("resize",resize);resize();
+
+const boyImage=new Image();
+boyImage.src="run_blaze_boy.png";
+const girlImage=new Image();
+girlImage.src="run_blaze_girl.png";
+
+let character="boy",playing=false,paused=false;
+let lane=1,playerLane=1,score=0,coins=0,stars=0;
+let speed=330,items=[],last=0,spawn=0;
+let jumpEnd=0,slideEnd=0,boostEnd=0,magnetEnd=0,skateEnd=0;
 let best=0;
+try{best=Number(localStorage.getItem("runBlazeBest"))||0}catch(e){}
 
-try{
-
-best=
-Number(
-localStorage.getItem(
-"runBlazeBest"
-)
-)||0;
-
-if(finalScore>best){
-
-best=finalScore;
-
-localStorage.setItem(
-"runBlazeBest",
-String(best)
-);
-
+function laneX(l,y){
+ const p=Math.max(0,Math.min(1,(y-H*.25)/(H*.75)));
+ return W/2+(l-1)*W*(.09+.28*p);
 }
-
-}catch(error){}
-
-
-$("finalScore").textContent=
-finalScore;
-
-$("bestScore").textContent=
-best;
-
-$("finalCoins").textContent=
-coins;
-
-$("finalStars").textContent=
-stars;
-
-$("finalKeys").textContent=
-keys;
-
-showScreen("over");
-
+function choose(c){
+ character=c;
+ $("boyBtn").classList.toggle("selected",c==="boy");
+ $("girlBtn").classList.toggle("selected",c==="girl");
 }
+$("boyBtn").onclick=()=>choose("boy");
+$("girlBtn").onclick=()=>choose("girl");
 
-
-let paused = false;
-
-function gameLoop(time){
-  if(!playing || paused) return;
-
-  const dt = Math.min(
-    .035,
-    Math.max(0, (time - lastTime) / 1000)
-  );
-
-  lastTime = time;
-  updateGame(dt);
-  drawGame();
-
-  if(playing && !paused){
-    requestAnimationFrame(gameLoop);
-  }
+function start(){
+ playing=true;paused=false;lane=1;playerLane=1;
+ score=0;coins=0;stars=0;speed=330;
+ items=[];spawn=.5;last=0;
+ jumpEnd=slideEnd=boostEnd=magnetEnd=skateEnd=0;
+ $("home").style.display="none";
+ $("over").style.display="none";
+ $("hud").style.display="flex";
+ $("controls").style.display="flex";
+ $("pauseBtn").textContent="Ⅱ";
+ updateHud();
 }
+$("playBtn").onclick=start;
+$("againBtn").onclick=start;
+$("homeBtn").onclick=()=>{
+ playing=false;
+ $("over").style.display="none";
+ $("home").style.display="flex";
+};
+$("pauseBtn").onclick=()=>{
+ if(!playing)return;
+ paused=!paused;
+ $("pauseBtn").textContent=paused?"▶":"Ⅱ";
+ last=0;
+};
 
+function left(){if(playing&&!paused)lane=Math.max(0,lane-1)}
+function right(){if(playing&&!paused)lane=Math.min(2,lane+1)}
+function jump(){if(playing&&!paused)jumpEnd=performance.now()+700}
+function slide(){if(playing&&!paused)slideEnd=performance.now()+650}
+function boost(){if(playing&&!paused)boostEnd=performance.now()+2500}
 
-showScreen("home");
-$("saveAccountBtn").addEventListener("click", () => {
-  const name = $("accountName").value.trim();
-  const bank = $("accountBank").value.trim();
-  const ifsc = $("accountIFSC").value.trim().toUpperCase();
-  const upi = $("accountUPI").value.trim();
-  const msg = $("accountSaveMsg");
+$("leftBtn").onclick=left;
+$("rightBtn").onclick=right;
+$("jumpBtn").onclick=jump;
+$("slideBtn").onclick=slide;
+$("boostBtn").onclick=boost;
 
-  if (!name || !bank || !ifsc || !upi) {
-    msg.textContent = "Please fill all fields.";
-    return;
-  }
-
-  if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) {
-    msg.textContent = "Please check your IFSC code.";
-    return;
-  }
-
-  msg.textContent =
-    "Details checked. Secure saving and real withdrawals are not connected yet.";
+addEventListener("keydown",e=>{
+ if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key))e.preventDefault();
+ if(e.repeat)return;
+ if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a")left();
+ if(e.key==="ArrowRight"||e.key.toLowerCase()==="d")right();
+ if(e.key==="ArrowUp"||e.key===" ")jump();
+ if(e.key==="ArrowDown")slide();
+ if(e.key.toLowerCase()==="b")boost();
+ if(e.key==="Escape"&&playing)$("pauseBtn").click();
 });
-</script>
 
+let sx=0,sy=0;
+canvas.addEventListener("touchstart",e=>{
+ sx=e.changedTouches[0].clientX;sy=e.changedTouches[0].clientY;
+},{passive:true});
+canvas.addEventListener("touchend",e=>{
+ const dx=e.changedTouches[0].clientX-sx;
+ const dy=e.changedTouches[0].clientY-sy;
+ if(Math.abs(dx)<25&&Math.abs(dy)<25)return;
+ if(Math.abs(dx)>Math.abs(dy)){dx<0?left():right()}
+ else{dy<0?jump():slide()}
+},{passive:true});
+
+function spawnItem(){
+ const r=Math.random();
+ let type="obstacle";
+ if(r<.40)type="coin";
+ else if(r<.47)type="star";
+ else if(r<.52)type="key";
+ else if(r<.57)type="gift";
+ else if(r<.61)type="magnet";
+ else if(r<.65)type="boost";
+ else if(r<.69)type="skate";
+ else if(r<.83)type="barrier";
+ items.push({lane:Math.floor(Math.random()*3),y:H*.25,type,done:false});
+}
+function updateHud(){
+ $("score").textContent=Math.floor(score);
+ $("coins").textContent=coins;
+ $("stars").textContent=stars;
+}
+function gameEnd(){
+ playing=false;
+ best=Math.max(best,Math.floor(score));
+ try{localStorage.setItem("runBlazeBest",String(best))}catch(e){}
+ $("finalScore").textContent=Math.floor(score);
+ $("finalCoins").textContent=coins;
+ $("over").style.display="flex";
+ $("hud").style.display="none";
+ $("controls").style.display="none";
+}
+function collect(it,now){
+ it.done=true;
+ if(it.type==="coin"){coins++;score+=10}
+ if(it.type==="star"){stars++;score+=50}
+ if(it.type==="key"){score+=25}
+ if(it.type==="gift"){coins+=5;score+=100}
+ if(it.type==="magnet")magnetEnd=now+6000;
+ if(it.type==="boost")boostEnd=now+2500;
+ if(it.type==="skate")skateEnd=now+5000;
+ updateHud();
+}
+function update(dt,now){
+ speed=Math.min(600,speed+dt*5);
+ score+=dt*(now<boostEnd?20:10);
+ spawn-=dt;
+ if(spawn<=0){
+  spawnItem();spawn=Math.max(.5,1.15-speed/1000)+Math.random()*.3;
+ }
+ const py=H*.82;
+ for(const it of items){
+  if(it.done)continue;
+  it.y+=speed*dt;
+  if(now<magnetEnd&&it.type==="coin"&&it.y>H*.5)it.lane=Math.round(playerLane);
+  if(it.lane===Math.round(playerLane)&&Math.abs(it.y-py)<32){
+   if(["coin","star","key","gift","magnet","boost","skate"].includes(it.type)){
+    collect(it,now);
+   }else if(now<jumpEnd||now<slideEnd||now<skateEnd){
+    it.done=true;score+=5;
+   }else{gameEnd();return}
+  }
+ }
+ items=items.filter(it=>it.y<H+80&&!it.done);
+ updateHud();
+}
+function drawTrack(now){
+ const sky=ctx.createLinearGradient(0,0,0,H);
+ sky.addColorStop(0,"#16354c");sky.addColorStop(.55,"#43848a");sky.addColorStop(1,"#b8b9a0");
+ ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+
+ ctx.fillStyle="#1e5948";
+ for(let i=0;i<9;i++){
+  const x=(i*W/8+now*.012)%(W+60)-30;
+  ctx.beginPath();ctx.moveTo(x,H*.25);ctx.lineTo(x-48,H*.52);ctx.lineTo(x+48,H*.52);ctx.fill();
+ }
+ ctx.fillStyle="#414d5a";
+ ctx.beginPath();ctx.moveTo(W*.38,H*.25);ctx.lineTo(W*.62,H*.25);
+ ctx.lineTo(W*1.1,H);ctx.lineTo(-W*.1,H);ctx.closePath();ctx.fill();
+ ctx.strokeStyle="#d5dbe0";ctx.lineWidth=2;
+ for(let i=0;i<2;i++){
+  ctx.beginPath();ctx.moveTo(W/2+(i-.5)*W*.12,H*.25);
+  ctx.lineTo(W/2+(i-.5)*W*.72,H);ctx.stroke();
+ }
+}
+function drawItem(it){
+ const x=laneX(it.lane,it.y);
+ const s=.4+Math.max(0,(it.y-H*.25)/(H*.75))*1.1;
+ ctx.save();ctx.translate(x,it.y);ctx.scale(s,s);
+ const icons={coin:"🪙",star:"⭐",key:"🔑",gift:"🎁",magnet:"🧲",boost:"⚡",skate:"🛹"};
+ if(icons[it.type]){
+  ctx.font="30px Arial";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillText(icons[it.type],0,0);
+ }else{
+  ctx.fillStyle=it.type==="barrier"?"#f97316":"#dc2626";
+  ctx.fillRect(-25,-30,50,60);
+  ctx.fillStyle="#fff";ctx.fillRect(-24,-8,48,8);
+ }
+ ctx.restore();
+}
+function drawPlayer(now,dt){
+ playerLane+=(lane-playerLane)*Math.min(1,dt*12);
+ const x=laneX(playerLane,H*.82);
+ let y=H*.82;
+ if(now<jumpEnd)y-=Math.sin((1-(jumpEnd-now)/700)*Math.PI)*H*.2;
+ if(now<slideEnd)y+=H*.03;
+ const img=character==="boy"?boyImage:girlImage;
+ const w=Math.min(100,W*.21),h=w*1.35;
+ if(img.complete&&img.naturalWidth>0){
+  ctx.drawImage(img,x-w/2,y-h,w,h);
+ }else{
+  ctx.font=`${w*.85}px Arial`;
+  ctx.textAlign="center";ctx.textBaseline="bottom";
+  ctx.fillText(character==="boy"?"🏃":"🏃‍♀️",x,y);
+ }
+}
+function render(now,dt){
+ drawTrack(now);
+ items.slice().sort((a,b)=>a.y-b.y).forEach(drawItem);
+ drawPlayer(now,dt);
+ if(playing&&paused){
+  ctx.fillStyle="#0009";ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="white";ctx.font="bold 32px Arial";ctx.textAlign="center";
+  ctx.fillText("PAUSED",W/2,H/2);
+ }
+}
+function loop(now){
+ requestAnimationFrame(loop);
+ const dt=last?Math.min((now-last)/1000,.04):0;
+ last=now;
+ if(playing&&!paused)update(dt,now);
+ render(now,dt);
+}
+requestAnimationFrame(loop);
+})();
+</script>
 </body>
 </html>
