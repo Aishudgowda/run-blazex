@@ -618,57 +618,51 @@ method+
 }
 
 
-function resetGame(){
-  function pauseGame() {
-  if (!playing) return;
+function resetGame() {
+  paused = false;
+  lane = 1;
+  targetLane = 1;
 
+  score = 0;
+  coins = 0;
+  stars = 0;
+  keys = 0;
+
+  magnet = 0;
+  shield = 0;
+  shoes = 0;
+
+  jumping = false;
+  sliding = false;
+  jumpTime = 0;
+  slideTime = 0;
+
+  objects = [];
+  spawnTimer = 0.5;
+  speed = 0.34;
+  lastTime = performance.now();
+
+  $("pauseBtn").style.display = "inline-block";
+  $("resumeBtn").style.display = "none";
+
+  updateHUD();
+}
+
+function pauseGame() {
+  if (!playing || paused) return;
   paused = true;
-  document.getElementById("pauseBtn").style.display = "none";
-  document.getElementById("resumeBtn").style.display = "inline-block";
+  $("pauseBtn").style.display = "none";
+  $("resumeBtn").style.display = "inline-block";
 }
 
 function resumeGame() {
   if (!playing || !paused) return;
-
   paused = false;
   lastTime = performance.now();
-
-  document.getElementById("pauseBtn").style.display = "inline-block";
-  document.getElementById("resumeBtn").style.display = "none";
-
+  $("pauseBtn").style.display = "inline-block";
+  $("resumeBtn").style.display = "none";
   requestAnimationFrame(gameLoop);
 }
-
-lane=1;
-targetLane=1;
-
-score=0;
-coins=0;
-stars=0;
-keys=0;
-
-magnet=0;
-shield=0;
-shoes=0;
-
-jumping=false;
-sliding=false;
-
-jumpTime=0;
-slideTime=0;
-
-objects=[];
-
-spawnTimer=.5;
-
-speed=.34;
-
-lastTime=performance.now();
-
-updateHUD();
-
-}
-
 
 function startGame(){
 
