@@ -43,7 +43,16 @@ h1{font-size:44px;color:#fb923c;margin:5px}
   <br>
   <button id="playBtn">▶ PLAY NOW</button>
   <p>PLAYTECH STUDIO</p>
- </div>
+  <p>💰 Total Coins: <span id="totalCoins">0</span></p>
+<button id="walletBtn">💳 WALLET / WITHDRAW</button>
+
+<div id="walletBox" style="display:none; margin-top:12px;">
+  <h3>Choose Withdrawal Method</h3>
+  <button type="button" onclick="alert('Bank withdrawal setup required')">🏦 Bank Account</button>
+  <button type="button" onclick="alert('UPI payout setup required')">📱 UPI</button>
+  <button type="button" onclick="alert('PayPal payout setup required')">🌐 PayPal</button>
+  <p>Withdrawal is not active yet.</p>
+</div>
 </div>
 
 <div id="over">
