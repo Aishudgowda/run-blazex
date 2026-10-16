@@ -236,23 +236,234 @@ function update(dt,now){
  updateHud();
 }
 function drawTrack(now){
- const sky=ctx.createLinearGradient(0,0,0,H);
- sky.addColorStop(0,"#16354c");sky.addColorStop(.55,"#43848a");sky.addColorStop(1,"#b8b9a0");
- ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+ const horizon=H*.25;
+ const roadTop=H*.25;
+ const roadBottom=H;
 
- ctx.fillStyle="#1e5948";
- for(let i=0;i<9;i++){
-  const x=(i*W/8+now*.012)%(W+60)-30;
-  ctx.beginPath();ctx.moveTo(x,H*.25);ctx.lineTo(x-48,H*.52);ctx.lineTo(x+48,H*.52);ctx.fill();
+ // 1. Atmospheric sky
+ const sky=ctx.createLinearGradient(0,0,0,H);
+ sky.addColorStop(0,"#111a35");
+ sky.addColorStop(.35,"#35465d");
+ sky.addColorStop(.68,"#8b7967");
+ sky.addColorStop(1,"#d5ad78");
+ ctx.fillStyle=sky;
+ ctx.fillRect(0,0,W,H);
+
+ // Mist in the distance
+ const mist=ctx.createLinearGradient(0,horizon-30,0,H*.65);
+ mist.addColorStop(0,"#c7c3b0aa");
+ mist.addColorStop(1,"#b7b6a000");
+ ctx.fillStyle=mist;
+ ctx.fillRect(0,horizon-30,W,H*.45);
+
+ // 2. Distant mountain silhouettes
+ ctx.fillStyle="#303b43";
+ ctx.beginPath();
+ ctx.moveTo(0,H*.43);
+ for(let i=0;i<=8;i++){
+  const x=i*W/8;
+  const y=H*(.28+Math.abs(Math.sin(i*2.1))*.13);
+  ctx.lineTo(x,y);
  }
- ctx.fillStyle="#414d5a";
- ctx.beginPath();ctx.moveTo(W*.38,H*.25);ctx.lineTo(W*.62,H*.25);
- ctx.lineTo(W*1.1,H);ctx.lineTo(-W*.1,H);ctx.closePath();ctx.fill();
- ctx.strokeStyle="#d5dbe0";ctx.lineWidth=2;
- for(let i=0;i<2;i++){
-  ctx.beginPath();ctx.moveTo(W/2+(i-.5)*W*.12,H*.25);
-  ctx.lineTo(W/2+(i-.5)*W*.72,H);ctx.stroke();
+ ctx.lineTo(W,H*.55);
+ ctx.lineTo(0,H*.55);
+ ctx.closePath();
+ ctx.fill();
+
+ // 3. Deep forest layers
+ for(let layer=0;layer<3;layer++){
+  const base=H*(.47+layer*.045);
+  const size=W*(.025+layer*.012);
+  ctx.fillStyle=["#263c37","#1b302c","#122722"][layer];
+  for(let i=0;i<18;i++){
+   const gap=W/9;
+   let x=(i*gap+layer*31+now*(.006+layer*.008))%(W+gap)-gap/2;
+   const y=base+(i%3)*H*.025;
+   ctx.beginPath();
+   ctx.moveTo(x,y-size*2);
+   ctx.lineTo(x-size,y+size*.5);
+   ctx.lineTo(x+size,y+size*.5);
+   ctx.closePath();
+   ctx.fill();
+   ctx.fillRect(x-size*.12,y,size*.24,H*.12);
+  }
  }
+
+ // 4. Ancient temple gateway in the distance
+ const cx=W/2;
+ const gy=H*.43;
+ const tw=W*.27;
+ const th=H*.20;
+
+ // Temple shadow
+ ctx.fillStyle="#172323";
+ ctx.beginPath();
+ ctx.moveTo(cx-tw*.65,gy+th*.2);
+ ctx.lineTo(cx-tw*.65,gy-th*.35);
+ ctx.lineTo(cx,gy-th*.9);
+ ctx.lineTo(cx+tw*.65,gy-th*.35);
+ ctx.lineTo(cx+tw*.65,gy+th*.2);
+ ctx.closePath();
+ ctx.fill();
+
+ // Temple stone facade
+ ctx.fillStyle="#776c58";
+ ctx.fillRect(cx-tw*.58,gy-th*.25,tw*1.16,th*.75);
+
+ // Roof tiers
+ for(let i=0;i<4;i++){
+  const rw=tw*(1.35-i*.19);
+  const ry=gy-th*.27-i*th*.15;
+  ctx.fillStyle=["#a49577","#88785e","#a49577","#6d604c"][i];
+  ctx.beginPath();
+  ctx.moveTo(cx-rw/2,ry);
+  ctx.lineTo(cx+rw/2,ry);
+  ctx.lineTo(cx+rw*.39,ry+th*.14);
+  ctx.lineTo(cx-rw*.39,ry+th*.14);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle="#d1b88c";
+  ctx.lineWidth=1;
+  ctx.stroke();
+ }
+
+ // Dark entrance
+ ctx.fillStyle="#10191b";
+ ctx.fillRect(cx-tw*.19,gy-th*.02,tw*.38,th*.52);
+
+ // Temple pillars
+ for(let side of [-1,1]){
+  for(let i=0;i<3;i++){
+   const px=cx+side*tw*(.25+i*.13);
+   const py=gy-th*.08;
+   const pw=tw*.075;
+   ctx.fillStyle=i%2?"#a99a7b":"#c1ad89";
+   ctx.fillRect(px-pw/2,py,pw,th*.62);
+   ctx.fillStyle="#75664e";
+   ctx.fillRect(px-pw*.7,py,pw*1.4,th*.07);
+   ctx.fillRect(px-pw*.7,py+th*.56,pw*1.4,th*.08);
+   ctx.strokeStyle="#554b3c";
+   ctx.lineWidth=1;
+   ctx.strokeRect(px-pw/2,py,pw,th*.62);
+  }
+ }
+
+ // 5. Broken ruins on both sides
+ for(let side of [-1,1]){
+  for(let i=0;i<4;i++){
+   const depth=i/4;
+   const x=cx+side*W*(.19+depth*.27);
+   const y=H*(.40+depth*.16);
+   const rw=W*(.025+depth*.035);
+   const rh=H*(.08+depth*.13);
+   ctx.fillStyle=["#554f40","#75674f","#625944","#443f34"][i];
+   ctx.fillRect(x-rw/2,y-rh*.45,rw,rh);
+   ctx.fillStyle="#9d8a69";
+   ctx.fillRect(x-rw*.65,y-rh*.48,rw*1.3,rh*.12);
+   ctx.fillStyle="#38392f";
+   ctx.fillRect(x-rw*.25,y-rh*.2,rw*.12,rh*.18);
+   ctx.fillRect(x+rw*.1,y-rh*.3,rw*.12,rh*.2);
+  }
+ }
+
+ // 6. Stone road with strong perspective depth
+ ctx.fillStyle="#514e49";
+ ctx.beginPath();
+ ctx.moveTo(W*.42,roadTop);
+ ctx.lineTo(W*.58,roadTop);
+ ctx.lineTo(W*1.08,H);
+ ctx.lineTo(-W*.08,H);
+ ctx.closePath();
+ ctx.fill();
+
+ // Road edge stones
+ ctx.strokeStyle="#b5a184";
+ ctx.lineWidth=2;
+ ctx.beginPath();
+ ctx.moveTo(W*.42,roadTop);
+ ctx.lineTo(-W*.08,H);
+ ctx.moveTo(W*.58,roadTop);
+ ctx.lineTo(W*1.08,H);
+ ctx.stroke();
+
+ // Perspective stone paving
+ for(let i=1;i<=13;i++){
+  const p=i/13;
+  const y=roadTop+(H-roadTop)*p*p;
+  const half=W*(.08+.50*p);
+  ctx.strokeStyle=i%2?"#827668":"#373b3b";
+  ctx.lineWidth=1+p*1.5;
+  ctx.beginPath();
+  ctx.moveTo(cx-half,y);
+  ctx.lineTo(cx+half,y);
+  ctx.stroke();
+ }
+
+ // Stone joints converging toward the horizon
+ for(let i=-5;i<=5;i++){
+  ctx.strokeStyle="#373b3b88";
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(cx+i*W*.014,roadTop);
+  ctx.lineTo(cx+i*W*.12,H);
+  ctx.stroke();
+ }
+
+ // 7. Ancient roadside lamps
+ for(let side of [-1,1]){
+  for(let i=0;i<3;i++){
+   const p=.18+i*.25;
+   const x=cx+side*W*(.16+p*.45);
+   const y=H*(.43+p*.42);
+   const size=1+p*1.5;
+
+   ctx.fillStyle="#302b25";
+   ctx.fillRect(x-5*size,y-25*size,10*size,25*size);
+   ctx.fillStyle="#b59b70";
+   ctx.fillRect(x-8*size,y-28*size,16*size,5*size);
+
+   // Warm torch glow
+   const glow=ctx.createRadialGradient(
+    x,y-30*size,1,x,y-30*size,22*size
+   );
+   glow.addColorStop(0,"#ffd98b99");
+   glow.addColorStop(1,"#ffad3500");
+   ctx.fillStyle=glow;
+   ctx.beginPath();
+   ctx.arc(x,y-30*size,22*size,0,Math.PI*2);
+   ctx.fill();
+
+   ctx.fillStyle="#ffbd52";
+   ctx.beginPath();
+   ctx.arc(x,y-30*size,4*size,0,Math.PI*2);
+   ctx.fill();
+  }
+ }
+
+ // 8. Foreground foliage for depth
+ for(let side of [-1,1]){
+  for(let i=0;i<7;i++){
+   const x=side*(W*.08+i*W*.065);
+   const y=H*(.75+(i%3)*.07);
+   const r=W*(.025+(i%3)*.009);
+   ctx.fillStyle=i%2?"#102c24":"#1a3929";
+   ctx.beginPath();
+   ctx.arc(x,y,r,0,Math.PI*2);
+   ctx.fill();
+   ctx.beginPath();
+   ctx.arc(x+side*r*.65,y-r*.5,r*.72,0,Math.PI*2);
+   ctx.fill();
+  }
+ }
+
+ // 9. Cinematic edge shadows
+ const shade=ctx.createLinearGradient(0,0,W,0);
+ shade.addColorStop(0,"#07121b99");
+ shade.addColorStop(.18,"#07121b00");
+ shade.addColorStop(.82,"#07121b00");
+ shade.addColorStop(1,"#07121b99");
+ ctx.fillStyle=shade;
+ ctx.fillRect(0,0,W,H);
 }
 function drawItem(it){
  const x=laneX(it.lane,it.y);
