@@ -185,7 +185,14 @@ function updateHud(){
  $("score").textContent=Math.floor(score);
  $("coins").textContent=coins;
  $("stars").textContent=stars;
+
+ try{
+  const total=Number(localStorage.getItem("runBlazeTotalCoins"))||0;
+  const totalEl=$("totalCoins");
+  if(totalEl) totalEl.textContent=total+coins;
+ }catch(e){}
 }
+ 
 function gameEnd(){
  playing=false;
  best=Math.max(best,Math.floor(score));
