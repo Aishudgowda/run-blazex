@@ -45,7 +45,16 @@ h1{font-size:44px;color:#fb923c;margin:5px}
   <p>PLAYTECH STUDIO</p>
   <p>💰 Total Coins: <span id="totalCoins">0</span></p>
 <button id="walletBtn">💳 WALLET / WITHDRAW</button>
-
+<div id="walletPanel" style="display:none; margin:15px auto; padding:15px; background:#172033; color:white; border-radius:12px; max-width:320px;">
+  <h3>💰 Run Blaze Wallet</h3>
+  <p>Total Coins: <span id="walletCoins">0</span></p>
+  <p>Choose Withdrawal Method:</p>
+  <button type="button" onclick="alert('UPI payout setup is required first.')">UPI</button>
+  <button type="button" onclick="alert('Bank payout setup is required first.')">Bank Account</button>
+  <button type="button" onclick="alert('PayPal payout setup is required first.')">PayPal</button>
+  <p style="font-size:12px;">Demo only — real money withdrawal is not active.</p>
+  <button type="button" onclick="document.getElementById('walletPanel').style.display='none'">Close</button>
+</div>
 <div id="walletBox" style="display:none; margin-top:12px;">
   <h3>Choose Withdrawal Method</h3>
   <button type="button" onclick="alert('Bank withdrawal setup required')">🏦 Bank Account</button>
