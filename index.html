@@ -549,5 +549,23 @@ function loop(now){
 requestAnimationFrame(loop);
 })();
 </script>
+ <!-- RUN BLAZE WITHDRAW SECTION -->
+<div id="withdrawBox" style="background:#142638;color:white;padding:20px;margin:15px;border-radius:12px">
+  <h2>💰 Withdraw</h2>
+
+  <label>Account Holder Name</label>
+  <input id="holderName" type="text" placeholder="Account holder name" style="display:block;width:100%;padding:12px;margin:8px 0;box-sizing:border-box">
+
+  <label>Bank Name</label>
+  <input id="bankName" type="text" placeholder="Bank name" style="display:block;width:100%;padding:12px;margin:8px 0;box-sizing:border-box">
+
+  <label>Account Number</label>
+  <input id="accountNumber" type="password" inputmode="numeric" placeholder="Account number" style="display:block;width:100%;padding:12px;margin:8px 0;box-sizing:border-box">
+
+  <label>IFSC Code</label>
+  <input id="ifscCode" type="text" placeholder="IFSC code" maxlength="11" style="display:block;width:100%;padding:12px;margin:8px 0;box-sizing:border-box">
+
+  <button type="button" onclick="alert('Form added. Real withdrawals are not enabled yet.')">Save Bank Details</button>
+</div>
 </body>
 </html>
