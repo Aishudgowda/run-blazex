@@ -567,5 +567,48 @@ requestAnimationFrame(loop);
 
   <button type="button" onclick="alert('Form added. Real withdrawals are not enabled yet.')">Save Bank Details</button>
 </div>
+ <!-- RUN BLAZE WALLET -->
+<div id="walletPanel" style="display:none;position:fixed;inset:0;background:#101820ee;z-index:9999;align-items:center;justify-content:center;padding:18px;">
+  <div style="background:#1e293b;color:white;width:100%;max-width:380px;padding:22px;border-radius:18px;box-sizing:border-box;font-family:Arial,sans-serif;">
+    <h2 style="margin-top:0;">💰 Run Blaze Wallet</h2>
+
+    <p>Total Coins: <b id="walletCoins">0</b> 🪙</p>
+    <p>Withdrawal Status: <b style="color:#facc15;">Not Connected</b></p>
+
+    <label for="withdrawMethod">Withdrawal Method</label>
+    <select id="withdrawMethod" style="width:100%;padding:12px;margin:10px 0;background:#334155;color:white;border-radius:8px;">
+      <option value="upi">UPI</option>
+      <option value="bank">Bank Account</option>
+      <option value="paypal">PayPal</option>
+    </select>
+
+    <p style="font-size:13px;color:#cbd5e1;">
+      Withdrawal setup is not active yet. Coins are game points, not real money.
+    </p>
+
+    <button onclick="alert('Real-money withdrawals are not connected yet.');"
+      style="width:100%;padding:13px;background:#22c55e;color:#052e16;border:0;border-radius:9px;font-weight:bold;">
+      Request Withdrawal
+    </button>
+
+    <button onclick="document.getElementById('walletPanel').style.display='none';"
+      style="width:100%;padding:12px;margin-top:10px;background:#475569;color:white;border:0;border-radius:9px;">
+      Close
+    </button>
+  </div>
+</div>
+
+<button onclick="openRunBlazeWallet()"
+  style="position:fixed;right:14px;bottom:18px;z-index:1000;padding:13px 18px;border:0;border-radius:30px;background:#facc15;color:#111827;font-weight:bold;">
+  💰 Wallet
+</button>
+
+<script>
+function openRunBlazeWallet() {
+  const total = Number(localStorage.getItem("runBlazeTotalCoins") || 0);
+  document.getElementById("walletCoins").textContent = total;
+  document.getElementById("walletPanel").style.display = "flex";
+}
+</script>
 </body>
 </html>
