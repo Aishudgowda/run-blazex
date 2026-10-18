@@ -391,5 +391,98 @@ document.body.innerHTML='<div style="padding:30px;color:white;font:18px Arial">R
 console.error(e);
 }
 </script>
+  <!-- RUN BLAZE WITHDRAWAL PANEL -->
+<style>
+#withdrawPanel{
+  display:none;position:fixed;inset:0;z-index:99999;
+  background:#04101df5;color:white;overflow:auto;
+  padding:20px;font-family:Arial,sans-serif
+}
+.withdrawBox{
+  max-width:430px;margin:25px auto;padding:20px;
+  background:#09243c;border:1px solid #35caff;
+  border-radius:18px
+}
+.withdrawBox h2{color:#43d9ff;text-align:center}
+.withdrawMethod{
+  width:100%;padding:14px;margin:6px 0;
+  background:#103651;color:white;border:1px solid #398cb6;
+  border-radius:10px;text-align:left;font-size:16px
+}
+.withdrawBox input{
+  width:100%;padding:12px;margin:7px 0;
+  border-radius:8px;border:1px solid #459ac2;
+  background:#061729;color:white;font-size:15px
+}
+.withdrawAction{
+  width:100%;padding:13px;margin-top:10px;
+  background:#ffca28;color:#17202b;font-weight:bold;
+  border:0;border-radius:10px;font-size:16px
+}
+#withdrawStatus{color:#8fffd0;font-size:14px}
+</style>
+
+<div id="withdrawPanel">
+  <div class="withdrawBox">
+    <button onclick="closeWithdraw()" style="float:right;background:none;color:white;border:0;font-size:25px">✕</button>
+    <h2>💳 YOUR WALLET</h2>
+    <p>Total Coins: <b id="withdrawCoins">0</b></p>
+    <hr>
+    <h3>Withdrawal Methods</h3>
+
+    <button class="withdrawMethod" onclick="chooseMethod('UPI')">🇮🇳 UPI</button>
+    <button class="withdrawMethod" onclick="chooseMethod('PhonePe')">🟣 PhonePe</button>
+    <button class="withdrawMethod" onclick="chooseMethod('Paytm')">🔵 Paytm</button>
+    <button class="withdrawMethod" onclick="chooseMethod('Bank Transfer')">🏦 Bank Transfer</button>
+    <button class="withdrawMethod" onclick="chooseMethod('PayPal')">🌐 PayPal</button>
+
+    <h3 id="selectedMethod">Select a withdrawal method</h3>
+    <input id="withdrawAccount" placeholder="UPI ID / Account details">
+    <input id="withdrawAmount" type="number" min="1" placeholder="Withdrawal amount (₹)">
+    <button class="withdrawAction" onclick="submitWithdraw()">Submit Request</button>
+    <p id="withdrawStatus"></p>
+    <p style="font-size:12px;color:#aac5d8">
+      Withdrawal requests require a secure payment backend for real payouts.
+    </p>
+  </div>
+</div>
+
+<script>
+let selectedWithdrawMethod = '';
+
+function openWithdraw(){
+  document.getElementById('withdrawPanel').style.display='block';
+  document.getElementById('withdrawCoins').textContent=
+    localStorage.getItem('runBlazeTotalCoins') || '0';
+}
+
+function closeWithdraw(){
+  document.getElementById('withdrawPanel').style.display='none';
+}
+
+function chooseMethod(method){
+  selectedWithdrawMethod=method;
+  document.getElementById('selectedMethod').textContent=
+    'Selected: '+method;
+  document.getElementById('withdrawStatus').textContent='';
+}
+
+function submitWithdraw(){
+  const account=document.getElementById('withdrawAccount').value.trim();
+  const amount=Number(document.getElementById('withdrawAmount').value);
+  const status=document.getElementById('withdrawStatus');
+
+  if(!selectedWithdrawMethod){
+    status.textContent='Please select a withdrawal method.';
+    return;
+  }
+  if(!account || !Number.isFinite(amount) || amount<=0){
+    status.textContent='Enter valid account details and amount.';
+    return;
+  }
+  status.textContent=
+    'Form ready. Real withdrawal is not connected yet; no payment has been sent.';
+}
+</script>
 </body>
 </html>
