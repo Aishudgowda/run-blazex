@@ -305,6 +305,9 @@ const dt=Math.min(clock.getDelta(),.04);
 elapsed+=dt;
 if(playing){
 const speed=(boostUntil>elapsed?30:20)+Math.min(score/500,8);
+  if(playerY===0 && elapsed>=slideUntil){
+  player.position.y+=Math.abs(Math.sin(elapsed*13))*.025;
+}
 score+=dt*10;
 spawnTimer+=dt;
 if(spawnTimer>1.1){spawn();spawnTimer=0}
