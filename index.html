@@ -1,613 +1,394 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#071629">
 <title>Run Blaze | Playtech Studio</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;overflow:hidden;font-family:Arial;background:#122332;color:white}
-canvas{display:block;width:100vw;height:100dvh}
-button{padding:13px 18px;border:0;border-radius:12px;background:#f97316;color:white;font-weight:bold;font-size:17px;cursor:pointer}
-#home,#over{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#081725d9;padding:20px}
-.card{width:min(380px,100%);padding:25px;background:#142638;border:1px solid #516579;border-radius:22px;text-align:center}
-h1{font-size:44px;color:#fb923c;margin:5px}
-.choice{background:#304456;margin:5px}
-.selected{outline:3px solid #fb923c}
-#playBtn,#againBtn{width:100%;margin-top:15px}
-#over{display:none}
-#hud{position:absolute;top:12px;left:12px;right:12px;display:none;justify-content:space-between;gap:6px}
-.stat{padding:9px;background:#102235e8;border-radius:10px;font-weight:bold}
-#controls{position:absolute;bottom:15px;left:12px;right:12px;display:none;justify-content:space-between}
-#controls button{padding:12px;min-width:48px;background:#142638e8}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071629;color:white;font-family:Arial,sans-serif;touch-action:none}
+canvas{display:block;width:100%;height:100%}
+#ui{position:fixed;inset:0;pointer-events:none}
+.brand{position:absolute;top:12px;left:12px;background:#061321dd;border:1px solid #4abfff66;border-radius:20px;padding:9px 12px;font-size:12px;font-weight:900;letter-spacing:1px}
+.hud{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;max-width:98vw}
+.stat{min-width:65px;text-align:center;padding:7px;background:#06182bea;border:1px solid #56caff66;border-radius:10px}
+.stat small{display:block;color:#72d8ff;font-weight:bold;font-size:10px}
+.stat b{font-size:17px}
+.overlay{pointer-events:auto;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;background:linear-gradient(#06182b20,#020812aa)}
+.panel{width:min(420px,95vw);text-align:center;padding:22px 16px;border:1px solid #55caff88;border-radius:22px;background:linear-gradient(145deg,#092844f5,#06101ff7);box-shadow:0 20px 70px #000a}
+.logo{font-weight:1000;font-size:clamp(48px,12vw,72px);line-height:.9;font-style:italic;color:#ffcf24;text-shadow:3px 4px 0 #a72d0c,0 0 25px #ff8d17aa;margin:15px 0}
+.sub{color:#9bdfff;letter-spacing:2px;font-size:11px;font-weight:bold;margin:12px 0 20px}
+.primary{border:0;border-radius:14px;padding:14px 25px;background:linear-gradient(#ffe64d,#ff9d00);color:#171b23;font-size:20px;font-weight:1000;min-width:190px;cursor:pointer}
+.features{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:20px}
+.feature{border:1px solid #49c8ff66;border-radius:12px;background:#071b31;padding:9px 7px;min-width:57px;font-size:10px;font-weight:bold}
+.feature span{display:block;font-size:23px;margin-bottom:4px}
+.hint{font-size:12px;color:#b7d5e9;line-height:1.6}
+.hidden{display:none!important}
+.controls{position:absolute;bottom:15px;left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;pointer-events:none}
+.group{display:flex;gap:8px}
+.ctrl{pointer-events:auto;border:2px solid #66d9ff;background:#052b4bdd;color:white;border-radius:50%;width:55px;height:55px;font-size:22px;font-weight:bold;touch-action:manipulation}
+.msg{position:absolute;top:72px;left:50%;transform:translateX(-50%);background:#052f3bea;border:1px solid #55e6ff;border-radius:30px;padding:9px 13px;font-weight:bold;color:#9df8ff;white-space:nowrap}
+.wallet{margin-top:12px;color:#9bc8df;font-size:12px}
 </style>
 </head>
 <body>
-<canvas id="game"></canvas>
-
-<div id="hud">
- <div class="stat">Score: <span id="score">0</span></div>
- <div class="stat">💰 Total: <span id="totalCoins">0</span></div>
- <div class="stat">🪙 <span id="coins">0</span></div>
- <div class="stat">⭐ <span id="stars">0</span></div>
- <button id="pauseBtn">Ⅱ</button>
+<div id="ui">
+<div class="brand">🎮 PLAYTECH STUDIO</div>
+<div id="hud" class="hud hidden">
+<div class="stat"><small>SCORE</small><b id="score">0</b></div>
+<div class="stat"><small>🪙 TOTAL COINS</small><b id="coins">0</b></div>
+<div class="stat"><small>BEST</small><b id="best">0</b></div>
+<div class="stat"><small>🗝️ KEYS</small><b id="keys">0</b></div>
+</div>
+<div id="powerMsg" class="msg hidden">🧲 MAGNET ACTIVE</div>
+<div id="home" class="overlay"><div class="panel">
+<div style="font-size:12px;letter-spacing:3px;color:#9bdfff;font-weight:bold">PLAYTECH STUDIO PRESENTS</div>
+<div class="logo">RUN<br>BLAZE</div>
+<div class="sub">RUN · COLLECT · SURVIVE</div>
+<button id="start" class="primary">▶ START RUN</button>
+<div class="features">
+<div class="feature"><span>🧲</span>MAGNET</div>
+<div class="feature"><span>⚡</span>BOOST</div>
+<div class="feature"><span>🎁</span>GIFT</div>
+<div class="feature"><span>🛹</span>SKATE</div>
+<div class="feature"><span>🗝️</span>KEY</div>
+</div>
+<p class="hint">← → Change lane · ↑ Jump · ↓ Slide<br>Collect coins. Avoid trains and barriers.</p>
+</div></div>
+<div id="over" class="overlay hidden"><div class="panel">
+<div style="font-size:38px;font-weight:1000;color:#ff4545">GAME OVER</div>
+<p class="sub">NICE RUNNER — TRY AGAIN!</p>
+<div style="display:flex;justify-content:space-around;margin:18px 0">
+<div>SCORE<br><b id="finalScore" style="font-size:26px;color:#ffcf24">0</b></div>
+<div>COINS<br><b id="finalCoins" style="font-size:26px;color:#ffcf24">0</b></div>
+<div>BEST<br><b id="finalBest" style="font-size:26px;color:#ffcf24">0</b></div>
+</div>
+<button id="again" class="primary">↻ RUN AGAIN</button>
+<div class="wallet">Totals saved on this device</div>
+</div></div>
+<div id="controls" class="controls hidden">
+<div class="group"><button class="ctrl" id="left">◀</button><button class="ctrl" id="right">▶</button></div>
+<div class="group"><button class="ctrl" id="slide">⬇</button><button class="ctrl" id="jump">⬆</button></div>
+</div>
 </div>
 
-<div id="home">
- <div class="card">
-  <h1>RUN BLAZE</h1>
-  <p>Run. Collect. Survive.</p>
-  <p>Choose your character</p>
-  <button class="choice selected" id="boyBtn">Boy</button>
-  <button class="choice" id="girlBtn">Girl</button>
-  <br>
-  <button id="playBtn">▶ PLAY NOW</button>
-  <p>PLAYTECH STUDIO</p>
-  <p>💰 Total Coins: <span id="totalCoins">0</span></p>
-  <button id="walletBtn" type="button" onclick="document.getElementById('walletPanel').style.display='block'">💳 WALLET / WITHDRAW</button>
-<div id="walletPanel" style="display:none; margin:15px auto; padding:15px; background:#172033; color:white; border-radius:12px; max-width:320px;">
-  <h3>💰 Run Blaze Wallet</h3>
-  <p>Total Coins: <span id="walletCoins">0</span></p>
-  <p>Choose Withdrawal Method:</p>
-  <button type="button" onclick="alert('UPI payout setup is required first.')">UPI</button>
- onclick="document.getElementById('withdrawBox').style.display='block'"
-  <button type="button" onclick="alert('PayPal payout setup is required first.')">PayPal</button>
-  <p style="font-size:12px;">Demo only — real money withdrawal is not active.</p>
-  <button type="button" onclick="document.getElementById('walletPanel').style.display='none'">Close</button>
-</div>
-<div id="walletBox" style="display:none; margin-top:12px;">
-  <h3>Choose Withdrawal Method</h3>
-  <button type="button" onclick="alert('Bank withdrawal setup required')">🏦 Bank Account</button>
-  <button type="button" onclick="alert('UPI payout setup required')">📱 UPI</button>
-  <button type="button" onclick="alert('PayPal payout setup required')">🌐 PayPal</button>
-  <p>Withdrawal is not active yet.</p>
-</div>
-</div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
-<div id="over">
- <div class="card">
-  <h1>GAME OVER</h1>
-  <p>Your score: <b id="finalScore">0</b></p>
-  <p>Coins: <b id="finalCoins">0</b></p>
-  <button id="againBtn">PLAY AGAIN</button><br><br>
-  <button id="homeBtn">HOME</button>
- </div>
-</div>
-
-<div id="controls">
- <div>
-  <button id="leftBtn">◀</button>
-  <button id="rightBtn">▶</button>
- </div>
- <div>
-  <button id="jumpBtn">⬆ Jump</button>
-  <button id="slideBtn">⬇ Slide</button>
-  <button id="boostBtn">⚡</button>
- </div>
-</div>
-
-<script>
-(function(){
-"use strict";
-const canvas=document.getElementById("game");
-const ctx=canvas.getContext("2d");
 const $=id=>document.getElementById(id);
+let scene,camera,renderer,clock,player;
+let playing=false,elapsed=0,score=0,runCoins=0,keys=0;
+let best=+(localStorage.getItem('runBlazeBest')||0);
+let totalCoins=+(localStorage.getItem('runBlazeTotalCoins')||0);
+let totalKeys=+(localStorage.getItem('runBlazeTotalKeys')||0);
+let lane=1,playerY=0,vy=0,slideUntil=0,magnetUntil=0,boostUntil=0,skateUntil=0;
+let spawnTimer=0;
+const objects=[],coins=[],laneX=[-2.4,0,2.4];
 
-let W=innerWidth,H=innerHeight,dpr=1;
-function resize(){
- W=innerWidth;H=innerHeight;
- dpr=Math.min(devicePixelRatio||1,2);
- canvas.width=W*dpr;canvas.height=H*dpr;
- ctx.setTransform(dpr,0,0,dpr,0,0);
+const mat=(c,r=.7,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+const M={
+ground:mat('#283544'),gravel:mat('#56616a'),rail:mat('#a8bac6',.25,.8),
+sleeper:mat('#463a32'),red:mat('#b52c24'),blue:mat('#176c9e'),
+dark:mat('#172431'),glass:mat('#6ddaff',.22,.4),gold:mat('#ffbd16',.25,.65),
+white:mat('#e6edf3'),tree:mat('#245c40'),leaf:mat('#347a4d'),
+green:mat('#28c987')
+};
+
+function box(w,h,d,material,x=0,y=0,z=0,parent=scene){
+const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;
 }
-addEventListener("resize",resize);resize();
-
-const boyImage=new Image();
-boyImage.src="run_blaze_boy.png";
-const girlImage=new Image();
-girlImage.src="run_blaze_girl.png";
-
-let character="boy",playing=false,paused=false;
-let lane=1,playerLane=1,score=0,coins=0,stars=0;
-let speed=330,items=[],last=0,spawn=0;
-let jumpEnd=0,slideEnd=0,boostEnd=0,magnetEnd=0,skateEnd=0;
-let best=0;
-try{best=Number(localStorage.getItem("runBlazeBest"))||0}catch(e){}
-
-function laneX(l,y){
- const p=Math.max(0,Math.min(1,(y-H*.25)/(H*.75)));
- return W/2+(l-1)*W*(.09+.28*p);
+function sphere(r,material,x,y,z,parent=scene){
+const m=new THREE.Mesh(new THREE.SphereGeometry(r,14,10),material);
+m.position.set(x,y,z);m.castShadow=true;parent.add(m);return m;
 }
-function choose(c){
- character=c;
- $("boyBtn").classList.toggle("selected",c==="boy");
- $("girlBtn").classList.toggle("selected",c==="girl");
+
+function init(){
+scene=new THREE.Scene();
+scene.background=new THREE.Color('#8db9d8');
+scene.fog=new THREE.Fog('#8db9d8',25,110);
+camera=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,.1,180);
+camera.position.set(0,5.6,10.8);
+camera.lookAt(0,1,-5);
+renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;
+document.body.prepend(renderer.domElement);
+scene.add(new THREE.HemisphereLight('#e6f7ff','#29303d',2));
+const sun=new THREE.DirectionalLight('#fff0ce',3);
+sun.position.set(-5,12,7);sun.castShadow=true;
+sun.shadow.mapSize.set(1024,1024);scene.add(sun);
+makeWorld();
+player=makePlayer();player.position.set(0,0,2);scene.add(player);
+clock=new THREE.Clock();
+addEventListener('resize',resize);
+renderer.setAnimationLoop(tick);
 }
-$("boyBtn").onclick=()=>choose("boy");
-$("girlBtn").onclick=()=>choose("girl");
+
+function makeWorld(){
+box(100,.3,180,M.ground,0,-.34,-55);
+for(let l=0;l<3;l++){
+const x=laneX[l];
+box(2.05,.12,180,M.gravel,x,-.18,-55);
+for(const side of [-.72,.72])box(.12,.16,180,M.rail,x+side,-.08,-55);
+for(let z=6;z>-140;z-=1.35)box(1.9,.13,.24,M.sleeper,x,-.12,z);
+for(const side of [-1,1])box(.05,2,180,M.dark,x+side*1.06,.7,-55);
+}
+for(let z=4;z>-100;z-=8){
+for(const side of [-1,1]){
+const x=side*6.1;
+box(.18,5,.18,M.dark,x,2.4,z);
+box(1.1,.14,.16,M.dark,x,4.7,z);
+sphere(.8,M.leaf,x+side*1.8,2.8,z);
+box(.4,1.4,.4,M.tree,x+side*1.8,1,z);
+box(.8,.8,.8,mat('#8496a6'),x+side*9,1.2,z-2);
+box(.75,1.5,.8,mat('#a6b6c3'),x+side*9,2.2,z-2);
+}
+}
+}
+
+function makePlayer(){
+const g=new THREE.Group();
+const red=mat('#d62828'),black=mat('#171c25'),skin=mat('#d9a47e'),shoe=mat('#f4f4f4');
+box(.58,.65,.35,red,0,1.22,0,g);
+box(.56,.22,.37,black,0,1.62,0,g);
+sphere(.23,skin,0,1.9,0,g);
+box(.24,.08,.05,black,0,1.93,-.19,g);
+box(.14,.48,.16,red,-.38,1.22,0,g);
+box(.14,.48,.16,red,.38,1.22,0,g);
+g.userData.legs=[];
+for(const x of [-.17,.17]){
+const leg=box(.17,.48,.2,black,x,.62,0,g);
+box(.2,.12,.3,shoe,x,.37,-.04,g);
+g.userData.legs.push(leg);
+}
+return g;
+}
+
+function makeTrain(l,z){
+const g=new THREE.Group();
+const color=l===0?M.blue:l===1?M.red:mat('#c6d3dc');
+box(1.8,1.7,5.5,color,0,1.05,0,g);
+box(1.7,.2,5.45,M.dark,0,1.96,0,g);
+box(1.6,.65,.08,M.glass,0,1.42,2.77,g);
+for(let zz=-1.9;zz<=1.8;zz+=1.25){
+box(.06,.66,.08,M.dark,-.91,1.4,zz,g);
+box(.06,.66,.08,M.dark,.91,1.4,zz,g);
+}
+for(const x of [-.68,.68])for(const zz of [-1.8,1.8]){
+const wh=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.12,12),M.dark);
+wh.rotation.z=Math.PI/2;wh.position.set(x,.25,zz);g.add(wh);
+}
+for(const x of [-.48,.48])sphere(.1,mat('#fff6ba',.2),x,.92,2.79,g);
+g.position.set(laneX[l],0,z);
+g.userData={kind:'train',lane:l,hit:true};
+scene.add(g);objects.push(g);
+}
+
+function makeBarrier(l,z){
+const g=new THREE.Group();
+box(1.35,.85,.45,mat('#f3ad19'),0,.45,0,g);
+for(let x=-.5;x<=.5;x+=.5)box(.18,.9,.47,mat('#e7e9ec'),x,.45,.01,g);
+g.position.set(laneX[l],0,z);
+g.userData={kind:'barrier',lane:l,hit:true};
+scene.add(g);objects.push(g);
+}
+
+function makeCoin(l,z,y=.8,type='coin'){
+let mesh;
+if(type==='key'){
+mesh=new THREE.Group();
+const ring=new THREE.Mesh(new THREE.TorusGeometry(.19,.055,8,16),M.gold);
+mesh.add(ring);
+box(.08,.42,.08,M.gold,.22,-.18,0,mesh);
+}else if(type==='magnet'){
+mesh=new THREE.Group();
+box(.17,.42,.16,mat('#ff384e'),-.13,0,0,mesh);
+box(.17,.42,.16,mat('#27a8ff'),.13,0,0,mesh);
+box(.48,.12,.16,M.white,0,-.22,0,mesh);
+}else if(type==='boost'){
+mesh=new THREE.Group();
+box(.16,.45,.13,mat('#ffdd21'),0,0,0,mesh);
+}else if(type==='gift'){
+mesh=new THREE.Group();
+box(.45,.38,.38,mat('#ef42b8'),0,0,0,mesh);
+box(.09,.4,.4,M.gold,0,0,0,mesh);
+}else if(type==='skate'){
+mesh=new THREE.Group();
+box(.6,.12,.24,mat('#25baff'),0,0,0,mesh);
+for(const x of [-.2,.2])sphere(.08,M.dark,x,-.1,0,mesh);
+}else{
+mesh=new THREE.Mesh(new THREE.TorusGeometry(.25,.075,10,20),M.gold);
+}
+mesh.position.set(laneX[l],y,z);
+mesh.rotation.x=type==='coin'?Math.PI/2:0;
+scene.add(mesh);
+mesh.userData={kind:type,lane:l,baseY:y,phase:Math.random()*6};
+coins.push(mesh);
+}
+
+function spawn(){
+const z=-72-Math.random()*8,l=Math.floor(Math.random()*3),r=Math.random();
+if(r<.24)makeTrain(l,z);
+else if(r<.42)makeBarrier(l,z);
+else if(r<.47)makeCoin(l,z,.8,'magnet');
+else if(r<.53)makeCoin(l,z,.8,'boost');
+else if(r<.58)makeCoin(l,z,.8,'gift');
+else if(r<.63)makeCoin(l,z,.8,'skate');
+else if(r<.68)makeCoin(l,z,.8,'key');
+else{
+const n=5+Math.floor(Math.random()*4);
+for(let i=0;i<n;i++)makeCoin(l,z-i*2.1,.8+(Math.random()<.16?1.2:0),'coin');
+}
+}
 
 function start(){
- playing=true;paused=false;lane=1;playerLane=1;
- score=0;coins=0;stars=0;speed=330;
- items=[];spawn=.5;last=0;
- jumpEnd=slideEnd=boostEnd=magnetEnd=skateEnd=0;
- $("home").style.display="none";
- $("over").style.display="none";
- $("hud").style.display="flex";
- $("controls").style.display="flex";
- $("pauseBtn").textContent="Ⅱ";
- updateHud();
+for(const o of [...objects,...coins])scene.remove(o);
+objects.length=0;coins.length=0;
+lane=1;player.position.set(0,0,2);playerY=0;vy=0;
+elapsed=0;score=0;runCoins=0;keys=0;spawnTimer=0;
+magnetUntil=boostUntil=skateUntil=slideUntil=0;
+playing=true;
+$('home').classList.add('hidden');
+$('over').classList.add('hidden');
+$('hud').classList.remove('hidden');
+$('controls').classList.remove('hidden');
+$('powerMsg').classList.add('hidden');
+updateHud();
 }
-$("playBtn").onclick=start;
-$("againBtn").onclick=start;
-$("homeBtn").onclick=()=>{
- playing=false;
- $("over").style.display="none";
- $("home").style.display="flex";
-};
-$("pauseBtn").onclick=()=>{
- if(!playing)return;
- paused=!paused;
- $("pauseBtn").textContent=paused?"▶":"Ⅱ";
- last=0;
-};
 
-function left(){if(playing&&!paused)lane=Math.max(0,lane-1)}
-function right(){if(playing&&!paused)lane=Math.min(2,lane+1)}
-function jump(){if(playing&&!paused)jumpEnd=performance.now()+700}
-function slide(){if(playing&&!paused)slideEnd=performance.now()+650}
-function boost(){if(playing&&!paused)boostEnd=performance.now()+2500}
+function endGame(){
+if(!playing)return;
+playing=false;
+best=Math.max(best,Math.floor(score));
+localStorage.setItem('runBlazeBest',best);
+$('finalScore').textContent=Math.floor(score);
+$('finalCoins').textContent=runCoins;
+$('finalBest').textContent=best;
+$('over').classList.remove('hidden');
+$('controls').classList.add('hidden');
+}
 
-$("leftBtn").onclick=left;
-$("rightBtn").onclick=right;
-$("jumpBtn").onclick=jump;
-$("slideBtn").onclick=slide;
-$("boostBtn").onclick=boost;
+function move(d){if(playing)lane=Math.max(0,Math.min(2,lane+d))}
+function jump(){if(playing&&playerY<.04)vy=8.2}
+function slide(){if(playing)slideUntil=elapsed+.75}
 
-addEventListener("keydown",e=>{
- if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key))e.preventDefault();
- if(e.repeat)return;
- if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a")left();
- if(e.key==="ArrowRight"||e.key.toLowerCase()==="d")right();
- if(e.key==="ArrowUp"||e.key===" ")jump();
- if(e.key==="ArrowDown")slide();
- if(e.key.toLowerCase()==="b")boost();
- if(e.key==="Escape"&&playing)$("pauseBtn").click();
+function updateHud(){
+$('score').textContent=Math.floor(score);
+$('coins').textContent=totalCoins;
+$('best').textContent=Math.max(best,Math.floor(score));
+$('keys').textContent=totalKeys;
+}
+
+function action(type){
+if(!playing)return;
+if(type==='magnet')magnetUntil=elapsed+8;
+if(type==='boost')boostUntil=elapsed+5;
+if(type==='skate')skateUntil=elapsed+7;
+if(type==='gift'){runCoins+=10;totalCoins+=10;localStorage.setItem('runBlazeTotalCoins',totalCoins)}
+if(type==='key'){keys++;totalKeys++;localStorage.setItem('runBlazeTotalKeys',totalKeys)}
+if(type==='coin'){runCoins++;totalCoins++;localStorage.setItem('runBlazeTotalCoins',totalCoins)}
+if(['magnet','boost','skate'].includes(type)){
+$('powerMsg').textContent=type==='magnet'?'🧲 MAGNET ACTIVE':type==='boost'?'⚡ BOOST ACTIVE':'🛹 SKATE SHIELD ACTIVE';
+$('powerMsg').classList.remove('hidden');
+}
+updateHud();
+}
+
+function tick(){
+const dt=Math.min(clock.getDelta(),.04);
+elapsed+=dt;
+if(playing){
+const speed=(boostUntil>elapsed?30:20)+Math.min(score/500,8);
+score+=dt*10;
+spawnTimer+=dt;
+if(spawnTimer>1.1){spawn();spawnTimer=0}
+
+player.position.x+=(laneX[lane]-player.position.x)*Math.min(1,dt*12);
+if(playerY>0||vy>0){
+playerY+=vy*dt;vy-=19*dt;
+if(playerY<0){playerY=0;vy=0}
+}
+player.position.y=playerY+(elapsed<slideUntil?-.25:0);
+player.scale.y=elapsed<slideUntil?.65:1;
+player.rotation.z+=(laneX[lane]-player.position.x)*dt*.05;
+player.userData.legs.forEach((leg,i)=>leg.rotation.x=Math.sin(elapsed*13+i*Math.PI)*.65);
+
+for(let i=objects.length-1;i>=0;i--){
+const o=objects[i];o.position.z+=speed*dt;
+if(o.position.z>10){scene.remove(o);objects.splice(i,1);continue}
+if(Math.abs(o.position.z-2)<1.5&&o.userData.lane===lane){
+if(o.userData.kind==='barrier'){
+if(playerY<.72&&elapsed>=slideUntil&&elapsed>=skateUntil)endGame();
+}else if(o.userData.kind==='train'){
+if(playerY<1.75&&elapsed>=skateUntil)endGame();
+}
+}
+}
+
+for(let i=coins.length-1;i>=0;i--){
+const c=coins[i];
+c.position.z+=speed*dt;c.rotation.y+=dt*2.8;
+c.position.y=c.userData.baseY+Math.sin(elapsed*4+c.userData.phase)*.12;
+if(magnetUntil>elapsed&&c.userData.kind==='coin'&&c.position.z>-26){
+c.position.x+=(player.position.x-c.position.x)*dt*2.5;
+c.position.z+=(2-c.position.z)*dt*.65;
+}
+if(c.position.z>8){scene.remove(c);coins.splice(i,1);continue}
+if(Math.abs(c.position.z-2)<1.1&&Math.abs(c.position.x-player.position.x)<.85&&Math.abs(c.position.y-(playerY+.85))<1.45){
+action(c.userData.kind);scene.remove(c);coins.splice(i,1);
+}
+}
+
+if(magnetUntil<=elapsed&&boostUntil<=elapsed&&skateUntil<=elapsed)$('powerMsg').classList.add('hidden');
+camera.position.x+=(player.position.x*.22-camera.position.x)*dt*2;
+camera.lookAt(player.position.x*.22,1.4,-5);
+}
+renderer.render(scene,camera);
+}
+
+function resize(){
+if(!camera||!renderer)return;
+camera.aspect=innerWidth/innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(innerWidth,innerHeight);
+}
+
+$('start').onclick=start;
+$('again').onclick=start;
+$('left').onclick=()=>move(-1);
+$('right').onclick=()=>move(1);
+$('jump').onclick=jump;
+$('slide').onclick=slide;
+
+addEventListener('keydown',e=>{
+if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','a','A','d','D','w','W','s','S'].includes(e.key))e.preventDefault();
+if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A')move(-1);
+if(e.key==='ArrowRight'||e.key==='d'||e.key==='D')move(1);
+if(e.key==='ArrowUp'||e.key===' '||e.key==='w'||e.key==='W')jump();
+if(e.key==='ArrowDown'||e.key==='s'||e.key==='S')slide();
+if(e.key==='Enter'&&!playing)start();
 });
 
 let sx=0,sy=0;
-canvas.addEventListener("touchstart",e=>{
- sx=e.changedTouches[0].clientX;sy=e.changedTouches[0].clientY;
+addEventListener('touchstart',e=>{
+sx=e.changedTouches[0].clientX;sy=e.changedTouches[0].clientY;
 },{passive:true});
-canvas.addEventListener("touchend",e=>{
- const dx=e.changedTouches[0].clientX-sx;
- const dy=e.changedTouches[0].clientY-sy;
- if(Math.abs(dx)<25&&Math.abs(dy)<25)return;
- if(Math.abs(dx)>Math.abs(dy)){dx<0?left():right()}
- else{dy<0?jump():slide()}
+addEventListener('touchend',e=>{
+const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+if(Math.max(Math.abs(dx),Math.abs(dy))<30)return;
+if(Math.abs(dx)>Math.abs(dy))move(dx>0?1:-1);
+else if(dy<0)jump();else slide();
 },{passive:true});
 
-function spawnItem(){
- const r=Math.random();
- let type="obstacle";
- if(r<.40)type="coin";
- else if(r<.47)type="star";
- else if(r<.52)type="key";
- else if(r<.57)type="gift";
- else if(r<.61)type="magnet";
- else if(r<.65)type="boost";
- else if(r<.69)type="skate";
- else if(r<.83)type="barrier";
- items.push({lane:Math.floor(Math.random()*3),y:H*.25,type,done:false});
-}
-function updateHud(){
- $("score").textContent=Math.floor(score);
- $("coins").textContent=coins;
- $("stars").textContent=stars;
-
- try{
-  const total=Number(localStorage.getItem("runBlazeTotalCoins"))||0;
-  const totalEl=$("totalCoins");
-  if(totalEl) totalEl.textContent=total+coins;
- }catch(e){}
-}
- 
-function gameEnd(){
- playing=false;
- best=Math.max(best,Math.floor(score));
-
- try{
-  localStorage.setItem("runBlazeBest",String(best));
-
-  let totalCoins=Number(localStorage.getItem("runBlazeTotalCoins")||0);
-  totalCoins+=coins;
-  localStorage.setItem("runBlazeTotalCoins",String(totalCoins));
- }catch(e){}
-
- $("finalScore").textContent=Math.floor(score);
- $("finalCoins").textContent=coins;
- $("over").style.display="flex";
- $("hud").style.display="none";
- $("controls").style.display="none";
-}
-function collect(it,now){
- it.done=true;
- if(it.type==="coin"){coins++;score+=10}
- if(it.type==="star"){stars++;score+=50}
- if(it.type==="key"){score+=25}
- if(it.type==="gift"){coins+=5;score+=100}
- if(it.type==="magnet")magnetEnd=now+6000;
- if(it.type==="boost")boostEnd=now+2500;
- if(it.type==="skate")skateEnd=now+5000;
- updateHud();
-}
-function update(dt,now){
- speed=Math.min(600,speed+dt*5);
- score+=dt*(now<boostEnd?20:10);
- spawn-=dt;
- if(spawn<=0){
-  spawnItem();spawn=Math.max(.5,1.15-speed/1000)+Math.random()*.3;
- }
- const py=H*.82;
- for(const it of items){
-  if(it.done)continue;
-  it.y+=speed*dt;
-  if(now<magnetEnd&&it.type==="coin"&&it.y>H*.5)it.lane=Math.round(playerLane);
-  if(it.lane===Math.round(playerLane)&&Math.abs(it.y-py)<32){
-   if(["coin","star","key","gift","magnet","boost","skate"].includes(it.type)){
-    collect(it,now);
-   }else if(now<jumpEnd||now<slideEnd||now<skateEnd){
-    it.done=true;score+=5;
-   }else{gameEnd();return}
-  }
- }
- items=items.filter(it=>it.y<H+80&&!it.done);
- updateHud();
-}
-function drawTrack(now){
- const horizon=H*.25;
- const roadTop=H*.25;
- const roadBottom=H;
-
- // 1. Atmospheric sky
- const sky=ctx.createLinearGradient(0,0,0,H);
- sky.addColorStop(0,"#111a35");
- sky.addColorStop(.35,"#35465d");
- sky.addColorStop(.68,"#8b7967");
- sky.addColorStop(1,"#d5ad78");
- ctx.fillStyle=sky;
- ctx.fillRect(0,0,W,H);
-
- // Mist in the distance
- const mist=ctx.createLinearGradient(0,horizon-30,0,H*.65);
- mist.addColorStop(0,"#c7c3b0aa");
- mist.addColorStop(1,"#b7b6a000");
- ctx.fillStyle=mist;
- ctx.fillRect(0,horizon-30,W,H*.45);
-
- // 2. Distant mountain silhouettes
- ctx.fillStyle="#303b43";
- ctx.beginPath();
- ctx.moveTo(0,H*.43);
- for(let i=0;i<=8;i++){
-  const x=i*W/8;
-  const y=H*(.28+Math.abs(Math.sin(i*2.1))*.13);
-  ctx.lineTo(x,y);
- }
- ctx.lineTo(W,H*.55);
- ctx.lineTo(0,H*.55);
- ctx.closePath();
- ctx.fill();
-
- // 3. Deep forest layers
- for(let layer=0;layer<3;layer++){
-  const base=H*(.47+layer*.045);
-  const size=W*(.025+layer*.012);
-  ctx.fillStyle=["#263c37","#1b302c","#122722"][layer];
-  for(let i=0;i<18;i++){
-   const gap=W/9;
-   let x=(i*gap+layer*31+now*(.006+layer*.008))%(W+gap)-gap/2;
-   const y=base+(i%3)*H*.025;
-   ctx.beginPath();
-   ctx.moveTo(x,y-size*2);
-   ctx.lineTo(x-size,y+size*.5);
-   ctx.lineTo(x+size,y+size*.5);
-   ctx.closePath();
-   ctx.fill();
-   ctx.fillRect(x-size*.12,y,size*.24,H*.12);
-  }
- }
-
- // 4. Ancient temple gateway in the distance
- const cx=W/2;
- const gy=H*.43;
- const tw=W*.27;
- const th=H*.20;
-
- // Temple shadow
- ctx.fillStyle="#172323";
- ctx.beginPath();
- ctx.moveTo(cx-tw*.65,gy+th*.2);
- ctx.lineTo(cx-tw*.65,gy-th*.35);
- ctx.lineTo(cx,gy-th*.9);
- ctx.lineTo(cx+tw*.65,gy-th*.35);
- ctx.lineTo(cx+tw*.65,gy+th*.2);
- ctx.closePath();
- ctx.fill();
-
- // Temple stone facade
- ctx.fillStyle="#776c58";
- ctx.fillRect(cx-tw*.58,gy-th*.25,tw*1.16,th*.75);
-
- // Roof tiers
- for(let i=0;i<4;i++){
-  const rw=tw*(1.35-i*.19);
-  const ry=gy-th*.27-i*th*.15;
-  ctx.fillStyle=["#a49577","#88785e","#a49577","#6d604c"][i];
-  ctx.beginPath();
-  ctx.moveTo(cx-rw/2,ry);
-  ctx.lineTo(cx+rw/2,ry);
-  ctx.lineTo(cx+rw*.39,ry+th*.14);
-  ctx.lineTo(cx-rw*.39,ry+th*.14);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle="#d1b88c";
-  ctx.lineWidth=1;
-  ctx.stroke();
- }
-
- // Dark entrance
- ctx.fillStyle="#10191b";
- ctx.fillRect(cx-tw*.19,gy-th*.02,tw*.38,th*.52);
-
- // Temple pillars
- for(let side of [-1,1]){
-  for(let i=0;i<3;i++){
-   const px=cx+side*tw*(.25+i*.13);
-   const py=gy-th*.08;
-   const pw=tw*.075;
-   ctx.fillStyle=i%2?"#a99a7b":"#c1ad89";
-   ctx.fillRect(px-pw/2,py,pw,th*.62);
-   ctx.fillStyle="#75664e";
-   ctx.fillRect(px-pw*.7,py,pw*1.4,th*.07);
-   ctx.fillRect(px-pw*.7,py+th*.56,pw*1.4,th*.08);
-   ctx.strokeStyle="#554b3c";
-   ctx.lineWidth=1;
-   ctx.strokeRect(px-pw/2,py,pw,th*.62);
-  }
- }
-
- // 5. Broken ruins on both sides
- for(let side of [-1,1]){
-  for(let i=0;i<4;i++){
-   const depth=i/4;
-   const x=cx+side*W*(.19+depth*.27);
-   const y=H*(.40+depth*.16);
-   const rw=W*(.025+depth*.035);
-   const rh=H*(.08+depth*.13);
-   ctx.fillStyle=["#554f40","#75674f","#625944","#443f34"][i];
-   ctx.fillRect(x-rw/2,y-rh*.45,rw,rh);
-   ctx.fillStyle="#9d8a69";
-   ctx.fillRect(x-rw*.65,y-rh*.48,rw*1.3,rh*.12);
-   ctx.fillStyle="#38392f";
-   ctx.fillRect(x-rw*.25,y-rh*.2,rw*.12,rh*.18);
-   ctx.fillRect(x+rw*.1,y-rh*.3,rw*.12,rh*.2);
-  }
- }
-
- // 6. Stone road with strong perspective depth
- ctx.fillStyle="#514e49";
- ctx.beginPath();
- ctx.moveTo(W*.42,roadTop);
- ctx.lineTo(W*.58,roadTop);
- ctx.lineTo(W*1.08,H);
- ctx.lineTo(-W*.08,H);
- ctx.closePath();
- ctx.fill();
-
- // Road edge stones
- ctx.strokeStyle="#b5a184";
- ctx.lineWidth=2;
- ctx.beginPath();
- ctx.moveTo(W*.42,roadTop);
- ctx.lineTo(-W*.08,H);
- ctx.moveTo(W*.58,roadTop);
- ctx.lineTo(W*1.08,H);
- ctx.stroke();
-
- // Perspective stone paving
- for(let i=1;i<=13;i++){
-  const p=i/13;
-  const y=roadTop+(H-roadTop)*p*p;
-  const half=W*(.08+.50*p);
-  ctx.strokeStyle=i%2?"#827668":"#373b3b";
-  ctx.lineWidth=1+p*1.5;
-  ctx.beginPath();
-  ctx.moveTo(cx-half,y);
-  ctx.lineTo(cx+half,y);
-  ctx.stroke();
- }
-
- // Stone joints converging toward the horizon
- for(let i=-5;i<=5;i++){
-  ctx.strokeStyle="#373b3b88";
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(cx+i*W*.014,roadTop);
-  ctx.lineTo(cx+i*W*.12,H);
-  ctx.stroke();
- }
-
- // 7. Ancient roadside lamps
- for(let side of [-1,1]){
-  for(let i=0;i<3;i++){
-   const p=.18+i*.25;
-   const x=cx+side*W*(.16+p*.45);
-   const y=H*(.43+p*.42);
-   const size=1+p*1.5;
-
-   ctx.fillStyle="#302b25";
-   ctx.fillRect(x-5*size,y-25*size,10*size,25*size);
-   ctx.fillStyle="#b59b70";
-   ctx.fillRect(x-8*size,y-28*size,16*size,5*size);
-
-   // Warm torch glow
-   const glow=ctx.createRadialGradient(
-    x,y-30*size,1,x,y-30*size,22*size
-   );
-   glow.addColorStop(0,"#ffd98b99");
-   glow.addColorStop(1,"#ffad3500");
-   ctx.fillStyle=glow;
-   ctx.beginPath();
-   ctx.arc(x,y-30*size,22*size,0,Math.PI*2);
-   ctx.fill();
-
-   ctx.fillStyle="#ffbd52";
-   ctx.beginPath();
-   ctx.arc(x,y-30*size,4*size,0,Math.PI*2);
-   ctx.fill();
-  }
- }
-
- // 8. Foreground foliage for depth
- for(let side of [-1,1]){
-  for(let i=0;i<7;i++){
-   const x=side*(W*.08+i*W*.065);
-   const y=H*(.75+(i%3)*.07);
-   const r=W*(.025+(i%3)*.009);
-   ctx.fillStyle=i%2?"#102c24":"#1a3929";
-   ctx.beginPath();
-   ctx.arc(x,y,r,0,Math.PI*2);
-   ctx.fill();
-   ctx.beginPath();
-   ctx.arc(x+side*r*.65,y-r*.5,r*.72,0,Math.PI*2);
-   ctx.fill();
-  }
- }
-
- // 9. Cinematic edge shadows
- const shade=ctx.createLinearGradient(0,0,W,0);
- shade.addColorStop(0,"#07121b99");
- shade.addColorStop(.18,"#07121b00");
- shade.addColorStop(.82,"#07121b00");
- shade.addColorStop(1,"#07121b99");
- ctx.fillStyle=shade;
- ctx.fillRect(0,0,W,H);
-}
-function drawItem(it){
- const x=laneX(it.lane,it.y);
- const s=.4+Math.max(0,(it.y-H*.25)/(H*.75))*1.1;
- ctx.save();ctx.translate(x,it.y);ctx.scale(s,s);
- const icons={coin:"🪙",star:"⭐",key:"🔑",gift:"🎁",magnet:"🧲",boost:"⚡",skate:"🛹"};
- if(icons[it.type]){
-  ctx.font="30px Arial";ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.fillText(icons[it.type],0,0);
- }else{
-  ctx.fillStyle=it.type==="barrier"?"#f97316":"#dc2626";
-  ctx.fillRect(-25,-30,50,60);
-  ctx.fillStyle="#fff";ctx.fillRect(-24,-8,48,8);
- }
- ctx.restore();
-}
-function drawPlayer(now,dt){
- playerLane+=(lane-playerLane)*Math.min(1,dt*12);
- const x=laneX(playerLane,H*.82);
- let y=H*.82;
- if(now<jumpEnd)y-=Math.sin((1-(jumpEnd-now)/700)*Math.PI)*H*.2;
- if(now<slideEnd)y+=H*.03;
- const img=character==="boy"?boyImage:girlImage;
- const w=Math.min(100,W*.21),h=w*1.35;
- if(img.complete&&img.naturalWidth>0){
-  ctx.save();
-ctx.translate(x, y - h);
-ctx.scale(-1, 1);
-ctx.drawImage(img, -w / 2, 0, w, h);
-ctx.restore();
- }else{
-  ctx.font=`${w*.85}px Arial`;
-  ctx.textAlign="center";ctx.textBaseline="bottom";
-  ctx.fillText(character==="boy"?"🏃":"🏃‍♀️",x,y);
- }
-}
-function render(now,dt){
- drawTrack(now);
- items.slice().sort((a,b)=>a.y-b.y).forEach(drawItem);
- drawPlayer(now,dt);
- if(playing&&paused){
-  ctx.fillStyle="#0009";ctx.fillRect(0,0,W,H);
-  ctx.fillStyle="white";ctx.font="bold 32px Arial";ctx.textAlign="center";
-  ctx.fillText("PAUSED",W/2,H/2);
- }
-}
-function loop(now){
- requestAnimationFrame(loop);
- const dt=last?Math.min((now-last)/1000,.04):0;
- last=now;
- if(playing&&!paused)update(dt,now);
- render(now,dt);
-}
-requestAnimationFrame(loop);
-})();
-</script>
- <!-- RUN BLAZE WITHDRAW SECTION -->
- <div id="withdrawBox" style="display:none;background:
-  <h2>💰 Withdraw</h2>
-
-  <label>Account Holder Name</label>
-  <input id="holderName" type="text" placeholder="Account holder name" style="display:block;width:100%;padding:12px;margin:8px 0;box-sizing:border-box">
-
-  <label>Bank Name</label>
-  <input id="bankName" type="text" placeholder="Bank name" style="display:block;width:100%;padding:12px;margin:8px 0;box-sizing:border-box">
-
-  <label>Account Number</label>
-  <input id="accountNumber" type="password" inputmode="numeric" placeholder="Account number" style="display:block;width:100%;padding:12px;margin:8px 0;box-sizing:border-box">
-
-  <label>IFSC Code</label>
-  <input id="ifscCode" type="text" placeholder="IFSC code" maxlength="11" style="display:block;width:100%;padding:12px;margin:8px 0;box-sizing:border-box">
-
-  <button type="button" onclick="alert('Form added. Real withdrawals are not enabled yet.')">Save Bank Details</button>
-</div>
- <!-- RUN BLAZE WALLET -->
-<div id="walletPanel" style="display:none;position:fixed;inset:0;background:#101820ee;z-index:9999;align-items:center;justify-content:center;padding:18px;">
-  <div style="background:#1e293b;color:white;width:100%;max-width:380px;padding:22px;border-radius:18px;box-sizing:border-box;font-family:Arial,sans-serif;">
-    <h2 style="margin-top:0;">💰 Run Blaze Wallet</h2>
-
-    <p>Total Coins: <b id="walletCoins">0</b> 🪙</p>
-    <p>Withdrawal Status: <b style="color:#facc15;">Not Connected</b></p>
-
-    <label for="withdrawMethod">Withdrawal Method</label>
-    <select id="withdrawMethod" style="width:100%;padding:12px;margin:10px 0;background:#334155;color:white;border-radius:8px;">
-      <option value="upi">UPI</option>
-      <option value="bank">Bank Account</option>
-      <option value="paypal">PayPal</option>
-    </select>
-
-    <p style="font-size:13px;color:#cbd5e1;">
-      Withdrawal setup is not active yet. Coins are game points, not real money.
-    </p>
-
-    <button onclick="alert('Real-money withdrawals are not connected yet.');"
-      style="width:100%;padding:13px;background:#22c55e;color:#052e16;border:0;border-radius:9px;font-weight:bold;">
-      Request Withdrawal
-    </button>
-
-    <button onclick="document.getElementById('walletPanel').style.display='none';"
-      style="width:100%;padding:12px;margin-top:10px;background:#475569;color:white;border:0;border-radius:9px;">
-      Close
-    </button>
-  </div>
-</div>
-
-<button onclick="openRunBlazeWallet()"
-  style="position:fixed;right:14px;bottom:18px;z-index:1000;padding:13px 18px;border:0;border-radius:30px;background:#facc15;color:#111827;font-weight:bold;">
-  💰 Wallet
-</button>
-
-<script>
-function openRunBlazeWallet() {
-  const total = Number(localStorage.getItem("runBlazeTotalCoins") || 0);
-  document.getElementById("walletCoins").textContent = total;
-  document.getElementById("walletPanel").style.display = "flex";
+try{init()}catch(e){
+document.body.innerHTML='<div style="padding:30px;color:white;font:18px Arial">Run Blaze could not start. Check your internet connection and reload the page.</div>';
+console.error(e);
 }
 </script>
 </body>
