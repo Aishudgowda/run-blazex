@@ -507,27 +507,63 @@ function submitWithdraw(){
   💳 WITHDRAW
 </button>
   
-<!-- RUN BLAZE - 8 ADS BONUS COINS -->
+
+  
+<!-- RUN BLAZE - COMPACT BONUS PANEL -->
 <div id="adBonusPanel" style="
   position:fixed;
-  bottom:80px;
-  left:50%;
-  transform:translateX(-50%);
-  width:280px;
-  max-width:90%;
+  right:12px;
+  top:135px;
+  width:210px;
+  max-width:48%;
   background:#172033;
   color:white;
-  padding:16px;
+  padding:12px;
   border:2px solid #f6c84a;
-  border-radius:16px;
+  border-radius:14px;
   text-align:center;
   z-index:9998;
   font-family:Arial,sans-serif;
   box-sizing:border-box;
+  box-shadow:0 4px 14px rgba(0,0,0,0.35);
 ">
-  <div style="font-size:20px;font-weight:bold;">
+  <div style="font-size:16px;font-weight:bold;">
     🎁 FREE BONUS
   </div>
+
+  <p style="font-size:13px;line-height:1.4;margin:8px 0;">
+    Watch 8 Ads &amp; Get 300 Bonus Coins!
+  </p>
+
+  <div id="adBonusProgress" style="
+    background:#344158;
+    border-radius:8px;
+    padding:7px;
+    margin-bottom:9px;
+    font-size:12px;
+  ">
+    Ads watched: 0 / 8
+  </div>
+
+  <button
+    type="button"
+    onclick="alert('Real advertisements are not connected yet.');"
+    style="
+      width:100%;
+      padding:9px 5px;
+      background:#f6c84a;
+      color:#172033;
+      border:0;
+      border-radius:8px;
+      font-size:12px;
+      font-weight:bold;
+      cursor:pointer;
+    "
+  >
+    ▶ WATCH ADS
+  </button>
+</div>
+
 
   <p style="margin:10px 0;">
     Watch 8 Ads &amp; Get 300 Bonus Coins!
