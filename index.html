@@ -1,5 +1,28 @@
 <!doctype html>
 <html lang="en">
+  <script>
+window.__runBlazeAdQueue = [];
+window.__runBlazeAdHandler = null;
+
+window.GD_OPTIONS = {
+  gameId: "1ab60c0eeb1f475a86d355539f77af0b",
+  onEvent: function(event) {
+    if (typeof window.__runBlazeAdHandler === "function") {
+      window.__runBlazeAdHandler(event);
+    } else {
+      window.__runBlazeAdQueue.push(event);
+    }
+  }
+};
+
+(function(d, s, id) {
+  if (d.getElementById(id)) return;
+  var js = d.createElement(s);
+  js.id = id;
+  js.src = "https://html5.api.gamedistribution.com/main.min.js";
+  d.head.appendChild(js);
+})(document, "script", "gamedistribution-jssdk");
+</script>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
