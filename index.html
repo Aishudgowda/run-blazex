@@ -452,6 +452,7 @@ function watchRewardedAd() {
     alert('Ad SDK is not ready. Please try again later.');
     return;
   }
+  window.watchRewardedAd = watchRewardedAd;
 
   if (rewardPending) return;
 
