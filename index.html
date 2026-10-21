@@ -384,7 +384,92 @@ camera.aspect=innerWidth/innerHeight;
 camera.updateProjectionMatrix();
 renderer.setSize(innerWidth,innerHeight);
 }
+window.__runBlazeAdHandler = function(event) {
+  if (event.name === 'SDK_GAME_PAUSE') {
+    sdkWasPlaying = playing;
+    if (playing) playing = false;
+  }
 
+  if (event.name === 'SDK_GAME_START') {
+    if (startAfterAd) {
+      startAfterAd = false;
+      start();
+    } else if (sdkWasPlaying) {
+      sdkWasPlaying = false;
+      playing = true;
+    }
+  }
+
+  if (event.name === 'SDK_REWARDED_WATCH_COMPLETE' && rewardPending) {
+    rewardPending = false;
+    rewardedCount++;
+
+    document.getElementById('adBonusProgress').textContent =
+      'Ads watched: ' + rewardedCount + ' / 8';
+
+    if (rewardedCount >= 8) {
+      totalCoins += 300;
+      localStorage.setItem('runBlazeTotalCoins', String(totalCoins));
+      rewardedCount = 0;
+      document.getElementById('adBonusProgress').textContent =
+        'Bonus unlocked: 300 coins!';
+      updateHud();
+    }
+
+    document.getElementById('withdrawCoins').textContent = totalCoins;
+  }
+};
+
+window.__runBlazeAdQueue.forEach(window.__runBlazeAdHandler);
+window.__runBlazeAdQueue.length = 0;
+
+function requestStart() {
+  if (typeof gdsdk !== 'undefined' &&
+      typeof gdsdk.showAd === 'function') {
+    startAfterAd = true;
+    try {
+      const result = gdsdk.showAd();
+      if (result && typeof result.catch === 'function') {
+        result.catch(() => {
+          if (startAfterAd) {
+            startAfterAd = false;
+            start();
+          }
+        });
+      }
+    } catch (e) {
+      startAfterAd = false;
+      start();
+    }
+  } else {
+    start();
+  }
+}
+
+function watchRewardedAd() {
+  if (typeof gdsdk === 'undefined' ||
+      typeof gdsdk.showAd !== 'function') {
+    alert('Ad SDK is not ready. Please try again later.');
+    return;
+  }
+
+  if (rewardPending) return;
+
+  rewardPending = true;
+
+  try {
+    const result = gdsdk.showAd('rewarded');
+    if (result && typeof result.catch === 'function') {
+      result.catch(() => {
+        rewardPending = false;
+        alert('Rewarded ad is unavailable. Please try again later.');
+      });
+    }
+  } catch (e) {
+    rewardPending = false;
+    alert('Rewarded ad is unavailable. Please try again later.');
+  }
+}
 $('start').onclick=start;
 $('again').onclick=start;
 $('left').onclick=()=>move(-1);
