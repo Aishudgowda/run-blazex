@@ -550,7 +550,7 @@ function restartGame(){
     player.lane = Math.max(player.lane - dt * 8, player.targetLane);
   }
 }
-  function updateItems(dt) {
+function updateItems(dt) {
   if (!Array.isArray(items)) return;
 
   for (let i = items.length - 1; i >= 0; i--) {
@@ -570,7 +570,17 @@ function restartGame(){
     ) {
       if (item.type === "coin") {
         coins++;
-        saveTotalCoins(coins);
+
+        try {
+          let saved = Number(
+            localStorage.getItem("runBlazeTotalCoins") || 0
+          );
+          saved++;
+          localStorage.setItem(
+            "runBlazeTotalCoins",
+            String(saved)
+          );
+        } catch (e) {}
       } else if (item.type === "star") {
         stars++;
       }
@@ -579,20 +589,13 @@ function restartGame(){
     }
   }
 }
-  function totalCoins() {
+
+function totalCoins() {
   try {
-    return Number(localStorage.getItem("runBlazeTotalCoins") || 0);
+    return Number(
+      localStorage.getItem("runBlazeTotalCoins") || 0
+    );
   } catch (e) {
     return 0;
   }
-}
-
-function saveTotalCoins(amount) {
-  try {
-    const saved = totalCoins();
-    localStorage.setItem(
-      "runBlazeTotalCoins",
-      String(saved + amount)
-    );
-  } catch (e) {}
 }
