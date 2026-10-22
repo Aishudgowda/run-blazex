@@ -1,711 +1,598 @@
 <!doctype html>
 <html lang="en">
-  <script>
-window.__runBlazeAdQueue = [];
-window.__runBlazeAdHandler = null;
-
-window.GD_OPTIONS = {
-  gameId: "1ab60c0eeb1f475a86d355539f77af0b",
-  onEvent: function(event) {
-    if (typeof window.__runBlazeAdHandler === "function") {
-      window.__runBlazeAdHandler(event);
-    } else {
-      window.__runBlazeAdQueue.push(event);
-    }
-  }
-};
-
-(function(d, s, id) {
-  if (d.getElementById(id)) return;
-  var js = d.createElement(s);
-  js.id = id;
-  js.src = "https://html5.api.gamedistribution.com/main.min.js";
-  d.head.appendChild(js);
-})(document, "script", "gamedistribution-jssdk");
-</script>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#071629">
+<meta name="theme-color" content="#081521">
 <title>Run Blaze | Playtech Studio</title>
 <style>
+:root{--orange:#ff8a27;--gold:#ffd166;--panel:rgba(8,21,33,.88);--line:rgba(255,255,255,.14)}
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071629;color:white;font-family:Arial,sans-serif;touch-action:none}
-canvas{display:block;width:100%;height:100%}
-#ui{position:fixed;inset:0;pointer-events:none}
-.brand{position:absolute;top:12px;left:12px;background:#061321dd;border:1px solid #4abfff66;border-radius:20px;padding:9px 12px;font-size:12px;font-weight:900;letter-spacing:1px}
-.hud{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;max-width:98vw}
-.stat{min-width:65px;text-align:center;padding:7px;background:#06182bea;border:1px solid #56caff66;border-radius:10px}
-.stat small{display:block;color:#72d8ff;font-weight:bold;font-size:10px}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#081521;color:#fff;font-family:Arial,sans-serif}
+button{font:inherit;cursor:pointer;border:0;color:white;font-weight:800;touch-action:manipulation}
+#game{position:fixed;inset:0}
+canvas{display:block}
+#hud{position:fixed;inset:14px 14px auto;display:none;align-items:flex-start;justify-content:space-between;gap:8px;pointer-events:none;z-index:3}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{background:var(--panel);border:1px solid var(--line);padding:9px 12px;border-radius:13px;min-width:75px}
+.stat small{display:block;color:#a9bdcc;font-size:10px}
 .stat b{font-size:17px}
-.overlay{pointer-events:auto;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;background:linear-gradient(#06182b20,#020812aa)}
-.panel{width:min(420px,95vw);text-align:center;padding:22px 16px;border:1px solid #55caff88;border-radius:22px;background:linear-gradient(145deg,#092844f5,#06101ff7);box-shadow:0 20px 70px #000a}
-.logo{font-weight:1000;font-size:clamp(48px,12vw,72px);line-height:.9;font-style:italic;color:#ffcf24;text-shadow:3px 4px 0 #a72d0c,0 0 25px #ff8d17aa;margin:15px 0}
-.sub{color:#9bdfff;letter-spacing:2px;font-size:11px;font-weight:bold;margin:12px 0 20px}
-.primary{border:0;border-radius:14px;padding:14px 25px;background:linear-gradient(#ffe64d,#ff9d00);color:#171b23;font-size:20px;font-weight:1000;min-width:190px;cursor:pointer}
-.features{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:20px}
-.feature{border:1px solid #49c8ff66;border-radius:12px;background:#071b31;padding:9px 7px;min-width:57px;font-size:10px;font-weight:bold}
-.feature span{display:block;font-size:23px;margin-bottom:4px}
-.hint{font-size:12px;color:#b7d5e9;line-height:1.6}
+.hudbutton{pointer-events:auto;background:#152b3c;border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.overlay{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:20px;background:#030d1780}
 .hidden{display:none!important}
-.controls{position:absolute;bottom:15px;left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;pointer-events:none}
-.group{display:flex;gap:8px}
-.ctrl{pointer-events:auto;border:2px solid #66d9ff;background:#052b4bdd;color:white;border-radius:50%;width:55px;height:55px;font-size:22px;font-weight:bold;touch-action:manipulation}
-.msg{position:absolute;top:72px;left:50%;transform:translateX(-50%);background:#052f3bea;border:1px solid #55e6ff;border-radius:30px;padding:9px 13px;font-weight:bold;color:#9df8ff;white-space:nowrap}
-.wallet{margin-top:12px;color:#9bc8df;font-size:12px}
+.panel{width:min(460px,100%);padding:25px;border:1px solid #ffffff24;border-radius:25px;background:linear-gradient(145deg,#112a3ceF,#061420f2);text-align:center;max-height:94vh;overflow:auto}
+.eyebrow{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:.2em}
+.logo{font-size:clamp(42px,10vw,68px);font-weight:1000;font-style:italic;line-height:.95;margin:12px 0;background:linear-gradient(100deg,#fff,#ffd166,#ff7b24);color:transparent;background-clip:text;-webkit-background-clip:text}
+.sub{color:#b8c8d5;line-height:1.5}
+.primary{width:100%;padding:15px;border-radius:14px;background:linear-gradient(100deg,#ff9a32,#f45b22);margin-top:14px;font-size:16px}
+.secondary{padding:12px 15px;border-radius:13px;background:#213b4e;border:1px solid #ffffff17}
+.row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.row>*{flex:1}
+.character{margin:18px 0;color:#a9bdcc;font-size:13px}
+.character button{margin:5px;min-width:100px}
+.selected{outline:2px solid var(--gold);background:#5c412c}
+.featureline{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0}
+.pill{border:1px solid #ffffff1c;border-radius:999px;padding:7px 10px;color:#d8e4ec;font-size:12px}
+.fine{font-size:11px;color:#91a6b5;margin-top:16px}
+.scorebig{font-size:42px;font-weight:1000;color:var(--gold);margin:8px}
+.controls{position:fixed;z-index:4;bottom:18px;left:14px;right:14px;display:none;justify-content:space-between;align-items:end;pointer-events:none}
+.controlgroup{display:flex;gap:8px;pointer-events:auto}
+.control{width:52px;height:52px;border-radius:15px;background:#0a2032dd;border:1px solid #ffffff24;font-size:19px}
+.control.action{width:auto;min-width:60px;padding:0 10px;font-size:11px}
+.hint{position:fixed;bottom:88px;left:0;right:0;text-align:center;color:#fffd;font-size:11px;pointer-events:none;z-index:3}
+.wallet-open{position:fixed;right:14px;bottom:14px;z-index:4;border-radius:999px;background:#ffd166;color:#14212b;padding:12px 16px}
+.field{display:block;text-align:left;margin:10px 0;color:#b9cad6;font-size:12px}
+.field input,.field select{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid #ffffff24;border-radius:10px;background:#0b1c2a;color:white;font:inherit}
+.note{padding:11px;border-radius:12px;background:#ffffff08;color:#c0cfda;font-size:12px;line-height:1.45}
+.adprogress{font-weight:900;color:#ffd166;margin:12px 0}
+@media(max-width:520px){#hud{inset:8px}.stat{padding:7px 8px;min-width:56px}.stat b{font-size:14px}.stat small{font-size:9px}.controls{bottom:10px;left:8px;right:8px}.control{width:45px;height:45px}.hint{bottom:67px}.wallet-open{bottom:70px;right:8px}}
 </style>
-</head>
-<body>
-<div id="ui">
-<div class="brand">🎮 PLAYTECH STUDIO</div>
-<div id="hud" class="hud hidden">
-<div class="stat"><small>SCORE</small><b id="score">0</b></div>
-<div class="stat"><small>🪙 TOTAL COINS</small><b id="coins">0</b></div>
-<div class="stat"><small>BEST</small><b id="best">0</b></div>
-<div class="stat"><small>🗝️ KEYS</small><b id="keys">0</b></div>
-</div>
-<div id="powerMsg" class="msg hidden">🧲 MAGNET ACTIVE</div>
-<div id="home" class="overlay"><div class="panel">
-<div style="font-size:12px;letter-spacing:3px;color:#9bdfff;font-weight:bold">PLAYTECH STUDIO PRESENTS</div>
-<div class="logo">RUN<br>BLAZE</div>
-<div class="sub">RUN · COLLECT · SURVIVE</div>
-<button id="start" class="primary">▶ START RUN</button>
-<div class="features">
-<div class="feature"><span>🧲</span>MAGNET</div>
-<div class="feature"><span>⚡</span>BOOST</div>
-<div class="feature"><span>🎁</span>GIFT</div>
-<div class="feature"><span>🛹</span>SKATE</div>
-<div class="feature"><span>🗝️</span>KEY</div>
-</div>
-<p class="hint">← → Change lane · ↑ Jump · ↓ Slide<br>Collect coins. Avoid trains and barriers.</p>
-</div></div>
-<div id="over" class="overlay hidden"><div class="panel">
-<div style="font-size:38px;font-weight:1000;color:#ff4545">GAME OVER</div>
-<p class="sub">NICE RUNNER — TRY AGAIN!</p>
-<div style="display:flex;justify-content:space-around;margin:18px 0">
-<div>SCORE<br><b id="finalScore" style="font-size:26px;color:#ffcf24">0</b></div>
-<div>COINS<br><b id="finalCoins" style="font-size:26px;color:#ffcf24">0</b></div>
-<div>BEST<br><b id="finalBest" style="font-size:26px;color:#ffcf24">0</b></div>
-</div>
-<button id="again" class="primary">↻ RUN AGAIN</button>
-  <button class="primary" onclick="watchRewardedAd()">
-  WATCH ADS & GET ₹300 BONUS
-</button>
-<div class="wallet">Totals saved on this device</div>
-</div></div>
-<div id="controls" class="controls hidden">
-<div class="group"><button class="ctrl" id="left">◀</button><button class="ctrl" id="right">▶</button></div>
-<div class="group"><button class="ctrl" id="slide">⬇</button><button class="ctrl" id="jump">⬆</button></div>
-</div>
-</div>
-
-<script type="module">
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-
-const $=id=>document.getElementById(id);
-let scene,camera,renderer,clock,player;
-let playing=false,elapsed=0,score=0,runCoins=0,keys=0;
-let best=+(localStorage.getItem('runBlazeBest')||0);
-let totalCoins=+(localStorage.getItem('runBlazeTotalCoins')||0);
-let totalKeys=+(localStorage.getItem('runBlazeTotalKeys')||0);
-let lane=1,playerY=0,vy=0,slideUntil=0,magnetUntil=0,boostUntil=0,skateUntil=0;
-let spawnTimer=0;
-const objects=[],coins=[],laneX=[-2.4,0,2.4];
-
-const mat=(c,r=.7,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
-const M={
-ground:mat('#283544'),gravel:mat('#56616a'),rail:mat('#a8bac6',.25,.8),
-sleeper:mat('#463a32'),red:mat('#b52c24'),blue:mat('#176c9e'),
-dark:mat('#172431'),glass:mat('#6ddaff',.22,.4),gold:mat('#ffbd16',.25,.65),
-white:mat('#e6edf3'),tree:mat('#245c40'),leaf:mat('#347a4d'),
-green:mat('#28c987')
-};
-
-function box(w,h,d,material,x=0,y=0,z=0,parent=scene){
-const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
-m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;
-}
-function sphere(r,material,x,y,z,parent=scene){
-const m=new THREE.Mesh(new THREE.SphereGeometry(r,14,10),material);
-m.position.set(x,y,z);m.castShadow=true;parent.add(m);return m;
-}
-
-function init(){
-scene=new THREE.Scene();
-scene.background=new THREE.Color('#8db9d8');
-scene.fog=new THREE.Fog('#8db9d8',25,110);
-camera=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,.1,180);
-camera.position.set(0,5.6,10.8);
-camera.lookAt(0,1,-5);
-renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
-renderer.setSize(innerWidth,innerHeight);
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.15;
-document.body.prepend(renderer.domElement);
-scene.add(new THREE.HemisphereLight('#e6f7ff','#29303d',2));
-const sun=new THREE.DirectionalLight('#fff0ce',3);
-sun.position.set(-5,12,7);sun.castShadow=true;
-sun.shadow.mapSize.set(1024,1024);scene.add(sun);
-makeWorld();
-player=makePlayer();player.position.set(0,0,2);scene.add(player);
-clock=new THREE.Clock();
-addEventListener('resize',resize);
-renderer.setAnimationLoop(tick);
-}
-
-function makeWorld(){
-box(100,.3,180,M.ground,0,-.34,-55);
-for(let l=0;l<3;l++){
-const x=laneX[l];
-box(2.05,.12,180,M.gravel,x,-.18,-55);
-for(const side of [-.72,.72])box(.12,.16,180,M.rail,x+side,-.08,-55);
-for(let z=6;z>-140;z-=1.35)box(1.9,.13,.24,M.sleeper,x,-.12,z);
-for(const side of [-1,1])box(.05,2,180,M.dark,x+side*1.06,.7,-55);
-}
-for(let z=4;z>-100;z-=8){
-for(const side of [-1,1]){
-const x=side*6.1;
-box(.18,5,.18,M.dark,x,2.4,z);
-box(1.1,.14,.16,M.dark,x,4.7,z);
-sphere(.8,M.leaf,x+side*1.8,2.8,z);
-box(.4,1.4,.4,M.tree,x+side*1.8,1,z);
-box(.8,.8,.8,mat('#8496a6'),x+side*9,1.2,z-2);
-box(.75,1.5,.8,mat('#a6b6c3'),x+side*9,2.2,z-2);
-}
-}
-}
-
-function makePlayer(){
-const g=new THREE.Group();
-const red=mat('#d62828'),black=mat('#171c25'),skin=mat('#d9a47e'),shoe=mat('#f4f4f4');
-box(.58,.65,.35,red,0,1.22,0,g);
-box(.56,.22,.37,black,0,1.62,0,g);
-sphere(.23,skin,0,1.9,0,g);
-box(.24,.08,.05,black,0,1.93,-.19,g);
-box(.14,.48,.16,red,-.38,1.22,0,g);
-box(.14,.48,.16,red,.38,1.22,0,g);
-g.userData.legs=[];
-for(const x of [-.17,.17]){
-const leg=box(.17,.48,.2,black,x,.62,0,g);
-box(.2,.12,.3,shoe,x,.37,-.04,g);
-g.userData.legs.push(leg);
-}
-return g;
-}
-
-function makeTrain(l,z){
-const g=new THREE.Group();
-const color=l===0?M.blue:l===1?M.red:mat('#c6d3dc');
-box(1.8,1.7,5.5,color,0,1.05,0,g);
-box(1.7,.2,5.45,M.dark,0,1.96,0,g);
-box(1.6,.65,.08,M.glass,0,1.42,2.77,g);
-for(let zz=-1.9;zz<=1.8;zz+=1.25){
-box(.06,.66,.08,M.dark,-.91,1.4,zz,g);
-box(.06,.66,.08,M.dark,.91,1.4,zz,g);
-}
-for(const x of [-.68,.68])for(const zz of [-1.8,1.8]){
-const wh=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.12,12),M.dark);
-wh.rotation.z=Math.PI/2;wh.position.set(x,.25,zz);g.add(wh);
-}
-for(const x of [-.48,.48])sphere(.1,mat('#fff6ba',.2),x,.92,2.79,g);
-g.position.set(laneX[l],0,z);
-g.userData={kind:'train',lane:l,hit:true};
-scene.add(g);objects.push(g);
-}
-
-function makeBarrier(l,z){
-const g=new THREE.Group();
-box(1.35,.85,.45,mat('#f3ad19'),0,.45,0,g);
-for(let x=-.5;x<=.5;x+=.5)box(.18,.9,.47,mat('#e7e9ec'),x,.45,.01,g);
-g.position.set(laneX[l],0,z);
-g.userData={kind:'barrier',lane:l,hit:true};
-scene.add(g);objects.push(g);
-}
-
-function makeCoin(l,z,y=.8,type='coin'){
-let mesh;
-if(type==='key'){
-mesh=new THREE.Group();
-const ring=new THREE.Mesh(new THREE.TorusGeometry(.19,.055,8,16),M.gold);
-mesh.add(ring);
-box(.08,.42,.08,M.gold,.22,-.18,0,mesh);
-}else if(type==='magnet'){
-mesh=new THREE.Group();
-box(.17,.42,.16,mat('#ff384e'),-.13,0,0,mesh);
-box(.17,.42,.16,mat('#27a8ff'),.13,0,0,mesh);
-box(.48,.12,.16,M.white,0,-.22,0,mesh);
-}else if(type==='boost'){
-mesh=new THREE.Group();
-box(.16,.45,.13,mat('#ffdd21'),0,0,0,mesh);
-}else if(type==='gift'){
-mesh=new THREE.Group();
-box(.45,.38,.38,mat('#ef42b8'),0,0,0,mesh);
-box(.09,.4,.4,M.gold,0,0,0,mesh);
-}else if(type==='skate'){
-mesh=new THREE.Group();
-box(.6,.12,.24,mat('#25baff'),0,0,0,mesh);
-for(const x of [-.2,.2])sphere(.08,M.dark,x,-.1,0,mesh);
-}else{
-mesh=new THREE.Mesh(new THREE.TorusGeometry(.25,.075,10,20),M.gold);
-}
-mesh.position.set(laneX[l],y,z);
-mesh.rotation.x=type==='coin'?Math.PI/2:0;
-scene.add(mesh);
-mesh.userData={kind:type,lane:l,baseY:y,phase:Math.random()*6};
-coins.push(mesh);
-}
-
-function spawn(){
-const z=-72-Math.random()*8,l=Math.floor(Math.random()*3),r=Math.random();
-if(r<.24)makeTrain(l,z);
-else if(r<.42)makeBarrier(l,z);
-else if(r<.47)makeCoin(l,z,.8,'magnet');
-else if(r<.53)makeCoin(l,z,.8,'boost');
-else if(r<.58)makeCoin(l,z,.8,'gift');
-else if(r<.63)makeCoin(l,z,.8,'skate');
-else if(r<.68)makeCoin(l,z,.8,'key');
-else{
-const n=5+Math.floor(Math.random()*4);
-for(let i=0;i<n;i++)makeCoin(l,z-i*2.1,.8+(Math.random()<.16?1.2:0),'coin');
-}
-}
-
-function start(){
-for(const o of [...objects,...coins])scene.remove(o);
-objects.length=0;coins.length=0;
-lane=1;player.position.set(0,0,2);playerY=0;vy=0;
-elapsed=0;score=0;runCoins=0;keys=0;spawnTimer=0;
-magnetUntil=boostUntil=skateUntil=slideUntil=0;
-playing=true;
-$('home').classList.add('hidden');
-$('over').classList.add('hidden');
-$('hud').classList.remove('hidden');
-$('controls').classList.remove('hidden');
-$('powerMsg').classList.add('hidden');
-updateHud();
-}
-
-function endGame(){
-if(!playing)return;
-playing=false;
-best=Math.max(best,Math.floor(score));
-localStorage.setItem('runBlazeBest',best);
-$('finalScore').textContent=Math.floor(score);
-$('finalCoins').textContent=runCoins;
-$('finalBest').textContent=best;
-$('over').classList.remove('hidden');
-$('controls').classList.add('hidden');
-}
-
-function move(d){if(playing)lane=Math.max(0,Math.min(2,lane+d))}
-function jump(){if(playing&&playerY<.04)vy=8.2}
-function slide(){if(playing)slideUntil=elapsed+.75}
-
-function updateHud(){
-$('score').textContent=Math.floor(score);
-$('coins').textContent=totalCoins;
-$('best').textContent=Math.max(best,Math.floor(score));
-$('keys').textContent=totalKeys;
-}
-
-function action(type){
-if(!playing)return;
-if(type==='magnet')magnetUntil=elapsed+8;
-if(type==='boost')boostUntil=elapsed+5;
-if(type==='skate')skateUntil=elapsed+7;
-if(type==='gift'){runCoins+=10;totalCoins+=10;localStorage.setItem('runBlazeTotalCoins',totalCoins)}
-if(type==='key'){keys++;totalKeys++;localStorage.setItem('runBlazeTotalKeys',totalKeys)}
-if(type==='coin'){runCoins++;totalCoins++;localStorage.setItem('runBlazeTotalCoins',totalCoins)}
-if(['magnet','boost','skate'].includes(type)){
-$('powerMsg').textContent=type==='magnet'?'🧲 MAGNET ACTIVE':type==='boost'?'⚡ BOOST ACTIVE':'🛹 SKATE SHIELD ACTIVE';
-$('powerMsg').classList.remove('hidden');
-}
-updateHud();
-}
-
-function tick(){
-const dt=Math.min(clock.getDelta(),.04);
-elapsed+=dt;
-if(playing){
-const speed=(boostUntil>elapsed?30:20)+Math.min(score/500,8);
-  if(playerY===0 && elapsed>=slideUntil){
-  player.position.y+=Math.abs(Math.sin(elapsed*13))*.025;
-}
-score+=dt*10;
-spawnTimer+=dt;
-if(spawnTimer>1.1){spawn();spawnTimer=0}
-
-player.position.x+=(laneX[lane]-player.position.x)*Math.min(1,dt*12);
-if(playerY>0||vy>0){
-playerY+=vy*dt;vy-=19*dt;
-if(playerY<0){playerY=0;vy=0}
-}
-player.position.y=playerY+(elapsed<slideUntil?-.25:0);
-player.scale.y=elapsed<slideUntil?.65:1;
-player.rotation.z+=(laneX[lane]-player.position.x)*dt*.05;
-player.userData.legs.forEach((leg,i)=>leg.rotation.x=Math.sin(elapsed*13+i*Math.PI)*.65);
-
-for(let i=objects.length-1;i>=0;i--){
-const o=objects[i];o.position.z+=speed*dt;
-if(o.position.z>10){scene.remove(o);objects.splice(i,1);continue}
-if(Math.abs(o.position.z-2)<1.5&&o.userData.lane===lane){
-if(o.userData.kind==='barrier'){
-if(playerY<.72&&elapsed>=slideUntil&&elapsed>=skateUntil)endGame();
-}else if(o.userData.kind==='train'){
-if(playerY<1.75&&elapsed>=skateUntil)endGame();
-}
-}
-}
-
-for(let i=coins.length-1;i>=0;i--){
-const c=coins[i];
-c.position.z+=speed*dt;c.rotation.y+=dt*2.8;
-c.position.y=c.userData.baseY+Math.sin(elapsed*4+c.userData.phase)*.12;
-if(magnetUntil>elapsed&&c.userData.kind==='coin'&&c.position.z>-26){
-c.position.x+=(player.position.x-c.position.x)*dt*2.5;
-c.position.z+=(2-c.position.z)*dt*.65;
-}
-if(c.position.z>8){scene.remove(c);coins.splice(i,1);continue}
-if(Math.abs(c.position.z-2)<1.1&&Math.abs(c.position.x-player.position.x)<.85&&Math.abs(c.position.y-(playerY+.85))<1.45){
-action(c.userData.kind);scene.remove(c);coins.splice(i,1);
-}
-}
-
-if(magnetUntil<=elapsed&&boostUntil<=elapsed&&skateUntil<=elapsed)$('powerMsg').classList.add('hidden');
-camera.position.x+=(player.position.x*.22-camera.position.x)*dt*2;
-camera.lookAt(player.position.x*.22,1.4,-5);
-}
-renderer.render(scene,camera);
-}
-
-function resize(){
-if(!camera||!renderer)return;
-camera.aspect=innerWidth/innerHeight;
-camera.updateProjectionMatrix();
-renderer.setSize(innerWidth,innerHeight);
-}
-window.__runBlazeAdHandler = function(event) {
-  if (event.name === 'SDK_GAME_PAUSE') {
-    sdkWasPlaying = playing;
-    if (playing) playing = false;
-  }
-
-  if (event.name === 'SDK_GAME_START') {
-    if (startAfterAd) {
-      startAfterAd = false;
-      start();
-    } else if (sdkWasPlaying) {
-      sdkWasPlaying = false;
-      playing = true;
-    }
-  }
-
-  if (event.name === 'SDK_REWARDED_WATCH_COMPLETE' && rewardPending) {
-    rewardPending = false;
-    rewardedCount++;
-
-    document.getElementById('adBonusProgress').textContent =
-      'Ads watched: ' + rewardedCount + ' / 8';
-
-    if (rewardedCount >= 8) {
-      totalCoins += 300;
-      localStorage.setItem('runBlazeTotalCoins', String(totalCoins));
-      rewardedCount = 0;
-      document.getElementById('adBonusProgress').textContent =
-        'Bonus unlocked: 300 coins!';
-      updateHud();
-    }
-
-    document.getElementById('withdrawCoins').textContent = totalCoins;
-  }
-};
-
-window.__runBlazeAdQueue.forEach(window.__runBlazeAdHandler);
-window.__runBlazeAdQueue.length = 0;
-
-function requestStart() {
-  if (typeof gdsdk !== 'undefined' &&
-      typeof gdsdk.showAd === 'function') {
-    startAfterAd = true;
-    try {
-      const result = gdsdk.showAd();
-      if (result && typeof result.catch === 'function') {
-        result.catch(() => {
-          if (startAfterAd) {
-            startAfterAd = false;
-            start();
-          }
-        });
-      }
-    } catch (e) {
-      startAfterAd = false;
-      start();
-    }
-  } else {
-    start();
-  }
-}
-
-function watchRewardedAd() {
-  if (typeof gdsdk === 'undefined' ||
-      typeof gdsdk.showAd !== 'function') {
-    alert('Ad SDK is not ready. Please try again later.');
-    return;
-  }
-  window.watchRewardedAd = watchRewardedAd;
-
-  if (rewardPending) return;
-
-  rewardPending = true;
-
-  try {
-    const result = gdsdk.showAd('rewarded');
-    if (result && typeof result.catch === 'function') {
-      result.catch(() => {
-        rewardPending = false;
-        alert('Rewarded ad is unavailable. Please try again later.');
-      });
-    }
-  } catch (e) {
-    rewardPending = false;
-    alert('Rewarded ad is unavailable. Please try again later.');
-  }
-}
-$('start').onclick=start;
-$('again').onclick=start;
-$('left').onclick=()=>move(-1);
-$('right').onclick=()=>move(1);
-$('jump').onclick=jump;
-$('slide').onclick=slide;
-
-addEventListener('keydown',e=>{
-if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','a','A','d','D','w','W','s','S'].includes(e.key))e.preventDefault();
-if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A')move(-1);
-if(e.key==='ArrowRight'||e.key==='d'||e.key==='D')move(1);
-if(e.key==='ArrowUp'||e.key===' '||e.key==='w'||e.key==='W')jump();
-if(e.key==='ArrowDown'||e.key==='s'||e.key==='S')slide();
-if(e.key==='Enter'&&!playing)start();
-});
-
-let sx=0,sy=0;
-addEventListener('touchstart',e=>{
-sx=e.changedTouches[0].clientX;sy=e.changedTouches[0].clientY;
-},{passive:true});
-addEventListener('touchend',e=>{
-const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
-if(Math.max(Math.abs(dx),Math.abs(dy))<30)return;
-if(Math.abs(dx)>Math.abs(dy))move(dx>0?1:-1);
-else if(dy<0)jump();else slide();
-},{passive:true});
-
-try{init()}catch(e){
-document.body.innerHTML='<div style="padding:30px;color:white;font:18px Arial">Run Blaze could not start. Check your internet connection and reload the page.</div>';
-console.error(e);
-}
-</script>
-  <!-- RUN BLAZE WITHDRAWAL PANEL -->
-<style>
-#withdrawPanel{
-  display:none;position:fixed;inset:0;z-index:99999;
-  background:#04101df5;color:white;overflow:auto;
-  padding:20px;font-family:Arial,sans-serif
-}
-.withdrawBox{
-  max-width:430px;margin:25px auto;padding:20px;
-  background:#09243c;border:1px solid #35caff;
-  border-radius:18px
-}
-.withdrawBox h2{color:#43d9ff;text-align:center}
-.withdrawMethod{
-  width:100%;padding:14px;margin:6px 0;
-  background:#103651;color:white;border:1px solid #398cb6;
-  border-radius:10px;text-align:left;font-size:16px
-}
-.withdrawBox input{
-  width:100%;padding:12px;margin:7px 0;
-  border-radius:8px;border:1px solid #459ac2;
-  background:#061729;color:white;font-size:15px
-}
-.withdrawAction{
-  width:100%;padding:13px;margin-top:10px;
-  background:#ffca28;color:#17202b;font-weight:bold;
-  border:0;border-radius:10px;font-size:16px
-}
-#withdrawStatus{color:#8fffd0;font-size:14px}
-</style>
-
-<div id="withdrawPanel">
-  <div class="withdrawBox">
-    <button onclick="closeWithdraw()" style="float:right;background:none;color:white;border:0;font-size:25px">✕</button>
-    <h2>💳 YOUR WALLET</h2>
-    <p>Total Coins: <b id="withdrawCoins">0</b></p>
-    <hr>
-    <h3>Withdrawal Methods</h3>
-
-    <button class="withdrawMethod" onclick="chooseMethod('UPI')">🇮🇳 UPI</button>
-    <button class="withdrawMethod" onclick="chooseMethod('PhonePe')">🟣 PhonePe</button>
-    <button class="withdrawMethod" onclick="chooseMethod('Paytm')">🔵 Paytm</button>
-    <button class="withdrawMethod" onclick="chooseMethod('Bank Transfer')">🏦 Bank Transfer</button>
-    <button class="withdrawMethod" onclick="chooseMethod('PayPal')">🌐 PayPal</button>
-
-    <h3 id="selectedMethod">Select a withdrawal method</h3>
-    <input id="withdrawAccount" placeholder="UPI ID / Account details">
-    <input id="withdrawAmount" type="number" min="1" placeholder="Withdrawal amount (₹)">
-    <button class="withdrawAction" onclick="submitWithdraw()">Submit Request</button>
-    <p id="withdrawStatus"></p>
-    <p style="font-size:12px;color:#aac5d8">
-      Withdrawal requests require a secure payment backend for real payouts.
-    </p>
-  </div>
-</div>
 
 <script>
-let selectedWithdrawMethod = '';
-
-function openWithdraw(){
-  document.getElementById('withdrawPanel').style.display='block';
-  document.getElementById('withdrawCoins').textContent=
-    localStorage.getItem('runBlazeTotalCoins') || '0';
-}
-
-function closeWithdraw(){
-  document.getElementById('withdrawPanel').style.display='none';
-}
-
-function chooseMethod(method){
-  selectedWithdrawMethod=method;
-  document.getElementById('selectedMethod').textContent=
-    'Selected: '+method;
-  document.getElementById('withdrawStatus').textContent='';
-}
-
-function submitWithdraw(){
-  const account=document.getElementById('withdrawAccount').value.trim();
-  const amount=Number(document.getElementById('withdrawAmount').value);
-  const status=document.getElementById('withdrawStatus');
-
-  if(!selectedWithdrawMethod){
-    status.textContent='Please select a withdrawal method.';
-    return;
+window.__runBlazeAdHandler=null;
+window.__runBlazeAdQueue=[];
+window.GD_OPTIONS={
+  gameId:"1ab60c0eeb1f475a86d355539f77af0b",
+  onEvent:function(event){
+    if(typeof window.__runBlazeAdHandler==="function")
+      window.__runBlazeAdHandler(event);
+    else window.__runBlazeAdQueue.push(event);
   }
-  if(!account || !Number.isFinite(amount) || amount<=0){
-    status.textContent='Enter valid account details and amount.';
-    return;
+};
+(function(){
+  if(window.self!==window.top){
+    var s=document.createElement("script");
+    s.id="gamedistribution-jssdk";
+    s.src="https://html5.api.gamedistribution.com/main.min.js";
+    s.async=true;
+    document.head.appendChild(s);
   }
-  status.textContent=
-    'Form ready. Real withdrawal is not connected yet; no payment has been sent.';
-}
+})();
 </script>
-  <button
-  id="walletBtn"
-  onclick="openWithdraw()"
-  style="
-    position:fixed;
-    top:65px;
-    right:12px;
-    z-index:9999;
-    padding:12px 18px;
-    border-radius:12px;
-    border:1px solid #40d5ff;
-    background:#082b46;
-    color:white;
-    font-weight:bold;
-    font-size:14px;
-    cursor:pointer;
-">
-  💳 WITHDRAW
-</button>
-  
+</head>
+<body>
+<div id="game"></div>
 
-  
-<!-- RUN BLAZE - COMPACT BONUS PANEL -->
-<div id="adBonusPanel" style="
-  position:fixed;
-  right:12px;
-  top:135px;
-  width:210px;
-  max-width:48%;
-  background:#172033;
-  color:white;
-  padding:12px;
-  border:2px solid #f6c84a;
-  border-radius:14px;
-  text-align:center;
-  z-index:9998;
-  font-family:Arial,sans-serif;
-  box-sizing:border-box;
-  box-shadow:0 4px 14px rgba(0,0,0,0.35);
-">
-  <div style="font-size:16px;font-weight:bold;">
-    🎁 FREE BONUS
+<div id="hud">
+  <div class="stats">
+    <div class="stat"><small>Score</small><b id="score">0</b></div>
+    <div class="stat"><small>Run coins</small><b>🪙 <span id="coins">0</span></b></div>
+    <div class="stat"><small>Total coins</small><b>🪙 <span id="totalCoinsHud">0</span></b></div>
+    <div class="stat"><small>Stars</small><b>⭐ <span id="stars">0</span></b></div>
   </div>
-
-  <p style="font-size:13px;line-height:1.4;margin:8px 0;">
-    Watch 8 Ads &amp; Get 300 Bonus Coins!
-  </p>
-
-  <div id="adBonusProgress" style="
-    background:#344158;
-    border-radius:8px;
-    padding:7px;
-    margin-bottom:9px;
-    font-size:12px;
-  ">
-    Ads watched: 0 / 8
-  </div>
-
-  <button
-    type="button"
-    onclick="alert('Real advertisements are not connected yet.');"
-    style="
-      width:100%;
-      padding:9px 5px;
-      background:#f6c84a;
-      color:#172033;
-      border:0;
-      border-radius:8px;
-      font-size:12px;
-      font-weight:bold;
-      cursor:pointer;
-    "
-  >
-    ▶ WATCH ADS
-  </button>
+  <button class="hudbutton" id="pauseBtn">Ⅱ</button>
 </div>
 
-
-  <p style="margin:10px 0;">
-    Watch 8 Ads &amp; Get 300 Bonus Coins!
-  </p>
-
-  <div id="adBonusProgress" style="
-    background:#344158;
-    border-radius:8px;
-    padding:8px;
-    margin-bottom:10px;
-  ">
-    Ads watched: 0 / 8
+<div class="controls" id="controls">
+  <div class="controlgroup">
+    <button class="control" id="leftBtn">◀</button>
+    <button class="control" id="rightBtn">▶</button>
   </div>
-
-  <button
-    type="button"
-    onclick="alert('Real advertisements are not connected yet. Please try again after ad integration.');"
-    style="
-      padding:10px 14px;
-      background:#f6c84a;
-      color:#172033;
-      border:0;
-      border-radius:8px;
-      font-weight:bold;
-      cursor:pointer;
-    "
-  >
-    ▶ WATCH ADS
-  </button>
+  <div class="controlgroup">
+    <button class="control action" id="jumpBtn">⬆ JUMP</button>
+    <button class="control action" id="slideBtn">⬇ SLIDE</button>
+    <button class="control action" id="boostBtn">⚡ BOOST</button>
+  </div>
 </div>
 
-</body>
-</html>
+<div class="hint" id="hint">Auto-run: ← → change track · ↑ jump · ↓ slide</div>
+<button class="wallet-open" id="walletBtn">💰 WALLET</button>
+
+<div class="overlay" id="home">
+  <div class="panel">
+    <div class="eyebrow">PLAYTECH STUDIO PRESENTS</div>
+    <div class="logo">RUN BLAZE</div>
+    <div class="sub">A 3D railway adventure. Dodge trains and collect golden coins.</div>
+    <div class="character">CHOOSE YOUR RUNNER<br>
+      <button class="secondary selected" id="boyBtn">🏃 Blaze</button>
+      <button class="secondary" id="girlBtn">🏃‍♀️ Nova</button>
+    </div>
+    <div class="featureline">
+      <span class="pill">🪙 Coins</span>
+      <span class="pill">⭐ Stars</span>
+      <span class="pill">⚡ Boost</span>
+      <span class="pill">🧲 Magnet</span>
+      <span class="pill">🚆 Trains</span>
+    </div>
+    <button class="primary" id="playBtn">▶ START RUN</button>
+    <div class="fine">3D endless runner · Best score saved on this device</div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="over">
+  <div class="panel">
+    <div class="eyebrow">RUN COMPLETE</div>
+    <div class="logo" style="font-size:45px">GAME OVER</div>
+    <div class="sub">Your score</div>
+    <div class="scorebig" id="finalScore">0</div>
+    <div class="row">
+      <div class="stat"><small>Run coins</small><b id="finalCoins">0</b></div>
+      <div class="stat"><small>Total coins</small><b id="finalTotalCoins">0</b></div>
+      <div class="stat"><small>Best score</small><b id="finalBest">0</b></div>
+    </div>
+    <button class="primary" id="againBtn">↻ RUN AGAIN</button>
+    <button class="secondary" id="homeBtn" style="width:100%;margin-top:9px">HOME</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="pause">
+  <div class="panel">
+    <div class="eyebrow">PAUSED</div>
+    <div class="logo" style="font-size:48px">PAUSED</div>
+    <button class="primary" id="resumeBtn">▶ RESUME</button>
+    <button class="secondary" id="quitBtn" style="width:100%;margin-top:9px">END RUN</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="wallet">
+  <div class="panel">
+    <div class="eyebrow">PLAYER WALLET</div>
+    <div class="logo" style="font-size:38px">TREASURE</div>
+    <div class="scorebig"><span id="walletCoins">0</span> 🪙</div>
+    <p class="sub">Lifetime game coins saved on this device.</p>
+    <div class="note">Game coins are not cash. Real-money withdrawals are not connected yet. Do not enter real bank details in this preview.</div>
+    <label class="field">Withdrawal method
+      <select id="withdrawMethod">
+        <option value="upi">UPI</option>
+        <option value="phonepe">PhonePe</option>
+        <option value="paytm">Paytm</option>
+        <option value="bank">Bank transfer</option>
+        <option value="paypal">PayPal</option>
+      </select>
+    </label>
+    <div class="note" id="methodInfo">UPI selected. Live withdrawals are not available yet.</div>
+    <div class="note" style="margin-top:10px">The withdrawal form unlocks after 3 rewarded ads are confirmed complete.</div>
+    <div class="adprogress" id="adProgress">Ads watched: 0 / 3</div>
+    <button class="primary" id="withdrawBtn">WATCH ADS FULLY</button>
+    <div id="bankForm" class="hidden">
+      <label class="field">Account holder name<input id="bankHolder" autocomplete="name"></label>
+      <label class="field">Bank name<input id="bankName"></label>
+      <label class="field">Account number<input id="bankAccount" inputmode="numeric"></label>
+      <label class="field">IFSC code<input id="bankIfsc" autocapitalize="characters"></label>
+      <label class="field">Requested amount (₹)<input id="bankAmount" inputmode="decimal"></label>
+      <button class="primary" id="submitWithdrawal">SUBMIT REQUEST</button>
+    </div>
+    <div class="note" id="withdrawStatus">Real payments are not connected. Do not enter real bank details here.</div>
+    <button class="secondary" id="closeWallet" style="width:100%;margin-top:9px">CLOSE</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $=id=>document.getElementById(id);
+const gameRoot=$('game');
+let scene,camera,renderer,clock;
+let running=false,paused=false,character='boy',lane=0,player;
+let trackMarks=[],objects=[],decor=[],lastSpawn=0,elapsed=0,score=0,coins=0,stars=0,speed=17;
+let boostUntil=0,magnetUntil=0,jumpUntil=0,slideUntil=0,gameOverLock=false,rideTrain=null;
+const laneX=[-2.25,0,2.25];
+const mat=(color,roughness=.75,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness});
+const M={
+  road:mat('#303d48'),edge:mat('#d0a66a'),gold:mat('#ffc83d',.28,.65),
+  green:mat('#164d3d'),leaf:mat('#23644a'),wood:mat('#69432d'),
+  stone:mat('#7d786c'),dark:mat('#172731'),orange:mat('#ff6a25'),
+  red:mat('#db3c36'),blue:mat('#49c8ff',.3,.25),white:mat('#f3e8d5'),
+  skin:mat('#c88e62'),shirt:mat('#ff7928'),pants:mat('#1d3348'),
+  hair:mat('#2b1b17'),purple:mat('#a98bff')
+};
+function box(w,h,d,material,x=0,y=0,z=0){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+  m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;return m;
+}
+function sphere(r,material,x=0,y=0,z=0){
+  const m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),material);
+  m.position.set(x,y,z);m.castShadow=true;return m;
+}
+function init3D(){
+  if(!window.THREE){
+    gameRoot.innerHTML='<div style="padding:30px;color:white">3D engine could not load. Check your internet connection and reload.</div>';
+    return false;
+  }
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color('#91b7cf');
+  scene.fog=new THREE.Fog('#91b7cf',30,112);
+  camera=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,.1,180);
+  camera.position.set(0,5.3,10.5);camera.lookAt(0,1,-5);
+  try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});}
+  catch(e){
+    gameRoot.innerHTML='<div style="padding:30px;color:white">3D graphics are not supported by this browser/device.</div>';
+    return false;
+  }
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.7));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.12;
+  gameRoot.appendChild(renderer.domElement);
+  scene.add(new THREE.HemisphereLight('#d9f4ff','#26352a',2));
+  const sun=new THREE.DirectionalLight('#ffe1ae',3.1);
+  sun.position.set(-8,16,7);sun.castShadow=true;
+  sun.shadow.mapSize.set(1024,1024);
+  sun.shadow.camera.left=-22;sun.shadow.camera.right=22;
+  sun.shadow.camera.top=25;sun.shadow.camera.bottom=-25;scene.add(sun);
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(180,180),mat('#29463b'));
+  floor.rotation.x=-Math.PI/2;floor.position.y=-.12;floor.position.z=-45;
+  floor.receiveShadow=true;scene.add(floor);
+  const road=box(8.4,.18,150,M.road,0,-.02,-52);scene.add(road);
+  const railMat=mat('#9eabb1',.28,.82);
+  for(const cx of laneX){
+    for(const off of [-.68,.68])scene.add(box(.12,.13,150,railMat,cx+off,.105,-52));
+    for(let i=0;i<43;i++){
+      const sleeper=box(1.72,.11,.42,M.wood,cx,.075,10-i*3.15);
+      scene.add(sleeper);trackMarks.push(sleeper);
+    }
+  }
+  for(const x of [-4.18,4.18])scene.add(box(.13,.18,150,M.edge,x,.08,-52));
+  const station=new THREE.Group();station.position.set(0,0,-38);scene.add(station);
+  station.add(box(12,.42,.95,M.dark,0,5.6,0));
+  station.add(box(12.5,.16,1.2,M.edge,0,5.92,0));
+  for(const x of [-5.35,5.35]){
+    station.add(box(.42,5.6,.65,M.stone,x,2.8,0));
+    station.add(box(.68,.22,.9,M.edge,x,5.55,0));
+  }
+  station.add(box(8.8,.15,.3,M.blue,0,5.28,.53));
+  for(const x of [-3.6,3.6]){
+    station.add(box(.38,1.45,.4,M.dark,x,3.8,.1));
+    station.add(box(.27,.34,.28,M.red,x,4.1,.34));
+    station.add(sphere(.13,M.gold,x,3.68,.35));
+  }
+  const cityMats=[mat('#657989'),mat('#536a7d'),mat('#788c9b'),mat('#465968')];
+  for(let i=0;i<16;i++){
+    const side=i%2?1:-1,z=-15-i*7.7,x=side*(7.2+Math.random()*5.4);
+    const w=2.8+Math.random()*2.6,h=5.5+Math.random()*9,d=5.5;
+    const building=box(w,h,d,cityMats[i%cityMats.length],x,h/2-.08,z);
+    scene.add(building);decor.push(building);
+    const faceX=x-side*(w/2+.035);
+    for(let row=0;row<Math.max(2,Math.floor((h-1)/1.6));row++){
+      for(let col=0;col<3;col++){
+        const win=box(.055,.55,.52,(row+col)%3?M.blue:M.white,faceX,1.3+row*1.45,z-1.7+col*1.55);
+        scene.add(win);decor.push(win);
+      }
+    }
+  }
+  for(const side of [-1,1])for(let i=0;i<7;i++){
+    const z=-10-i*15,x=side*5.35;
+    const pole=box(.12,4.5,.12,M.dark,x,2.25,z);scene.add(pole);
+    const arm=box(.9,.1,.1,M.dark,x-side*.4,4.36,z);scene.add(arm);
+    const lamp=sphere(.17,M.gold,x-side*.76,4.3,z);scene.add(lamp);
+    decor.push(pole,arm,lamp);
+  }
+  player=makePlayer();player.position.set(0,0,4);scene.add(player);
+  addTrain(1,-15);
+  return true;
+}
+function makePlayer(){
+  const g=new THREE.Group();
+  const shirt=character==='girl'?M.purple:M.shirt;
+  g.add(box(.72,.9,.42,shirt,0,1.42,0));
+  g.add(sphere(.29,M.skin,0,2.12,0));
+  const hair=sphere(.3,M.hair,0,2.31,-.035);
+  hair.scale.set(1,.55,1);g.add(hair);
+  g.add(box(.2,.72,.23,M.skin,-.48,1.43,0));
+  g.add(box(.2,.72,.23,M.skin,.48,1.43,0));
+  g.add(box(.25,.72,.3,M.pants,-.2,.58,0));
+  g.add(box(.25,.72,.3,M.pants,.2,.58,0));
+  g.add(box(.3,.16,.45,M.white,-.2,.18,.08));
+  g.add(box(.3,.16,.45,M.white,.2,.18,.08));
+  // Blue backpack
+  g.add(box(.48,.62,.25,M.blue,0,1.45,.30));
+  g.userData.parts={
+    armL:g.children[2],armR:g.children[3],
+    legL:g.children[4],legR:g.children[5]
+  };
+  return g;
+}
+function clearObjects(){
+  for(const o of objects){scene.remove(o.mesh);if(o.mesh.geometry)o.mesh.geometry.dispose();}
+  objects=[];rideTrain=null;
+}
+function addPickup(type,laneNo,z,height){
+  const g=new THREE.Group();let mesh;
+  const coinY=height===undefined?1.18:height;
+  if(type==='coin'){
+    const coinMat=new THREE.MeshStandardMaterial({
+      color:'#ffd21f',metalness:.78,roughness:.18,
+      emissive:'#9c6200',emissiveIntensity:.5
+    });
+    mesh=new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.14,32),coinMat);
+    mesh.rotation.x=Math.PI/2;mesh.position.y=coinY;g.add(mesh);
+    const face=new THREE.Mesh(new THREE.CircleGeometry(.3,28),
+      new THREE.MeshStandardMaterial({color:'#fff3a6',side:THREE.DoubleSide}));
+    face.position.set(0,coinY,.076);g.add(face);
+    const face2=face.clone();face2.position.z=-.076;g.add(face2);
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(.49,.035,8,28),
+      new THREE.MeshStandardMaterial({color:'#ffb000',emissive:'#ff9d00'}));
+    ring.position.y=coinY;g.add(ring);
+  }else if(type==='star'){
+    mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(.4,1),M.gold);
+    mesh.position.y=1.2;g.add(mesh);
+  }else if(type==='magnet'){
+    mesh=new THREE.Mesh(new THREE.TorusGeometry(.28,.13,10,20,Math.PI*1.5),M.red);
+    mesh.rotation.z=Math.PI/2;mesh.position.y=1.2;g.add(mesh);
+  }else if(type==='boost'){
+    mesh=new THREE.Mesh(new THREE.OctahedronGeometry(.4),M.blue);
+    mesh.position.y=1.2;g.add(mesh);
+  }else{
+    mesh=box(.55,.65,.55,type==='barrier'?M.red:M.orange,0,.5,0);g.add(mesh);
+    if(type==='barrier')g.add(box(.7,.12,.6,M.white,0,.55,.01));
+  }
+  g.position.set(laneX[laneNo],0,z);
+  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+  scene.add(g);objects.push({mesh:g,type,lane:laneNo,z,hit:false,height:coinY});
+}
+function addTrain(laneNo,z){
+  const g=new THREE.Group();
+  const bodyMat=laneNo===0?M.orange:(laneNo===1?M.red:M.blue);
+  g.add(box(1.86,2.46,18,bodyMat,0,1.30,0));
+  g.add(box(1.9,.16,17.9,M.dark,0,2.57,0));
+  g.add(box(1.45,.82,.09,M.blue,0,1.78,9.06));
+  g.add(box(1.62,.16,.08,M.white,0,2.27,9.07));
+  for(const x of [-.57,.57])g.add(sphere(.105,M.gold,x,.60,9.08));
+  g.add(box(.66,.22,1.8,M.dark,0,2.72,-1.8));
+  for(const side of [-1,1]){
+    g.add(box(.07,.14,17.8,M.white,side*.94,1.18,0));
+    g.add(box(.035,.12,17.7,M.gold,side*.965,2.28,0));
+    for(let doorZ=-5.8;doorZ<=5.9;doorZ+=5.8){
+      g.add(box(.045,1.25,1.02,M.dark,side*.973,1.82,doorZ));
+    }
+    for(let winZ=-7;winZ<=7.01;winZ+=2.3){
+      g.add(box(.045,.65,1.55,M.dark,side*.974,2.02,winZ));
+      g.add(box(.05,.06,1.55,M.blue,side*.982,2.36,winZ));
+    }
+    for(let zz=-7.25;zz<=7.3;zz+=2.45){
+      g.add(box(.055,.62,1.35,M.blue,side*.945,1.83,zz));
+      g.add(box(.06,.09,1.43,M.white,side*.95,2.17,zz));
+    }
+    for(let zz=-6.5;zz<=6.6;zz+=3){
+      const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.29,.29,.17,16),M.dark);
+      wheel.rotation.z=Math.PI/2;wheel.position.set(side*.98,.38,zz);
+      g.add(wheel);g.add(sphere(.11,M.edge,side*1.08,.38,zz));
+    }
+    g.add(box(.11,.28,16.8,M.dark,side*.91,.55,0));
+  }
+  g.add(box(1.52,.12,.08,M.gold,0,.98,9.12));
+  g.position.set(laneX[laneNo],0,z);
+  g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+  scene.add(g);
+  objects.push({mesh:g,type:'train',lane:laneNo,z,hit:false});
+  [6.4,3.2,0,-3.2,-6.4].forEach((offset,i)=>
+    addPickup('coin',laneNo,z+offset,3.15+(i===2?.12:0)));
+}
+function coinLine(laneNo,startZ,count=5,step=3.5,height=1.18){
+  for(let i=0;i<count;i++)addPickup('coin',laneNo,startZ-i*step,height);
+}
+function spawnWave(){
+  const r=Math.random(),ln=Math.floor(Math.random()*3);
+  if(r<.16){
+    addTrain(ln,-94);
+    const safe=(ln+1+Math.floor(Math.random()*2))%3;
+    coinLine(safe,-88,5,3.7,1.18);
+  }else if(r<.38){
+    coinLine(ln,-82,6,3.6,1.18);
+    const sideLane=(ln+1+Math.floor(Math.random()*2))%3;
+    coinLine(sideLane,-84,5,3.6,1.18);
+  }else if(r<.55){
+    for(let l=0;l<3;l++)coinLine(l,-80-l*1.1,5,3.8,1.18);
+  }else if(r<.66){
+    const seq=Math.random()<.5?
+      [ln,(ln+1)%3,(ln+1)%3,(ln+2)%3,(ln+2)%3,ln]:
+      [ln,(ln+2)%3,(ln+2)%3,(ln+1)%3,(ln+1)%3,ln];
+    seq.forEach((l,i)=>addPickup('coin',l,-82-i*3.65,1.18));
+  }else if(r<.76){
+    const heights=[1.18,1.55,1.9,2.12,2.12,1.9,1.55,1.18];
+    heights.forEach((h,i)=>addPickup('coin',ln,-80-i*2.75,h));
+  }else if(r<.83){
+    addPickup('barrier',ln,-82);
+    const safe=(ln+1+Math.floor(Math.random()*2))%3;
+    coinLine(safe,-82,4,3.6,1.18);
+  }else if(r<.88)addPickup('star',ln,-82);
+  else if(r<.95){
+    addPickup('magnet',ln,-82);
+    for(let l=0;l<3;l++)coinLine(l,-91-l,6,3.4,1.18);
+  }else if(r<.98)addPickup('boost',ln,-82);
+  else coinLine(ln,-82,4,3.6,1.18);
+}
+function totalCoins(){
+  try{return Number(localStorage.getItem('runBlazeTotalCoins'))||0;}
+  catch(e){return 0;}
+}
+function setTotal(n){
+  try{localStorage.setItem('runBlazeTotalCoins',String(n));}catch(e){}
+}
+function hud(){
+  $('score').textContent=Math.floor(score);
+  $('coins').textContent=coins;
+  $('totalCoinsHud').textContent=totalCoins();
+  $('stars').textContent=stars;
+}
+function gameEnd(){
+  if(!playing) return;
+
+  playing = false;
+
+  best = Math.max(best, Math.floor(score));
+
+  try {
+    localStorage.setItem("runBlazeBest", String(best));
+  } catch(e) {}
+
+  try {
+    localStorage.setItem("runBlazeTotalCoins", String(totalCoins()));
+  } catch(e) {}
+
+  hud();
+function restartGame(){
+  score = 0;
+  coins = 0;
+  stars = 0;
+  speed = 430;
+  playing = true;
+
+  $("over").classList.remove("show");
+
+  resetGame();
+  hud();
+
+  lastTime = performance.now();
+  requestAnimationFrame(loop);
+}
+  function resetGame(){
+  obstacles = [];
+  items = [];
+  particles = [];
+
+  player.lane = 1;
+  player.targetLane = 1;
+  player.jumpY = 0;
+  player.slide = false;
+
+  spawnTimer = 0;
+  itemTimer = 0;
+}
+  function startGame(){
+  if (playing) return;
+
+  score = 0;
+  coins = 0;
+  stars = 0;
+  speed = 430;
+  playing = true;
+
+  $("over").classList.remove("show");
+
+  resetGame();
+  hud();
+
+  lastTime = performance.now();
+  requestAnimationFrame(loop);
+}
+  function loop(timestamp) {
+  if (!playing) return;
+
+  const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+  lastTime = timestamp;
+
+  score += dt * speed / 10;
+  speed = Math.min(speed + dt * 2, 760);
+
+  updatePlayer(dt);
+  updateObstacles(dt);
+  updateItems(dt);
+  hud();
+
+  renderScene();
+
+  requestAnimationFrame(loop);
+}
+  function updatePlayer(dt) {
+  if (!player) return;
+
+  if (player.lane < player.targetLane) {
+    player.lane = Math.min(player.lane + dt * 8, player.targetLane);
+  } else if (player.lane > player.targetLane) {
+    player.lane = Math.max(player.lane - dt * 8, player.targetLane);
+  }
+}
+  function updateObstacles(dt) {
+  if (!Array.isArray(obstacles)) return;
+
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    const obstacle = obstacles[i];
+
+    obstacle.z += speed * dt;
+
+    if (obstacle.z > 30) {
+      obstacles.splice(i, 1);
+      continue;
+    }
+
+    if (
+      obstacle.lane === player.targetLane &&
+      obstacle.z > 0 &&
+      obstacle.z < 2 &&
+      player.jumpY <= 0
+    ) {
+      gameEnd();
+      return;
+    }
+  }
+}
+  function updatePlayer(dt) {
+  if (!player) return;
+
+  if (player.lane < player.targetLane) {
+    player.lane = Math.min(player.lane + dt * 8, player.targetLane);
+  } else if (player.lane > player.targetLane) {
+    player.lane = Math.max(player.lane - dt * 8, player.targetLane);
+  }
+}
+  function updateItems(dt) {
+  if (!Array.isArray(items)) return;
+
+  for (let i = items.length - 1; i >= 0; i--) {
+    const item = items[i];
+
+    item.z += speed * dt;
+
+    if (item.z > 30) {
+      items.splice(i, 1);
+      continue;
+    }
+
+    if (
+      item.lane === player.targetLane &&
+      item.z > 0 &&
+      item.z < 2
+    ) {
+      if (item.type === "coin") {
+        coins++;
+        saveTotalCoins(coins);
+      } else if (item.type === "star") {
+        stars++;
+      }
+
+      items.splice(i, 1);
+    }
+  }
+}
+  function totalCoins() {
+  try {
+    return Number(localStorage.getItem("runBlazeTotalCoins") || 0);
+  } catch (e) {
+    return 0;
+  }
+}
+
+function saveTotalCoins(amount) {
+  try {
+    const saved = totalCoins();
+    localStorage.setItem(
+      "runBlazeTotalCoins",
+      String(saved + amount)
+    );
+  } catch (e) {}
+}
